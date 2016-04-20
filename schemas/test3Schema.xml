@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <stream>
-	<name>test</name>
+	<name>test3</name>
 	<attributes>
 		<attribute type="integer" name="temperature">
 			<value type="min">0</value>
 			<value type="max">25</value>
 		</attribute>
+		<!--Generate a sequence of characters with a random size between 1 and 10 for each tuple-->
 		<attribute type="text" name="comment">
 			<value type="min">1</value>
 			<value type="max">10</value>

@@ -1,66 +1,60 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <variations>
-	<profile type="standard" rate="1">
-		<duration>16</duration>
-	</profile>
-	<transition type="linear">
-		<duration>0</duration>
-	</transition>
-	<profile type="standard" rate="10">
-		<duration>16</duration>
-	</profile>
-	<transition type="linear">
-		<duration>0</duration>
-	</transition>
 	<profile type="standard" rate="100">
-		<duration>16</duration>
+		<duration>60</duration>
+	</profile>
+	<transition type="linear">
+		<duration>0</duration>
+	</transition>
+	<profile type="standard" rate="200">
+		<duration>60</duration>
+	</profile>
+	<transition type="linear">
+		<duration>0</duration>
+	</transition>
+	<profile type="standard" rate="300">
+		<duration>60</duration>
+	</profile>
+	<transition type="linear">
+		<duration>0</duration>
+	</transition>
+	<profile type="standard" rate="400">
+		<duration>60</duration>
+	</profile>
+	<transition type="linear">
+		<duration>0</duration>
+	</transition>
+	<profile type="standard" rate="500">
+		<duration>60</duration>
+	</profile>
+	<transition type="linear">
+		<duration>0</duration>
+	</transition>
+	<profile type="standard" rate="600">
+		<duration>60</duration>
+	</profile>
+	<transition type="linear">
+		<duration>0</duration>
+	</transition>
+	<profile type="standard" rate="700">
+		<duration>60</duration>
+	</profile>
+	<transition type="linear">
+		<duration>0</duration>
+	</transition>
+	<profile type="standard" rate="800">
+		<duration>60</duration>
+	</profile>
+	<transition type="linear">
+		<duration>0</duration>
+	</transition>
+	<profile type="standard" rate="900">
+		<duration>60</duration>
 	</profile>
 	<transition type="linear">
 		<duration>0</duration>
 	</transition>
 	<profile type="standard" rate="1000">
-		<duration>16</duration>
-	</profile>
-	<transition type="linear">
-		<duration>0</duration>
-	</transition>
-	<profile type="standard" rate="10000">
-		<duration>16</duration>
-	</profile>
-	<transition type="linear">
-		<duration>0</duration>
-	</transition>
-	<profile type="standard" rate="50000">
-		<duration>16</duration>
-	</profile>
-	<transition type="linear">
-		<duration>0</duration>
-	</transition>
-	<profile type="standard" rate="60000">
-		<duration>16</duration>
-	</profile>
-	<transition type="linear">
-		<duration>0</duration>
-	</transition>
-	<profile type="standard" rate="70000">
-		<duration>16</duration>
-	</profile>
-	<transition type="linear">
-		<duration>0</duration>
-	</transition>
-	<profile type="standard" rate="80000">
-		<duration>16</duration>
-	</profile>
-	<transition type="linear">
-		<duration>0</duration>
-	</transition>
-	<profile type="standard" rate="90000">
-		<duration>16</duration>
-	</profile>
-	<transition type="linear">
-		<duration>0</duration>
-	</transition>
-	<profile type="standard" rate="100000">
-		<duration>20</duration>
+		<duration>60</duration>
 	</profile>
 </variations>
