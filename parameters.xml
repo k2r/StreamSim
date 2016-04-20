@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<parameters>
+	<interval>1</interval>
+	<executors>8</executors>
+	<threads>256</threads>
+	<sequential>500</sequential>
+</parameters>
