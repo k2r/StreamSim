@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<variations>
+	<profile type="standard" rate="10">
+		<duration>20</duration>
+	</profile>
+	<transition type="linear">
+		<duration>15</duration>
+	</transition>
+	<profile type="standard" rate="5000">
+		<duration>20</duration>
+	</profile>
+	<transition type="exponential">
+		<duration>40</duration>
+	</transition>
+	<profile type="standard" rate="2">
+		<duration>15</duration>
+	</profile>
+	<transition type="exponential">
+		<duration>10</duration>
+	</transition>
+	<profile type="standard" rate="30000">
+		<duration>20</duration>
+	</profile>
+	<transition type="linear">
+		<duration>0</duration>
+	</transition>
+	<profile type="standard" rate="20000">
+		<duration>10</duration>
+	</profile>
+	<transition type="linear">
+		<duration>0</duration>
+	</transition>
+	<profile type="standard" rate="10000">
+		<duration>10</duration>
+	</profile>
+	<transition type="linear">
+		<duration>0</duration>
+	</transition>
+	<profile type="standard" rate="1000">
+		<duration>10</duration>
+	</profile>
+	<transition type="linear">
+		<duration>0</duration>
+	</transition>
+	<profile type="standard" rate="1">
+		<duration>10</duration>
+	</profile>
+</variations>
