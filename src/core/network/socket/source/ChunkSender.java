@@ -4,7 +4,7 @@
 package core.network.socket.source;
 
 import java.io.DataOutputStream;
-import java.io.PrintWriter;
+//import java.io.PrintWriter;
 import java.util.ArrayList;
 //import java.util.Arrays;
 import java.util.concurrent.RecursiveAction;
@@ -18,7 +18,6 @@ import core.element.IElement;
  *
  */
 
-@SuppressWarnings(value = {})
 public class ChunkSender extends RecursiveAction{
 	
 	/**
