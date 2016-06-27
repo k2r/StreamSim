@@ -8,22 +8,15 @@ package core.util.xmlNodes;
  *
  */
 public enum GlobalConfigNodeNames {
-
+	
+	COMMAND("command"),
+	DBHOST("db_host"),
+	DBUSER("db_user"),
+	DBPWD("db_password"),
 	PARAMETERS("parameters"),
-	HOME("bench_home_directory"),
-	SGCONF("stream_generator_conf_file"),
 	NAME("stream_name"),
 	SGPORT("stream_port"),
-	VARIATION("stream_type"),
-	SMCONF("system_monitor_conf_file"),
-	SMPORT("system_monitor_port"),
-	SGHOST("stream_host"),
-	SGHOSTPORT("stream_host_port"),
-	SMHOST("monitor_host"),
-	SMHOSTPORT("monitor_host_port"),
-	NBSUPERVISORS("nb_supervisors"),
-	SIZE("window_size"),
-	STEP("window_step");
+	VARIATION("stream_type");
 	
 	private String name = "";
 	

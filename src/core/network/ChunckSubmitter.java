@@ -4,9 +4,7 @@
 package core.network;
 
 import java.util.ArrayList;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 import core.element.IElement;
 import core.network.rmi.source.RMIStreamSource;
@@ -23,21 +21,17 @@ public class ChunckSubmitter implements Runnable{
 	private IElementStream stream;
 	private final long tickRate;
 	private ArrayList<String> attrNames;
-	//private int maxThreads;
-	//private int maxSeqEmit;
-	private static final Logger logger = LoggerFactory.getLogger(ChunckSubmitter.class);
+	private static final Logger logger = Logger.getLogger("ChunkSubmitter");
 	
 	/**
 	 * 
 	 */
-	public ChunckSubmitter(IElement[] chunk, double rate, IElementStream stream, long tickRate, int maxThreads, int maxSeqEmit) {
+	public ChunckSubmitter(IElement[] chunk, double rate, IElementStream stream, long tickRate) {
 		this.chunk = chunk;
 		this.rate = rate;
 		this.stream = stream;
 		this.tickRate = tickRate;
 		this.attrNames = this.stream.getAttributeNames();
-		//this.maxThreads = maxThreads;
-		//this.maxSeqEmit = maxSeqEmit;
 	}
 
 	/**
@@ -101,18 +95,16 @@ public class ChunckSubmitter implements Runnable{
 	public void run() {
 		long start = System.currentTimeMillis();
 		RMIStreamSource source = (RMIStreamSource)this.getStream().getSource();
-		//ISocketStreamSource source = this.getStream().getSource();
 		try{
 			System.out.println("Rate : " + this.getChunk().length);
 			source.buffer(this.getChunk(), this.attrNames);
-			//source.emit(this.maxThreads, this.maxSeqEmit);
 			long end = System.currentTimeMillis();
 			long remaining = (this.getTickRate() * 1000) - (end - start); //the time remaining after the complete emission
 			if(remaining > 0){
 				Thread.sleep(remaining);
 			}
 		}catch(Exception e){
-			logger.error("Unable to start the ChunkSubmitter process");
+			logger.severe("Unable to start the ChunkSubmitter process");
 		}
 	}
 

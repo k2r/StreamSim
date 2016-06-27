@@ -30,6 +30,10 @@ public class XmlStreamInitParser {
 	private final Document document;
 	
 	/*Stream generator parameters*/
+	private String command;
+	private String dbHost;
+	private String dbUser;
+	private String dbPwd;
 	private String name;
 	private String sgPort;
 	private String variation;
@@ -71,6 +75,62 @@ public class XmlStreamInitParser {
 		return this.document;
 	}
 	
+	/**
+	 * @return the command
+	 */
+	public String getCommand() {
+		return command;
+	}
+
+	/**
+	 * @param command the command to set
+	 */
+	public void setCommand(String command) {
+		this.command = command;
+	}
+
+	/**
+	 * @return the dbHost
+	 */
+	public String getDbHost() {
+		return dbHost;
+	}
+
+	/**
+	 * @param dbHost the dbHost to set
+	 */
+	public void setDbHost(String dbHost) {
+		this.dbHost = dbHost;
+	}
+
+	/**
+	 * @return the dbUser
+	 */
+	public String getDbUser() {
+		return dbUser;
+	}
+
+	/**
+	 * @param dbUser the dbUser to set
+	 */
+	public void setDbUser(String dbUser) {
+		this.dbUser = dbUser;
+	}
+
+	/**
+	 * @return the dbPwd
+	 */
+	public String getDbPwd() {
+		return dbPwd;
+	}
+
+	/**
+	 * @param dbPwd the dbPwd to set
+	 */
+	public void setDbPwd(String dbPwd) {
+		this.dbPwd = dbPwd;
+	}
+
 	/**
 	 * @return the name
 	 */
@@ -172,6 +232,14 @@ public class XmlStreamInitParser {
 	public void initParameters() {
 		Document doc = this.getDocument();
 		final Element parameters = (Element) doc.getElementsByTagName(GlobalConfigNodeNames.PARAMETERS.toString()).item(0);
+		final NodeList command = parameters.getElementsByTagName(GlobalConfigNodeNames.COMMAND.toString());
+		this.setName(command.item(0).getTextContent());
+		final NodeList dbHost = parameters.getElementsByTagName(GlobalConfigNodeNames.DBHOST.toString());
+		this.setName(dbHost.item(0).getTextContent());
+		final NodeList dbUser = parameters.getElementsByTagName(GlobalConfigNodeNames.DBUSER.toString());
+		this.setName(dbUser.item(0).getTextContent());
+		final NodeList dbPwd = parameters.getElementsByTagName(GlobalConfigNodeNames.DBPWD.toString());
+		this.setName(dbPwd.item(0).getTextContent());
 		final NodeList name = parameters.getElementsByTagName(GlobalConfigNodeNames.NAME.toString());
 		this.setName(name.item(0).getTextContent());
 		final NodeList sgport = parameters.getElementsByTagName(GlobalConfigNodeNames.SGPORT.toString());
@@ -180,11 +248,5 @@ public class XmlStreamInitParser {
 		this.setVariation(variation.item(0).getTextContent());
 		final NodeList tickInterval = parameters.getElementsByTagName(NodeNames.TICKINTERVAL.toString());
 		this.setTick_interval(Long.parseLong(tickInterval.item(0).getTextContent()));
-		final NodeList executors = parameters.getElementsByTagName(NodeNames.EXECUTORS.toString());
-		this.setMax_nb_executors(Integer.parseInt(executors.item(0).getTextContent()));
-		final NodeList threads = parameters.getElementsByTagName(NodeNames.NBTHREAD.toString());
-		this.setMax_threads(Integer.parseInt(threads.item(0).getTextContent()));
-		final NodeList sequential = parameters.getElementsByTagName(NodeNames.SEQOPER.toString());
-		this.setMax_seq_emit(Integer.parseInt(sequential.item(0).getTextContent()));
 	}
 }

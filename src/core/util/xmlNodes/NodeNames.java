@@ -23,10 +23,7 @@ public enum NodeNames {
 	LOAD("load"),
 	DURATION("duration"),
 	VALUE("value"),
-	EXECUTORS("executors"),
 	TICKINTERVAL("interval"),
-	NBTHREAD("threads"),
-	SEQOPER("sequential"),
 	PARAM("parameters");
 	
 	private String name = "";
