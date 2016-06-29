@@ -112,4 +112,12 @@ public class Element3<T, U, V> implements IElement3<T, U, V> {
 		return "[Element3 : <" + attrNames.get(0) + ":" + this.getFirstValue() + ";" + attrNames.get(1) + ":" + this.getSecondValue() + ";" + attrNames.get(2) + ":" + this.getThirdValue() + ";@" + this.getTimestamp() + ">]";
 	}
 
+	@SuppressWarnings("rawtypes")
+	@Override
+	public boolean equals(Object obj){
+		Element3 element = (Element3) obj;
+		return (this.getFirstValue() == element.getFirstValue() &&
+				this.getSecondValue() == element.getSecondValue() &&
+				this.getThirdValue() == element.getThirdValue());
+	}
 }

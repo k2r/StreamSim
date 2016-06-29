@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 import core.attribute.IStreamAttribute;
 import core.attribute.type.AttributeType;
@@ -30,6 +31,7 @@ import core.element.element4.IElement4;
 public class JdbcStorageManager {
 
 	private final Connection connection;
+	private static final Logger logger = Logger.getLogger("JdbcStorageManager");
 	
 	public JdbcStorageManager(String dbHost, String dbUser, String dbPassword) throws ClassNotFoundException, SQLException{
 		String jdbcDriver = "com.mysql.jdbc.Driver";
@@ -77,14 +79,14 @@ public class JdbcStorageManager {
 			statement = this.connection.createStatement();
 			statement.executeUpdate(query);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.info("Parameter table has already been created or can not be instanciate");
 		}
 	}
 
 	@SuppressWarnings("unchecked")
 	public <T,U,V,W> void recordStream(String streamName, ArrayList<IStreamAttribute> attributes, HashMap<String, IElement[]> elements){
 		try {
+			this.createStreamTable(streamName, attributes);
 			Integer nbAttributes = attributes.size();
 			Statement statement = this.connection.createStatement();
 			for(String chunkId : elements.keySet()){
@@ -98,16 +100,16 @@ public class JdbcStorageManager {
 					case(1): 	IElement1<T> e1 = (IElement1<T>) element;
 								value1 = e1.getValue();
 								String query1 = "INSERT INTO stream_" + streamName 
-										+ " VALUES(" + chunkId + ", " + value1;
-								statement.addBatch(query1);
+										+ " VALUES('" + chunkId + "', '" + value1 + "')";
+								statement.executeUpdate(query1);
 								break;
 								
 					case(2):	IElement2<T, U> e2 = (IElement2<T, U>) element;
 								value1 = e2.getFirstValue();
 								value2 = e2.getSecondValue();
 								String query2 = "INSERT INTO stream_" + streamName 
-										+ " VALUES(" + chunkId + ", " + value1 + ", " + value2;
-								statement.addBatch(query2);
+										+ " VALUES('" + chunkId + "', '" + value1 + "', '" + value2 + "')";
+								statement.executeUpdate(query2);
 								break;
 								
 					case(3):	IElement3<T, U, V> e3 = (IElement3<T, U, V>) element;
@@ -115,9 +117,9 @@ public class JdbcStorageManager {
 								value2 = e3.getSecondValue();
 								value3 = e3.getThirdValue();
 								String query3 = "INSERT INTO stream_" + streamName 
-										+ " VALUES(" + chunkId + ", " + value1 + ", " + value2
-										+ ", " + value3;
-								statement.addBatch(query3);
+										+ " VALUES('" + chunkId + "', '" + value1 + "', '" + value2
+										+ "', '" + value3 + "')";
+								statement.executeUpdate(query3);
 								break;
 
 					case(4):	IElement4<T, U, V, W> e4 = (IElement4<T, U, V, W>) element;
@@ -126,13 +128,12 @@ public class JdbcStorageManager {
 								value3 = e4.getThirdValue();
 								value4 = e4.getFourthValue();
 								String query4 = "INSERT INTO stream_" + streamName 
-										+ " VALUES(" + chunkId + ", " + value1 + ", " + value2
-										+ ", " + value3 + ", "  + value4;
-								statement.addBatch(query4);
+										+ " VALUES('" + chunkId + "', '" + value1 + "', '" + value2
+										+ "', '" + value3 + "', '"  + value4 + "')";
+								statement.executeUpdate(query4);
 								break;
 					}
 				}
-				statement.executeBatch();
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -141,13 +142,12 @@ public class JdbcStorageManager {
 	}
 	
 	public void recordParameters(String streamName, Integer port, String variation, Long tickDelay){
-		String query = "INSERT INTO parameters VALUES("
-				+ streamName + ", " + port + ", " + variation + ", " + tickDelay + ")";
+		String query = "INSERT INTO parameters VALUES('"
+				+ streamName + "', '" + port + "', '" + variation + "', '" + tickDelay + "')";
 		try {
 			Statement statement = this.connection.createStatement();
 			statement.executeUpdate(query);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
