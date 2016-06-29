@@ -39,11 +39,6 @@ public class XmlStreamInitParser {
 	private String variation;
 	private long tick_interval;
 	
-	/*Stream generator parallelism parameters*/
-	private int max_nb_executors;
-	private int max_threads;
-	private int max_seq_emit;
-	
 	public XmlStreamInitParser(String filename) throws ParserConfigurationException, SAXException, IOException{
 		this.filename = filename;
 		this.factory = DocumentBuilderFactory.newInstance();
@@ -186,60 +181,18 @@ public class XmlStreamInitParser {
 	public void setTick_interval(long tick_interval) {
 		this.tick_interval = tick_interval;
 	}
-	
-	/**
-	 * @return the max_nb_executors
-	 */
-	public int getMax_nb_executors() {
-		return max_nb_executors;
-	}
-
-	/**
-	 * @param max_nb_executors the max_nb_executors to set
-	 */
-	public void setMax_nb_executors(int max_nb_executors) {
-		this.max_nb_executors = max_nb_executors;
-	}
-
-	/**
-	 * @return the max_threads
-	 */
-	public int getMax_threads() {
-		return max_threads;
-	}
-
-	/**
-	 * @param max_threads the max_threads to set
-	 */
-	public void setMax_threads(int max_threads) {
-		this.max_threads = max_threads;
-	}
-
-	/**
-	 * @return the max_seq_emit
-	 */
-	public int getMax_seq_emit() {
-		return max_seq_emit;
-	}
-
-	/**
-	 * @param max_seq_emit the max_seq_emit to set
-	 */
-	public void setMax_seq_emit(int max_seq_oper) {
-		this.max_seq_emit = max_seq_oper;
-	}
-	
+		
 	public void initParameters() {
 		Document doc = this.getDocument();
 		final Element parameters = (Element) doc.getElementsByTagName(GlobalConfigNodeNames.PARAMETERS.toString()).item(0);
 		final NodeList command = parameters.getElementsByTagName(GlobalConfigNodeNames.COMMAND.toString());
-		this.setName(command.item(0).getTextContent());
+		this.setCommand(command.item(0).getTextContent());
 		final NodeList dbHost = parameters.getElementsByTagName(GlobalConfigNodeNames.DBHOST.toString());
-		this.setName(dbHost.item(0).getTextContent());
+		this.setDbHost(dbHost.item(0).getTextContent());
 		final NodeList dbUser = parameters.getElementsByTagName(GlobalConfigNodeNames.DBUSER.toString());
-		this.setName(dbUser.item(0).getTextContent());
+		this.setDbUser(dbUser.item(0).getTextContent());
 		final NodeList dbPwd = parameters.getElementsByTagName(GlobalConfigNodeNames.DBPWD.toString());
-		this.setName(dbPwd.item(0).getTextContent());
+		this.setDbPwd(dbPwd.item(0).getTextContent());
 		final NodeList name = parameters.getElementsByTagName(GlobalConfigNodeNames.NAME.toString());
 		this.setName(name.item(0).getTextContent());
 		final NodeList sgport = parameters.getElementsByTagName(GlobalConfigNodeNames.SGPORT.toString());

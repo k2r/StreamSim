@@ -62,4 +62,11 @@ public class Element1<T> implements IElement1<T> {
 	public String toString(ArrayList<String> attrNames){
 		return "[Element1 : <" + attrNames.get(0) + " :" + this.getValue() + ";@" + this.getTimestamp() + ">]";
 	}
+	
+	@SuppressWarnings("rawtypes")
+	@Override
+	public boolean equals(Object obj){
+		Element1 element = (Element1) obj;
+		return this.getValue() == element.getValue();
+	}
 }

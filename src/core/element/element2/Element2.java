@@ -90,4 +90,12 @@ public class Element2<T, U> implements IElement2<T, U> {
 	public String toString(ArrayList<String> attrNames){
 		return "[Element2 : <" + attrNames.get(0) + ":" + this.getFirstValue() + ";" + attrNames.get(1) + ":" + this.getSecondValue() + ";@" + this.getTimestamp() + ">]";
 	}
+	
+	@SuppressWarnings("rawtypes")
+	@Override
+	public boolean equals(Object obj){
+		Element2 element = (Element2) obj;
+		return (this.getFirstValue() == element.getFirstValue() &&
+				this.getSecondValue() == element.getSecondValue());
+	}
 }

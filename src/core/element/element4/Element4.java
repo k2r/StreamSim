@@ -132,4 +132,13 @@ public class Element4<T, U, V, W> implements IElement4<T, U, V, W> {
 		return "[Element4 : <" + attrNames.get(0) + ":" + this.getFirstValue() + ";" + attrNames.get(1) + ":" + this.getSecondValue() + ";" + attrNames.get(2) + ":" + this.getThirdValue() + ";" + attrNames.get(3) + ":" + this.getFourthValue() + ";@" + this.getTimestamp() + ">]";
 	}
 
+	@SuppressWarnings("rawtypes")
+	@Override
+	public boolean equals(Object obj){
+		Element4 element = (Element4) obj;
+		return (this.getFirstValue() == element.getFirstValue() &&
+				this.getSecondValue() == element.getSecondValue() &&
+				this.getThirdValue() == element.getThirdValue() &&
+				this.getFourthValue() == element.getFourthValue());
+	}
 }
