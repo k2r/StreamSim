@@ -69,11 +69,11 @@ public class RMIStreamSource extends UnicastRemoteObject implements IRMIStreamSo
 		this.attrNames = attrNames;
 	}
 
-	public void buffer(IElement[] chunk, ArrayList<String> attrNames){
+	public void buffer(IElement[] chunk, ArrayList<String> attrNames, int chunkCounter){
 		this.chunk = chunk;
 		this.setAttrNames(attrNames);
 		try {
-			registry.rebind("tuples", (IRMIStreamSource)this);
+			registry.rebind("chunk" + chunkCounter, (IRMIStreamSource)this);
 		} catch (RemoteException e) {
 			System.out.println("Server unable to bind the remote object");
 		}

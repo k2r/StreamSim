@@ -27,6 +27,7 @@ import core.util.XmlStreamInitParser;
  */
 public class MainRMI{
 
+	
 	/**
 	 * @param args
 	 * @throws IOException 
@@ -46,6 +47,7 @@ public class MainRMI{
 		int profile;
 		Long tickDelay = 0L;
 
+		int chunkCounter = 0;
 		IElementStream stream = null;
 		HashMap<String, IElement[]> elements = null;
 		int pSize = 0;
@@ -165,7 +167,8 @@ public class MainRMI{
 					String pChunkKey = "P" + i + "It" + k;
 					IElement[] pElements = elements.get(pChunkKey);
 					ExecutorService executorP = Executors.newCachedThreadPool();
-					Future<?> futureP = executorP.submit(new ChunckSubmitter(pElements, rateP, stream, tickDelay));
+					Future<?> futureP = executorP.submit(new ChunckSubmitter(pElements, rateP, stream, tickDelay, chunkCounter));
+					chunkCounter++;
 					try {
 						futureP.get(tickDelay, TimeUnit.SECONDS);
 					} catch (TimeoutException e) {
@@ -193,8 +196,8 @@ public class MainRMI{
 						String tChunkKey = "T" + j + "It" + l;
 						IElement[] tElements = elements.get(tChunkKey);
 						ExecutorService executorT = Executors.newCachedThreadPool();
-						Future<?> futureT = executorT.submit(new ChunckSubmitter(tElements, rateT, stream, tickDelay));
-
+						Future<?> futureT = executorT.submit(new ChunckSubmitter(tElements, rateT, stream, tickDelay, chunkCounter));
+						chunkCounter++;
 						try {
 							futureT.get(tickDelay, TimeUnit.SECONDS);
 						} catch (TimeoutException e) {
