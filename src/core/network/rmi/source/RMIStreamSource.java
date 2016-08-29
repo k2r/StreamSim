@@ -2,6 +2,7 @@
  * 
  */
 package core.network.rmi.source;
+import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -69,12 +70,12 @@ public class RMIStreamSource extends UnicastRemoteObject implements IRMIStreamSo
 		this.attrNames = attrNames;
 	}
 
-	public void buffer(IElement[] chunk, ArrayList<String> attrNames, int chunkCounter){
+	public void buffer(IElement[] chunk, ArrayList<String> attrNames){
 		this.chunk = chunk;
 		this.setAttrNames(attrNames);
 		try {
-			registry.rebind("chunk" + chunkCounter, (IRMIStreamSource)this);
-		} catch (RemoteException e) {
+			registry.bind("tuples", (IRMIStreamSource)this);
+		} catch (RemoteException | AlreadyBoundException e) {
 			System.out.println("Server unable to bind the remote object");
 		}
 	}

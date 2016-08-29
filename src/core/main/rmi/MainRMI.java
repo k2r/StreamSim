@@ -47,7 +47,6 @@ public class MainRMI{
 		int profile;
 		Long tickDelay = 0L;
 
-		int chunkCounter = 0;
 		IElementStream stream = null;
 		HashMap<String, IElement[]> elements = null;
 		int pSize = 0;
@@ -167,17 +166,17 @@ public class MainRMI{
 					String pChunkKey = "P" + i + "It" + k;
 					IElement[] pElements = elements.get(pChunkKey);
 					ExecutorService executorP = Executors.newCachedThreadPool();
-					Future<?> futureP = executorP.submit(new ChunckSubmitter(pElements, rateP, stream, tickDelay, chunkCounter));
-					chunkCounter++;
+					Future<?> futureP = executorP.submit(new ChunckSubmitter(pElements, rateP, stream, tickDelay));
 					try {
 						futureP.get(tickDelay, TimeUnit.SECONDS);
 					} catch (TimeoutException e) {
 						futureP.cancel(true);
 					} catch (ExecutionException e) {
 						futureP.cancel(true);
+						k = (int) (k - tickDelay);
 					}
 					executorP.shutdownNow();
-				}    
+				}
 				i++;
 
 				if(j < tSize && nextP < pSize){
@@ -196,14 +195,14 @@ public class MainRMI{
 						String tChunkKey = "T" + j + "It" + l;
 						IElement[] tElements = elements.get(tChunkKey);
 						ExecutorService executorT = Executors.newCachedThreadPool();
-						Future<?> futureT = executorT.submit(new ChunckSubmitter(tElements, rateT, stream, tickDelay, chunkCounter));
-						chunkCounter++;
+						Future<?> futureT = executorT.submit(new ChunckSubmitter(tElements, rateT, stream, tickDelay));
 						try {
 							futureT.get(tickDelay, TimeUnit.SECONDS);
 						} catch (TimeoutException e) {
 							futureT.cancel(true);
 						} catch (ExecutionException e) {
 							futureT.cancel(true);
+							l = (int) (l - tickDelay);
 						}
 						executorT.shutdownNow();
 					}

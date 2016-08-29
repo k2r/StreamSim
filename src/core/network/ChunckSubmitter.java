@@ -21,19 +21,17 @@ public class ChunckSubmitter implements Runnable{
 	private IElementStream stream;
 	private final long tickRate;
 	private ArrayList<String> attrNames;
-	private int chunkCounter;
 	private static final Logger logger = Logger.getLogger("ChunkSubmitter");
 	
 	/**
 	 * 
 	 */
-	public ChunckSubmitter(IElement[] chunk, double rate, IElementStream stream, long tickRate, int chunkCounter) {
+	public ChunckSubmitter(IElement[] chunk, double rate, IElementStream stream, long tickRate) {
 		this.chunk = chunk;
 		this.rate = rate;
 		this.stream = stream;
 		this.tickRate = tickRate;
 		this.attrNames = this.stream.getAttributeNames();
-		this.chunkCounter = chunkCounter;
 	}
 
 	/**
@@ -99,7 +97,7 @@ public class ChunckSubmitter implements Runnable{
 		RMIStreamSource source = (RMIStreamSource)this.getStream().getSource();
 		try{
 			System.out.println("Rate : " + this.getChunk().length);
-			source.buffer(this.getChunk(), this.attrNames, this.chunkCounter);
+			source.buffer(this.getChunk(), this.attrNames);
 			long end = System.currentTimeMillis();
 			long remaining = (this.getTickRate() * 1000) - (end - start); //the time remaining after the complete emission
 			if(remaining > 0){
