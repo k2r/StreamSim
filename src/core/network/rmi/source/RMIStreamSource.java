@@ -82,7 +82,7 @@ public class RMIStreamSource extends UnicastRemoteObject implements IRMIStreamSo
 				Thread.sleep(1000);
 				this.buffer(chunk, attrNames);
 			} catch (InterruptedException e1) {
-				e1.printStackTrace();
+				System.out.println("Waiting for client acknowlegment before sending new tuples...");
 			}
 			
 		}

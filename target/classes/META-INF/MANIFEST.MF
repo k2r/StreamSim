@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-Built-By: Roland
-Class-Path: lib/mysql-connector-java-5.1.6.jar lib/mockito-all-1.9.5.j
- ar
-Build-Jdk: 1.8.0_101
-Created-By: Maven Integration for Eclipse
-Main-Class: core.main.rmi.MainRMI
-
