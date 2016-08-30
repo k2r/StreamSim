@@ -34,6 +34,7 @@ public class MainRMIClient {
 				IRMIStreamSource stub = (IRMIStreamSource) registry.lookup("tuples");
 				IElement[] istream = stub.getInputStream();
 				ArrayList<String> attrNames = stub.getAttrNames();
+				registry.unbind("tuples");
 				int n = istream.length;
 				for(int i = 0; i < n; i++){
 					System.out.println(istream[i].toString(attrNames));
@@ -47,6 +48,7 @@ public class MainRMIClient {
 		}catch(Exception e){
 			System.out.println("Client exception: " + e.toString());
 			e.printStackTrace();
+			main(args);
 		}
 	}
 

@@ -77,6 +77,14 @@ public class RMIStreamSource extends UnicastRemoteObject implements IRMIStreamSo
 			registry.bind("tuples", (IRMIStreamSource)this);
 		} catch (RemoteException | AlreadyBoundException e) {
 			System.out.println("Server unable to bind the remote object");
+			System.out.println("Re-sending chunk...");
+			try {
+				Thread.sleep(1000);
+				this.buffer(chunk, attrNames);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+			
 		}
 	}
 }
