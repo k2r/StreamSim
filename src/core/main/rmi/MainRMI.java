@@ -162,20 +162,23 @@ public class MainRMI{
 				System.out.println("Profile " + i + "....");
 				double rateP = stream.getCurrentProfile().getNbElementPerTick();
 				long durationP = (long) stream.getCurrentProfile().getDuration();
-				for(int k = 0; k < durationP; k += tickDelay){
+				int k = 0;
+				while(k < durationP){
+				//for(int k = 0; k < durationP; k += tickDelay){
 					String pChunkKey = "P" + i + "It" + k;
 					IElement[] pElements = elements.get(pChunkKey);
 					ExecutorService executorP = Executors.newCachedThreadPool();
 					Future<?> futureP = executorP.submit(new ChunckSubmitter(pElements, rateP, stream, tickDelay));
 					try {
 						futureP.get(tickDelay, TimeUnit.SECONDS);
+						k += tickDelay;
 					} catch (TimeoutException e) {
-						futureP.cancel(true);
+						futureP.cancel(false);
 					} catch (ExecutionException e) {
-						futureP.cancel(true);
-						k = (int) (k - tickDelay);
+						futureP.cancel(false);
 					}
 					executorP.shutdownNow();
+					System.out.println(pChunkKey);
 				}
 				i++;
 
@@ -188,8 +191,10 @@ public class MainRMI{
 					stream.getCurrentTransition().solveTransitionFunc(stream.getCurrentProfile().getNbElementPerTick(), stream.getNextProfile().getNbElementPerTick(), tickDelay);
 
 					long durationT = (long) stream.getCurrentTransition().getDuration();
-
-					for(int l = 0; l < durationT; l += tickDelay){
+					
+					int l = 0;
+					while(l < durationT){
+					//for(int l = 0; l < durationT; l += tickDelay){
 						double rateT = stream.getCurrentTransition().getIntermediateValue();
 
 						String tChunkKey = "T" + j + "It" + l;
@@ -198,13 +203,14 @@ public class MainRMI{
 						Future<?> futureT = executorT.submit(new ChunckSubmitter(tElements, rateT, stream, tickDelay));
 						try {
 							futureT.get(tickDelay, TimeUnit.SECONDS);
+							l += tickDelay;
 						} catch (TimeoutException e) {
-							futureT.cancel(true);
+							futureT.cancel(false);
 						} catch (ExecutionException e) {
-							futureT.cancel(true);
-							l = (int) (l - tickDelay);
+							futureT.cancel(false);
 						}
 						executorT.shutdownNow();
+						System.out.println(tChunkKey);
 					}
 					stream.setTransition(false);
 					j++;
