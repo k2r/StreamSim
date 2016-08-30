@@ -3,13 +3,11 @@
  */
 package test;
 
-import static org.junit.Assert.*;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.junit.Test;
 import org.mockito.Mockito;
 
 import core.attribute.IStreamAttribute;
@@ -17,22 +15,20 @@ import core.attribute.type.AttributeType;
 import core.element.IElement;
 import core.element.element3.Element3;
 import core.jdbc.JdbcStorageManager;
+import junit.framework.TestCase;
 
 /**
  * @author Roland
  *
  */
-public class JdbcStorageManagerTest {
-	
-	
+public class JdbcStorageManagerTestSuite extends TestCase {
 
 	/**
-	 * Test method for {@link core.jdbc.JdbcStorageManager#createStreamTable(java.util.ArrayList)}.
+	 * Test method for {@link core.jdbc.JdbcStorageManager#createStreamTable(java.lang.String, java.util.ArrayList)}.
 	 * @throws SQLException 
 	 * @throws ClassNotFoundException 
 	 */
-	@Test
-	public void testCreateStreamTable() throws SQLException, ClassNotFoundException {
+	public void testCreateStreamTable() throws ClassNotFoundException, SQLException {
 		IStreamAttribute attr1 = Mockito.mock(IStreamAttribute.class);
 		IStreamAttribute attr2 = Mockito.mock(IStreamAttribute.class);
 		IStreamAttribute attr3 = Mockito.mock(IStreamAttribute.class);
@@ -54,11 +50,10 @@ public class JdbcStorageManagerTest {
 	}
 
 	/**
-	 * Test method for {@link core.jdbc.JdbcStorageManager#recordStream(java.lang.String, java.util.HashMap)}.
+	 * Test method for {@link core.jdbc.JdbcStorageManager#recordStream(java.lang.String, java.util.ArrayList, java.util.HashMap)}.
 	 * @throws SQLException 
 	 * @throws ClassNotFoundException 
 	 */
-	@Test
 	public void testRecordStream() throws ClassNotFoundException, SQLException {
 		IStreamAttribute attr1 = Mockito.mock(IStreamAttribute.class);
 		IStreamAttribute attr2 = Mockito.mock(IStreamAttribute.class);
@@ -109,18 +104,16 @@ public class JdbcStorageManagerTest {
 	 * @throws SQLException 
 	 * @throws ClassNotFoundException 
 	 */
-	@Test
 	public void testRecordParameters() throws ClassNotFoundException, SQLException {
 		JdbcStorageManager manager = new JdbcStorageManager("localhost", "root", null);
 		manager.recordParameters("testStream3", 9000, "linear", 1L);
 	}
 
 	/**
-	 * Test method for {@link core.jdbc.JdbcStorageManager#getElements(java.lang.String)}.
+	 * Test method for {@link core.jdbc.JdbcStorageManager#getElements(java.lang.String, java.util.ArrayList)}.
 	 * @throws SQLException 
 	 * @throws ClassNotFoundException 
 	 */
-	@Test
 	public void testGetElements() throws ClassNotFoundException, SQLException {
 		IStreamAttribute attr1 = Mockito.mock(IStreamAttribute.class);
 		IStreamAttribute attr2 = Mockito.mock(IStreamAttribute.class);
@@ -171,23 +164,22 @@ public class JdbcStorageManagerTest {
 		}
 		
 		HashMap<String, IElement[]> actual = manager.getElements("testStream4", attributes);
-		for(String chunkId : actual.keySet()){
+		/*for(String chunkId : actual.keySet()){
 			IElement[] chunk = actual.get(chunkId);
 			System.out.print(chunkId + "= [");
 			for(IElement element : chunk){
 				System.out.println(element.toString(attrNames));
 			}
 			System.out.println("]");
-		}
-		//assertEquals(chunks, actual);
+		}*/
+		assertEquals(chunks, actual);
 	}
 
 	/**
-	 * Test method for {@link core.jdbc.JdbcStorageManager#getPort()}.
+	 * Test method for {@link core.jdbc.JdbcStorageManager#getPort(java.lang.String)}.
 	 * @throws SQLException 
 	 * @throws ClassNotFoundException 
 	 */
-	@Test
 	public void testGetPort() throws ClassNotFoundException, SQLException {
 		JdbcStorageManager manager = new JdbcStorageManager("localhost", "root", null);
 		manager.recordParameters("testStream5", 9005, "linearIncrease", 1L);
@@ -204,7 +196,6 @@ public class JdbcStorageManagerTest {
 	 * @throws SQLException 
 	 * @throws ClassNotFoundException 
 	 */
-	@Test
 	public void testGetVariation() throws ClassNotFoundException, SQLException {
 		JdbcStorageManager manager = new JdbcStorageManager("localhost", "root", null);
 		manager.recordParameters("testStream8", 9000, "linearIncrease", 1L);
@@ -221,7 +212,6 @@ public class JdbcStorageManagerTest {
 	 * @throws SQLException 
 	 * @throws ClassNotFoundException 
 	 */
-	@Test
 	public void testGetTickDelay() throws ClassNotFoundException, SQLException {
 		JdbcStorageManager manager = new JdbcStorageManager("localhost", "root", null);
 		manager.recordParameters("testStream11", 9000, "linear", 1L);

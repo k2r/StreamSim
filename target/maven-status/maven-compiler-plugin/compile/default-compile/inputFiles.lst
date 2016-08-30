@@ -2,6 +2,7 @@ C:\These\D3\Depots\streamsim\src\core\attribute\type\AttributeType.java
 C:\These\D3\Depots\streamsim\src\core\profile\StandardProfile.java
 C:\These\D3\Depots\streamsim\src\core\element\element2\IElement2.java
 C:\These\D3\Depots\streamsim\src\core\util\xmlNodes\NodeNames.java
+C:\These\D3\Depots\streamsim\src\test\JdbcStorageManagerTestSuite.java
 C:\These\D3\Depots\streamsim\src\core\attribute\TextAttribute.java
 C:\These\D3\Depots\streamsim\src\core\element\element3\IElement3.java
 C:\These\D3\Depots\streamsim\src\core\util\XmlStreamParser.java
@@ -13,11 +14,9 @@ C:\These\D3\Depots\streamsim\src\core\element\element4\IElement4.java
 C:\These\D3\Depots\streamsim\src\core\util\xmlNodes\AttributeNames.java
 C:\These\D3\Depots\streamsim\src\core\transition\LinearTransition.java
 C:\These\D3\Depots\streamsim\src\core\util\XmlStreamInitParser.java
-C:\These\D3\Depots\streamsim\src\test\JdbcStorageManagerTest.java
 C:\These\D3\Depots\streamsim\src\core\attribute\IStreamAttribute.java
 C:\These\D3\Depots\streamsim\src\core\profile\type\ProfileType.java
 C:\These\D3\Depots\streamsim\src\core\element\element2\Element2.java
-C:\These\D3\Depots\streamsim\src\test\XmlStreamParserTest.java
 C:\These\D3\Depots\streamsim\src\core\transition\IStreamTransition.java
 C:\These\D3\Depots\streamsim\src\core\element\IElement.java
 C:\These\D3\Depots\streamsim\src\core\network\rmi\source\IRMIStreamSource.java
