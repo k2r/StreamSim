@@ -11,7 +11,7 @@ import core.attribute.type.AttributeType;
  * @author Roland KOTTO KOMBI
  * Implementation of an attribute taking only integer values in a predefined interval
  */
-public class IntAttribute implements IStreamAttribute {
+public class IntAttribute implements IAttribute {
 
 	private String name;
 	private AttributeType type;
@@ -26,7 +26,7 @@ public class IntAttribute implements IStreamAttribute {
 	}
 	
 	/* (non-Javadoc)
-	 * @see core.attribute.IStreamAttribute#getName()
+	 * @see core.attribute.IAttribute#getName()
 	 */
 	@Override
 	public String getName() {
@@ -34,7 +34,7 @@ public class IntAttribute implements IStreamAttribute {
 	}
 
 	/* (non-Javadoc)
-	 * @see core.attribute.IStreamAttribute#getType()
+	 * @see core.attribute.IAttribute#getType()
 	 */
 	@Override
 	public AttributeType getType() {
@@ -42,7 +42,7 @@ public class IntAttribute implements IStreamAttribute {
 	}
 	
 	/* (non-Javadoc)
-	 * @see core.attribute.IStreamAttribute#getReferenceValue()
+	 * @see core.attribute.IAttribute#getReferenceValue()
 	 */
 	@Override
 	public ArrayList<String> getReferenceValue() {
@@ -57,7 +57,7 @@ public class IntAttribute implements IStreamAttribute {
 	}
 	
 	/* (non-Javadoc)
-	 * @see core.attribute.IStreamAttribute#getValueSpace()
+	 * @see core.attribute.IAttribute#getValueSpace()
 	 */
 	@Override
 	public String getValueSpace() {

@@ -6,8 +6,8 @@ package core.stream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import core.attribute.IStreamAttribute;
 import core.element.IElement;
+import core.element.ISchema;
 //import core.network.socket.ISocketStreamSource;
 import core.network.rmi.source.IRMIStreamSource;
 import core.profile.IStreamProfile;
@@ -46,9 +46,9 @@ public interface IElementStream {
 	
 	/**
 	 * 
-	 * @return the list of attribute names belonging to the current stream schema
+	 * @return the schema of the current stream
 	 */
-	public ArrayList<IStreamAttribute> getAttributes();
+	public ISchema getSchema();
 	
 	/**
 	 * 

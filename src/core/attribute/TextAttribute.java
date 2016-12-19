@@ -11,7 +11,7 @@ import core.attribute.type.AttributeType;
  * @author Roland
  * Implementation of an attribute taking only string values of a predefined number of characters
  */
-public class TextAttribute implements IStreamAttribute {
+public class TextAttribute implements IAttribute {
 
 	private String name;
 	private AttributeType type;
@@ -30,7 +30,7 @@ public class TextAttribute implements IStreamAttribute {
 	}
 
 	/* (non-Javadoc)
-	 * @see core.attribute.IStreamAttribute#getName()
+	 * @see core.attribute.IAttribute#getName()
 	 */
 	@Override
 	public String getName() {
@@ -38,7 +38,7 @@ public class TextAttribute implements IStreamAttribute {
 	}
 
 	/* (non-Javadoc)
-	 * @see core.attribute.IStreamAttribute#getType()
+	 * @see core.attribute.IAttribute#getType()
 	 */
 	@Override
 	public AttributeType getType() {
@@ -46,7 +46,7 @@ public class TextAttribute implements IStreamAttribute {
 	}
 
 	/* (non-Javadoc)
-	 * @see core.attribute.IStreamAttribute#getReferenceValue()
+	 * @see core.attribute.IAttribute#getReferenceValue()
 	 */
 	@Override
 	public ArrayList<String> getReferenceValue() {
@@ -57,7 +57,7 @@ public class TextAttribute implements IStreamAttribute {
 	}
 
 	/* (non-Javadoc)
-	 * @see core.attribute.IStreamAttribute#getValueSpace()
+	 * @see core.attribute.IAttribute#getValueSpace()
 	 */
 	@Override
 	public String getValueSpace() {

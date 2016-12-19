@@ -10,10 +10,10 @@ import java.util.HashMap;
 
 import org.mockito.Mockito;
 
-import core.attribute.IStreamAttribute;
+import core.attribute.IAttribute;
 import core.attribute.type.AttributeType;
 import core.element.IElement;
-import core.element.element3.Element3;
+import core.element.StreamElement;
 import core.jdbc.JdbcStorageManager;
 import junit.framework.TestCase;
 
@@ -29,9 +29,9 @@ public class JdbcStorageManagerTestSuite extends TestCase {
 	 * @throws ClassNotFoundException 
 	 */
 	public void testCreateStreamTable() throws ClassNotFoundException, SQLException {
-		IStreamAttribute attr1 = Mockito.mock(IStreamAttribute.class);
-		IStreamAttribute attr2 = Mockito.mock(IStreamAttribute.class);
-		IStreamAttribute attr3 = Mockito.mock(IStreamAttribute.class);
+		IAttribute attr1 = Mockito.mock(IAttribute.class);
+		IAttribute attr2 = Mockito.mock(IAttribute.class);
+		IAttribute attr3 = Mockito.mock(IAttribute.class);
 		
 		Mockito.when(attr1.getName()).thenReturn("attribute1");
 		Mockito.when(attr1.getType()).thenReturn(AttributeType.ENUM);
@@ -40,7 +40,7 @@ public class JdbcStorageManagerTestSuite extends TestCase {
 		Mockito.when(attr3.getName()).thenReturn("attribute3");
 		Mockito.when(attr3.getType()).thenReturn(AttributeType.TEXT);
 		
-		ArrayList<IStreamAttribute> attributes = new ArrayList<>();
+		ArrayList<IAttribute> attributes = new ArrayList<>();
 		attributes.add(attr1);
 		attributes.add(attr2);
 		attributes.add(attr3);
@@ -55,9 +55,9 @@ public class JdbcStorageManagerTestSuite extends TestCase {
 	 * @throws ClassNotFoundException 
 	 */
 	public void testRecordStream() throws ClassNotFoundException, SQLException {
-		IStreamAttribute attr1 = Mockito.mock(IStreamAttribute.class);
-		IStreamAttribute attr2 = Mockito.mock(IStreamAttribute.class);
-		IStreamAttribute attr3 = Mockito.mock(IStreamAttribute.class);
+		IAttribute attr1 = Mockito.mock(IAttribute.class);
+		IAttribute attr2 = Mockito.mock(IAttribute.class);
+		IAttribute attr3 = Mockito.mock(IAttribute.class);
 		
 		Mockito.when(attr1.getName()).thenReturn("attribute1");
 		Mockito.when(attr1.getType()).thenReturn(AttributeType.ENUM);
@@ -66,29 +66,36 @@ public class JdbcStorageManagerTestSuite extends TestCase {
 		Mockito.when(attr3.getName()).thenReturn("attribute3");
 		Mockito.when(attr3.getType()).thenReturn(AttributeType.TEXT);
 		
-		ArrayList<IStreamAttribute> attributes = new ArrayList<>();
+		ArrayList<IAttribute> attributes = new ArrayList<>();
 		attributes.add(attr1);
 		attributes.add(attr2);
 		attributes.add(attr3);
 		
-		IElement element1 = (IElement) new Element3<String, Integer, String>("enum1", 1, "text1", 0.0); 
-		IElement element2 = (IElement) new Element3<String, Integer, String>("enum2", 2, "text2", 0.0); 
-		IElement element3 = (IElement) new Element3<String, Integer, String>("enum3", 3, "text3", 0.0); 
-		IElement element4 = (IElement) new Element3<String, Integer, String>("enum4", 4, "text4", 0.0); 
-		IElement element5 = (IElement) new Element3<String, Integer, String>("enum5", 5, "text5", 0.0); 
-		IElement element6 = (IElement) new Element3<String, Integer, String>("enum6", 6, "text6", 0.0);
+		Object[] values1 = {"enum1", 1, "text1"};
+		Object[] values2 = {"enum2", 2, "text2"};
+		Object[] values3 = {"enum3", 3, "text3"};
+		Object[] values4 = {"enum4", 4, "text4"};
+		Object[] values5 = {"enum5", 5, "text5"};
+		Object[] values6 = {"enum6", 6, "text6"};
+		
+		IElement elem1 = (IElement) new StreamElement(3, 0.0, values1);
+		IElement elem2 = (IElement) new StreamElement(3, 0.0, values2);
+		IElement elem3 = (IElement) new StreamElement(3, 0.0, values3);
+		IElement elem4 = (IElement) new StreamElement(3, 0.0, values4);
+		IElement elem5 = (IElement) new StreamElement(3, 0.0, values5);
+		IElement elem6 = (IElement) new StreamElement(3, 0.0, values6);
 		
 		IElement[] chunk1 = new IElement[1];
-		chunk1[0] = element1;
+		chunk1[0] = elem1;
 		
 		IElement[] chunk2 = new IElement[2];
-		chunk2[0] = element2;
-		chunk2[1] = element3;
+		chunk2[0] = elem2;
+		chunk2[1] = elem3;
 		
 		IElement[] chunk3 = new IElement[3];
-		chunk3[0] = element4;
-		chunk3[1] = element5;
-		chunk3[2] = element6;
+		chunk3[0] = elem4;
+		chunk3[1] = elem5;
+		chunk3[2] = elem6;
 		
 		HashMap<String, IElement[]> chunks = new HashMap<>();
 		chunks.put("P1It1", chunk1);
@@ -115,9 +122,9 @@ public class JdbcStorageManagerTestSuite extends TestCase {
 	 * @throws ClassNotFoundException 
 	 */
 	public void testGetElements() throws ClassNotFoundException, SQLException {
-		IStreamAttribute attr1 = Mockito.mock(IStreamAttribute.class);
-		IStreamAttribute attr2 = Mockito.mock(IStreamAttribute.class);
-		IStreamAttribute attr3 = Mockito.mock(IStreamAttribute.class);
+		IAttribute attr1 = Mockito.mock(IAttribute.class);
+		IAttribute attr2 = Mockito.mock(IAttribute.class);
+		IAttribute attr3 = Mockito.mock(IAttribute.class);
 		
 		Mockito.when(attr1.getName()).thenReturn("attribute1");
 		Mockito.when(attr1.getType()).thenReturn(AttributeType.ENUM);
@@ -126,29 +133,36 @@ public class JdbcStorageManagerTestSuite extends TestCase {
 		Mockito.when(attr3.getName()).thenReturn("attribute3");
 		Mockito.when(attr3.getType()).thenReturn(AttributeType.TEXT);
 		
-		ArrayList<IStreamAttribute> attributes = new ArrayList<>();
+		ArrayList<IAttribute> attributes = new ArrayList<>();
 		attributes.add(attr1);
 		attributes.add(attr2);
 		attributes.add(attr3);
 		
-		IElement element1 = (IElement) new Element3<String, Integer, String>("enum1", 1, "text1", 0.0); 
-		IElement element2 = (IElement) new Element3<String, Integer, String>("enum2", 2, "text2", 0.0); 
-		IElement element3 = (IElement) new Element3<String, Integer, String>("enum3", 3, "text3", 0.0); 
-		IElement element4 = (IElement) new Element3<String, Integer, String>("enum4", 4, "text4", 0.0); 
-		IElement element5 = (IElement) new Element3<String, Integer, String>("enum5", 5, "text5", 0.0); 
-		IElement element6 = (IElement) new Element3<String, Integer, String>("enum6", 6, "text6", 0.0);
+		Object[] values1 = {"enum1", 1, "text1"};
+		Object[] values2 = {"enum2", 2, "text2"};
+		Object[] values3 = {"enum3", 3, "text3"};
+		Object[] values4 = {"enum4", 4, "text4"};
+		Object[] values5 = {"enum5", 5, "text5"};
+		Object[] values6 = {"enum6", 6, "text6"};
+		
+		IElement elem1 = (IElement) new StreamElement(3, 0.0, values1);
+		IElement elem2 = (IElement) new StreamElement(3, 0.0, values2);
+		IElement elem3 = (IElement) new StreamElement(3, 0.0, values3);
+		IElement elem4 = (IElement) new StreamElement(3, 0.0, values4);
+		IElement elem5 = (IElement) new StreamElement(3, 0.0, values5);
+		IElement elem6 = (IElement) new StreamElement(3, 0.0, values6);
 		
 		IElement[] chunk1 = new IElement[1];
-		chunk1[0] = element1;
+		chunk1[0] = elem1;
 		
 		IElement[] chunk2 = new IElement[2];
-		chunk2[0] = element2;
-		chunk2[1] = element3;
+		chunk2[0] = elem2;
+		chunk2[1] = elem3;
 		
 		IElement[] chunk3 = new IElement[3];
-		chunk3[0] = element4;
-		chunk3[1] = element5;
-		chunk3[2] = element6;
+		chunk3[0] = elem4;
+		chunk3[1] = elem5;
+		chunk3[2] = elem6;
 		
 		HashMap<String, IElement[]> chunks = new HashMap<>();
 		chunks.put("P1It1", chunk1);

@@ -110,7 +110,7 @@ public class MainRMI{
 					manager.recordParameters(streamName, port, variation, tickDelay);
 
 					System.out.println("Recording tuples for stream " + streamName + "...");
-					manager.recordStream(streamName, stream.getAttributes(), elements);
+					manager.recordStream(streamName, stream.getSchema().getAttributes(), elements);
 					System.out.println("Stream " + streamName + " recorded successfully!");
 					return;
 				} catch (ClassNotFoundException | SQLException e) {
@@ -141,7 +141,7 @@ public class MainRMI{
 				stream.initializeVariations();
 
 				System.out.println("Loading the stream from the database...");
-				elements = manager.getElements(streamName, stream.getAttributes());
+				elements = manager.getElements(streamName, stream.getSchema().getAttributes());
 
 				pSize = stream.getProfiles().size();
 				tSize = stream.getTransitions().size();
@@ -164,7 +164,6 @@ public class MainRMI{
 				long durationP = (long) stream.getCurrentProfile().getDuration();
 				int k = 0;
 				while(k < durationP){
-				//for(int k = 0; k < durationP; k += tickDelay){
 					String pChunkKey = "P" + i + "It" + k;
 					IElement[] pElements = elements.get(pChunkKey);
 					ExecutorService executorP = Executors.newCachedThreadPool();
@@ -194,7 +193,6 @@ public class MainRMI{
 					
 					int l = 0;
 					while(l < durationT){
-					//for(int l = 0; l < durationT; l += tickDelay){
 						double rateT = stream.getCurrentTransition().getIntermediateValue();
 
 						String tChunkKey = "T" + j + "It" + l;

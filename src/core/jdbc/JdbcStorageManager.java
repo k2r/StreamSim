@@ -12,17 +12,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
-import core.attribute.IStreamAttribute;
+import core.attribute.IAttribute;
 import core.attribute.type.AttributeType;
 import core.element.IElement;
-import core.element.element1.Element1;
-import core.element.element1.IElement1;
-import core.element.element2.Element2;
-import core.element.element2.IElement2;
-import core.element.element3.Element3;
-import core.element.element3.IElement3;
-import core.element.element4.Element4;
-import core.element.element4.IElement4;
+import core.element.StreamElement;
 
 /**
  * @author Roland
@@ -41,11 +34,11 @@ public class JdbcStorageManager {
 		this.createParametersTable();
 	}
 	
-	public void createStreamTable(String streamName, ArrayList<IStreamAttribute> attributes){
+	public void createStreamTable(String streamName, ArrayList<IAttribute> attributes){
 		String query = "CREATE TABLE stream_" + streamName + "(";
 		query += "chunkId VARCHAR(255)";
 		for(int i = 0; i < attributes.size(); i++){
-			IStreamAttribute attribute = attributes.get(i);
+			IAttribute attribute = attributes.get(i);
 			String attrName = attribute.getName();
 			AttributeType attrType = attribute.getType();
 			String attrDbType = "VARCHAR(255)";
@@ -60,7 +53,6 @@ public class JdbcStorageManager {
 			statement = this.connection.createStatement();
 			statement.executeUpdate(query);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -83,8 +75,7 @@ public class JdbcStorageManager {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	public <T,U,V,W> void recordStream(String streamName, ArrayList<IStreamAttribute> attributes, HashMap<String, IElement[]> elements){
+	public void recordStream(String streamName, ArrayList<IAttribute> attributes, HashMap<String, IElement[]> elements){
 		try {
 			this.createStreamTable(streamName, attributes);
 			Integer nbAttributes = attributes.size();
@@ -92,51 +83,16 @@ public class JdbcStorageManager {
 			for(String chunkId : elements.keySet()){
 				IElement[] chunk = elements.get(chunkId);
 				for(IElement element : chunk){
-					T value1;
-					U value2;
-					V value3;
-					W value4;
-					switch(nbAttributes){
-					case(1): 	IElement1<T> e1 = (IElement1<T>) element;
-								value1 = e1.getValue();
-								String query1 = "INSERT INTO stream_" + streamName 
-										+ " VALUES('" + chunkId + "', '" + value1 + "')";
-								statement.executeUpdate(query1);
-								break;
-								
-					case(2):	IElement2<T, U> e2 = (IElement2<T, U>) element;
-								value1 = e2.getFirstValue();
-								value2 = e2.getSecondValue();
-								String query2 = "INSERT INTO stream_" + streamName 
-										+ " VALUES('" + chunkId + "', '" + value1 + "', '" + value2 + "')";
-								statement.executeUpdate(query2);
-								break;
-								
-					case(3):	IElement3<T, U, V> e3 = (IElement3<T, U, V>) element;
-								value1 = e3.getFirstValue();
-								value2 = e3.getSecondValue();
-								value3 = e3.getThirdValue();
-								String query3 = "INSERT INTO stream_" + streamName 
-										+ " VALUES('" + chunkId + "', '" + value1 + "', '" + value2
-										+ "', '" + value3 + "')";
-								statement.executeUpdate(query3);
-								break;
-
-					case(4):	IElement4<T, U, V, W> e4 = (IElement4<T, U, V, W>) element;
-								value1 = e4.getFirstValue();
-								value2 = e4.getSecondValue();
-								value3 = e4.getThirdValue();
-								value4 = e4.getFourthValue();
-								String query4 = "INSERT INTO stream_" + streamName 
-										+ " VALUES('" + chunkId + "', '" + value1 + "', '" + value2
-										+ "', '" + value3 + "', '"  + value4 + "')";
-								statement.executeUpdate(query4);
-								break;
+					Object[] values = element.getValues();
+					String query = "INSERT INTO stream_" + streamName + " VALUES('" + chunkId + "',";
+					for(int i = 0; i < nbAttributes - 1; i++){
+						query += "'" + values[i] + "' ,";
 					}
+					query += "'" + values[nbAttributes - 1] + "')";
+					statement.executeUpdate(query);
 				}
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -152,8 +108,8 @@ public class JdbcStorageManager {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
-	public <T,U,V,W> HashMap<String, IElement[]> getElements(String streamName, ArrayList<IStreamAttribute> attributes){
+
+	public HashMap<String, IElement[]> getElements(String streamName, ArrayList<IAttribute> attributes){
 		int nbAttributes = attributes.size();
 		HashMap<String, IElement[]> elements = new HashMap<>();
 		String query = "SELECT * FROM stream_" + streamName;
@@ -163,37 +119,14 @@ public class JdbcStorageManager {
 			ResultSet results = statement.executeQuery(query);
 			while(results.next()){
 				String chunk = results.getString("chunkId");
-				IElement element = null;
-				ArrayList<Object> values = new ArrayList<>();
-				switch(nbAttributes){
-				case(1): 	for(int i = 0; i < nbAttributes; i++){
-								Object val = (Object) results.getObject(attributes.get(i).getName());
-								values.add(val);
-							}
-							element = (IElement) new Element1<T>((T) values.get(0), System.currentTimeMillis()); 
-							break;
-							
-				case(2):	for(int i = 0; i < nbAttributes; i++){
-								Object val = (Object) results.getObject(attributes.get(i).getName());
-								values.add(val);
-							}
-							element = (IElement) new Element2<T, U>((T) values.get(0), (U) values.get(1), System.currentTimeMillis()); 
-							break;
-							
-				case(3):	for(int i = 0; i < nbAttributes; i++){
-								Object val = (Object) results.getObject(attributes.get(i).getName());
-								values.add(val);
-							}
-							element = (IElement) new Element3<T, U, V>((T) values.get(0), (U) values.get(1), (V) values.get(2), System.currentTimeMillis()); 
-							break;
-
-				case(4):	for(int i = 0; i < nbAttributes; i++){
-								Object val = (Object) results.getObject(attributes.get(i).getName());
-								values.add(val);
-							}
-							element = (IElement) new Element4<T, U, V, W>((T) values.get(0), (U) values.get(1), (V) values.get(2), (W) values.get(3),  System.currentTimeMillis()); 
-							break;
+				
+				Object[] values = new Object[nbAttributes];
+				for(int i = 0; i < nbAttributes; i++){
+					Object value = (Object) results.getObject(attributes.get(i).getName());
+					values[i] = value;
 				}
+				IElement element = (IElement) new StreamElement(nbAttributes, (double)System.currentTimeMillis(), values);
+				
 				if(elements.containsKey(chunk)){
 					IElement[] chunkElements = elements.get(chunk);
 					IElement[] update = new IElement[chunkElements.length + 1];
@@ -210,7 +143,6 @@ public class JdbcStorageManager {
 				}
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return elements;
@@ -228,7 +160,6 @@ public class JdbcStorageManager {
 				break;
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return port;
@@ -246,7 +177,6 @@ public class JdbcStorageManager {
 				break;
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return variation;
@@ -264,7 +194,6 @@ public class JdbcStorageManager {
 				break;
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return tickDelay;

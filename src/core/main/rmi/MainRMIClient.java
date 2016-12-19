@@ -46,8 +46,8 @@ public class MainRMIClient {
 				}
             }
 		}catch(Exception e){
-			System.out.println("Client exception: " + e.toString());
-			e.printStackTrace();
+			System.out.println("Waiting for stream items on host" + host + " port " + port + "...");
+			Thread.sleep(1000);
 			main(args);
 		}
 	}
