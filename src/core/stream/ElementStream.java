@@ -12,17 +12,12 @@ import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 
-import core.attribute.IStreamAttribute;
+import core.attribute.IAttribute;
 import core.attribute.type.AttributeType;
 import core.element.IElement;
-import core.element.element1.Element1;
-import core.element.element1.IElement1;
-import core.element.element2.Element2;
-import core.element.element2.IElement2;
-import core.element.element3.Element3;
-import core.element.element3.IElement3;
-import core.element.element4.Element4;
-import core.element.element4.IElement4;
+import core.element.ISchema;
+import core.element.StreamElement;
+import core.element.StreamSchema;
 import core.network.rmi.source.IRMIStreamSource;
 import core.network.rmi.source.RMIStreamSource;
 //import core.network.socket.source.ISocketStreamSource;
@@ -40,7 +35,7 @@ public class ElementStream implements IElementStream {
 	private int port;
 	private Path schemaPath;
 	private Path varPath;
-	private ArrayList<IStreamAttribute> attributes;
+	private ISchema schema;
 	private ArrayList<IStreamProfile> profiles;
 	private ArrayList<IStreamTransition> transitions;
 	private IStreamProfile currentProfile;
@@ -97,7 +92,7 @@ public class ElementStream implements IElementStream {
 	public void initializeSchema() {
 		try {
 			XmlStreamParser parser = new XmlStreamParser(this.schemaPath.toString());
-			this.attributes = parser.getStreamAttributes();
+			this.schema = new StreamSchema(parser.getStreamAttributes());
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			e.printStackTrace();
 		}
@@ -107,8 +102,8 @@ public class ElementStream implements IElementStream {
 	 * @see core.stream.IElementStream#getAttributes()
 	 */
 	@Override
-	public ArrayList<IStreamAttribute> getAttributes() {
-		return this.attributes;
+	public ISchema getSchema() {
+		return this.schema;
 	}
 
 	/* (non-Javadoc)
@@ -117,7 +112,7 @@ public class ElementStream implements IElementStream {
 	@Override
 	public String getAttributeType(String attributeName) {
 		String result = null;
-		ArrayList<IStreamAttribute> attributes = this.getAttributes();
+		ArrayList<IAttribute> attributes = this.schema.getAttributes();
 		int n = attributes.size();
 		for (int i = 0; i < n; i++){
 			String name = attributes.get(i).getName();
@@ -134,7 +129,7 @@ public class ElementStream implements IElementStream {
 	@Override
 	public ArrayList<String> getReferenceValue(String attributeName) {
 		ArrayList<String> result = null;
-		ArrayList<IStreamAttribute> attributes = this.getAttributes();
+		ArrayList<IAttribute> attributes = this.schema.getAttributes();
 		int n = attributes.size();
 		for (int i = 0; i < n; i++){
 			String name = attributes.get(i).getName();
@@ -151,7 +146,7 @@ public class ElementStream implements IElementStream {
 	@Override
 	public String getValueSpace(String attributeName) {
 		String result = null;
-		ArrayList<IStreamAttribute> attributes = this.getAttributes();
+		ArrayList<IAttribute> attributes = this.schema.getAttributes();
 		int n = attributes.size();
 		for (int i = 0; i < n; i++){
 			String name = attributes.get(i).getName();
@@ -292,7 +287,7 @@ public class ElementStream implements IElementStream {
 	 */
 	@Override
 	public ArrayList<String> getAttributeNames(){
-		ArrayList<IStreamAttribute> attrs = this.getAttributes();
+		ArrayList<IAttribute> attrs = this.schema.getAttributes();
 		ArrayList<String> result = new ArrayList<String>();
 		int n = attrs.size();
 		for(int i = 0; i < n; i++){
@@ -357,7 +352,7 @@ public class ElementStream implements IElementStream {
 	public ArrayList<IElement[]> generateProfile(long tickDelay) {
 		IStreamProfile profile = this.getCurrentProfile();
 		ArrayList<IElement[]> result = new ArrayList<IElement[]>();
-		int nbAttribute = this.getAttributes().size();
+		int nbAttributes = this.schema.getAttributes().size();
 
 		int rate = profile.getNbElementPerTick();
 		double iterations = profile.getDuration() / tickDelay;
@@ -367,175 +362,29 @@ public class ElementStream implements IElementStream {
 
 			IElement[] iter = new IElement[rate];
 			for(int j = 0; j < rate; j++){
-				switch(nbAttribute){
-
-				case(1):  
-					IElement1<Object> e1 = (IElement1<Object>) new Element1<Object>(null, timestamp);
-				for(int k = 0; k < nbAttribute; k++){
-					IStreamAttribute attribute = attributes.get(k);
+				IElement element = (IElement) new StreamElement(nbAttributes,timestamp);
+				for(int k = 0; k < nbAttributes; k++){
+					IAttribute attribute = this.schema.getAttributes().get(k);
 					String type = attribute.getType().toString();
 					if(type.equalsIgnoreCase(AttributeType.INT.toString())){
 						int min = Integer.parseInt(attribute.getReferenceValue().get(0));
 						int max = Integer.parseInt(attribute.getReferenceValue().get(1));
 						int intValue = (Integer)this.getCurrentProfile().getNextValue(min, max, null, type);
-						e1.setValue((Integer)intValue);
+						element.setValue(k, intValue);
 					}
 					if(type.equalsIgnoreCase(AttributeType.TEXT.toString())){
 						int min = Integer.parseInt(attribute.getReferenceValue().get(0));
 						int max = Integer.parseInt(attribute.getReferenceValue().get(1));
 						String textValue = (String)this.getCurrentProfile().getNextValue(min, max, null, type);
-						e1.setValue(textValue);
+						element.setValue(k, textValue);
 					}
 					if(type.equalsIgnoreCase(AttributeType.ENUM.toString())){
 						ArrayList<String> vals = attribute.getReferenceValue();
 						String enumValue = (String)this.getCurrentProfile().getNextValue(0, 0, vals, type);
-						e1.setValue(enumValue);
+						element.setValue(k, enumValue);
 					}
 				}
-				iter[j] = (IElement) e1;	
-				break;				
-				case(2): 
-					IElement2<Object,Object> e2 = (IElement2<Object,Object>) new Element2<Object, Object>(null, null, timestamp);
-				for(int k = 0; k < nbAttribute; k++){
-					IStreamAttribute attribute = attributes.get(k);
-					String type = attribute.getType().toString();
-					if(type.equalsIgnoreCase(AttributeType.INT.toString())){
-						int min = Integer.parseInt(attribute.getReferenceValue().get(0));
-						int max = Integer.parseInt(attribute.getReferenceValue().get(1));
-						int intValue = (Integer)this.getCurrentProfile().getNextValue(min, max, null, type);
-						switch(k){
-						case(0): 
-							e2.setFirstValue((Integer)intValue);
-						case(1):
-							e2.setSecondValue((Integer)intValue);
-						}
-
-					}
-					if(type.equalsIgnoreCase(AttributeType.TEXT.toString())){
-						int min = Integer.parseInt(attribute.getReferenceValue().get(0));
-						int max = Integer.parseInt(attribute.getReferenceValue().get(1));
-						String textValue = (String)this.getCurrentProfile().getNextValue(min, max, null, type);
-						switch(k){
-						case(0): 
-							e2.setFirstValue((String)textValue);
-						case(1):
-							e2.setSecondValue((String)textValue);
-						}
-					}
-					if(type.equalsIgnoreCase(AttributeType.ENUM.toString())){
-						ArrayList<String> vals = attribute.getReferenceValue();
-						String enumValue = (String)this.getCurrentProfile().getNextValue(0, 0, vals, type);
-						switch(k){
-						case(0): 
-							e2.setFirstValue((String)enumValue);
-						case(1):
-							e2.setSecondValue((String)enumValue);
-						}
-					}
-				}
-				iter[j] = (IElement) e2;
-				break;
-				case(3): 
-					IElement3<Object,Object,Object> e3 = (IElement3<Object,Object,Object>) new Element3<Object,Object,Object>(null, null, null, timestamp);
-				for(int k = 0; k < nbAttribute; k++){
-					IStreamAttribute attribute = attributes.get(k);
-					String type = attribute.getType().toString();
-					if(type.equalsIgnoreCase(AttributeType.INT.toString())){
-						int min = Integer.parseInt(attribute.getReferenceValue().get(0));
-						int max = Integer.parseInt(attribute.getReferenceValue().get(1));
-						int intValue = (Integer)this.getCurrentProfile().getNextValue(min, max, null, type);
-						switch(k){
-						case(0): 
-							e3.setFirstValue((Integer)intValue);
-						case(1):
-							e3.setSecondValue((Integer)intValue);
-						case(2):
-							e3.setThirdValue((Integer)intValue);
-						}
-
-					}
-					if(type.equalsIgnoreCase(AttributeType.TEXT.toString())){
-						int min = Integer.parseInt(attribute.getReferenceValue().get(0));
-						int max = Integer.parseInt(attribute.getReferenceValue().get(1));
-						String textValue = (String)this.getCurrentProfile().getNextValue(min, max, null, type);
-						switch(k){
-						case(0): 
-							e3.setFirstValue((String)textValue);
-						case(1):
-							e3.setSecondValue((String)textValue);
-						case(2):
-							e3.setThirdValue((String)textValue);
-						}
-					}
-					if(type.equalsIgnoreCase(AttributeType.ENUM.toString())){
-						ArrayList<String> vals = attribute.getReferenceValue();
-						String enumValue = (String)this.getCurrentProfile().getNextValue(0, 0, vals, type);
-						switch(k){
-						case(0): 
-							e3.setFirstValue((String)enumValue);
-						case(1):
-							e3.setSecondValue((String)enumValue);
-						case(2):
-							e3.setThirdValue((String)enumValue);
-						}
-					}
-				}
-				iter[j] = (IElement) e3;
-				break;
-				case(4): 
-					IElement4<Object,Object,Object,Object> e4 = (IElement4<Object,Object,Object,Object>) new Element4<Object,Object,Object,Object>(null, null, null, null, timestamp);
-				for(int k = 0; k < nbAttribute; k++){
-					IStreamAttribute attribute = attributes.get(k);
-					String type = attribute.getType().toString();
-					if(type.equalsIgnoreCase(AttributeType.INT.toString())){
-						int min = Integer.parseInt(attribute.getReferenceValue().get(0));
-						int max = Integer.parseInt(attribute.getReferenceValue().get(1));
-						int intValue = (Integer)this.getCurrentProfile().getNextValue(min, max, null, type);
-						switch(k){
-						case(0): 
-							e4.setFirstValue((Integer)intValue);
-						case(1):
-							e4.setSecondValue((Integer)intValue);
-						case(2):
-							e4.setThirdValue((Integer)intValue);
-						case(3):
-							e4.setFourthValue((Integer)intValue);
-						}
-
-					}
-					if(type.equalsIgnoreCase(AttributeType.TEXT.toString())){
-						int min = Integer.parseInt(attribute.getReferenceValue().get(0));
-						int max = Integer.parseInt(attribute.getReferenceValue().get(1));
-						String textValue = (String)this.getCurrentProfile().getNextValue(min, max, null, type);
-						switch(k){
-						case(0): 
-							e4.setFirstValue((String)textValue);
-						case(1):
-							e4.setSecondValue((String)textValue);
-						case(2):
-							e4.setThirdValue((String)textValue);
-						case(3):
-							e4.setFourthValue((String)textValue);
-						}
-					}
-					if(type.equalsIgnoreCase(AttributeType.ENUM.toString())){
-						ArrayList<String> vals = attribute.getReferenceValue();
-						String enumValue = (String)this.getCurrentProfile().getNextValue(0, 0, vals, type);
-						switch(k){
-						case(0): 
-							e4.setFirstValue((String)enumValue);
-						case(1):
-							e4.setSecondValue((String)enumValue);
-						case(2):
-							e4.setThirdValue((String)enumValue);
-						case(3):
-							e4.setFourthValue((String)enumValue);
-						}
-					}
-				}
-				iter[j] = (IElement) e4;
-				break;
-				}
+				iter[j] = element;
 			}
 			result.add(iter);
 		}
@@ -551,7 +400,7 @@ public class ElementStream implements IElementStream {
 		IStreamProfile former = this.getCurrentProfile();
 		IStreamProfile next = this.getNextProfile();
 		IStreamTransition transition = this.getCurrentTransition();
-		int nbAttribute = this.getAttributes().size();
+		int nbAttributes = this.schema.getAttributes().size();
 
 		transition.solveTransitionFunc(former.getNbElementPerTick(), next.getNbElementPerTick(), tickDelay);
 
@@ -566,176 +415,30 @@ public class ElementStream implements IElementStream {
 			double timestamp = System.currentTimeMillis();
 
 			for(int j = 0; j < rate; j++){
-				switch(nbAttribute){
 
-				case(1):  
-					IElement1<Object> e1 = (IElement1<Object>) new Element1<Object>(null, timestamp);
-				for(int k = 0; k < nbAttribute; k++){
-					IStreamAttribute attribute = attributes.get(k);
+				IElement element = (IElement) new StreamElement(nbAttributes, timestamp);
+				for(int k = 0; k < nbAttributes; k++){
+					IAttribute attribute = this.schema.getAttributes().get(k);
 					String type = attribute.getType().toString();
 					if(type.equalsIgnoreCase(AttributeType.INT.toString())){
 						int min = Integer.parseInt(attribute.getReferenceValue().get(0));
 						int max = Integer.parseInt(attribute.getReferenceValue().get(1));
 						int intValue = (Integer)this.getCurrentProfile().getNextValue(min, max, null, type);
-						e1.setValue((Integer)intValue);
-					}
-					if(type.equalsIgnoreCase(AttributeType.TEXT.toString())){
-						int min = Integer.parseInt(attribute.getReferenceValue().get(0));
-						int max = Integer.parseInt(attribute.getReferenceValue().get(1));
-						String textValue = (String)this.getCurrentProfile().getNextValue(min, max, null, type);;
-						e1.setValue(textValue);
-					}
-					if(type.equalsIgnoreCase(AttributeType.ENUM.toString())){
-						ArrayList<String> vals = attribute.getReferenceValue();
-						String enumValue = (String)this.getCurrentProfile().getNextValue(0, 0, vals, type);
-						e1.setValue(enumValue);
-					}
-				}
-				iter[j] = (IElement) e1;	
-				break;
-
-				case(2): 
-					IElement2<Object,Object> e2 = (IElement2<Object,Object>) new Element2<Object,Object>(null, null, timestamp);
-				for(int k = 0; k < nbAttribute; k++){
-					IStreamAttribute attribute = attributes.get(k);
-					String type = attribute.getType().toString();
-					if(type.equalsIgnoreCase(AttributeType.INT.toString())){
-						int min = Integer.parseInt(attribute.getReferenceValue().get(0));
-						int max = Integer.parseInt(attribute.getReferenceValue().get(1));
-						int intValue = (Integer)this.getCurrentProfile().getNextValue(min, max, null, type);
-						switch(k){
-						case(0): 
-							e2.setFirstValue((Integer)intValue);
-						case(1):
-							e2.setSecondValue((Integer)intValue);
-						}
-
+						element.setValue(k, intValue);
 					}
 					if(type.equalsIgnoreCase(AttributeType.TEXT.toString())){
 						int min = Integer.parseInt(attribute.getReferenceValue().get(0));
 						int max = Integer.parseInt(attribute.getReferenceValue().get(1));
 						String textValue = (String)this.getCurrentProfile().getNextValue(min, max, null, type);
-						switch(k){
-						case(0): 
-							e2.setFirstValue((String)textValue);
-						case(1):
-							e2.setSecondValue((String)textValue);
-						}
+						element.setValue(k, textValue);
 					}
 					if(type.equalsIgnoreCase(AttributeType.ENUM.toString())){
 						ArrayList<String> vals = attribute.getReferenceValue();
 						String enumValue = (String)this.getCurrentProfile().getNextValue(0, 0, vals, type);
-						switch(k){
-						case(0): 
-							e2.setFirstValue((String)enumValue);
-						case(1):
-							e2.setSecondValue((String)enumValue);
-						}
+						element.setValue(k, enumValue);
 					}
 				}
-				iter[j] = (IElement) e2;
-				break;
-				case(3): 
-					IElement3<Object,Object,Object> e3 = (IElement3<Object,Object,Object>) new Element3<Object,Object,Object>(null, null, null, timestamp);
-				for(int k = 0; k < nbAttribute; k++){
-					IStreamAttribute attribute = attributes.get(k);
-					String type = attribute.getType().toString();
-					if(type.equalsIgnoreCase(AttributeType.INT.toString())){
-						int min = Integer.parseInt(attribute.getReferenceValue().get(0));
-						int max = Integer.parseInt(attribute.getReferenceValue().get(1));
-						int intValue = (Integer)this.getCurrentProfile().getNextValue(min, max, null, type);
-						switch(k){
-						case(0): 
-							e3.setFirstValue((Integer)intValue);
-						case(1):
-							e3.setSecondValue((Integer)intValue);
-						case(2):
-							e3.setThirdValue((Integer)intValue);
-						}
-
-					}
-					if(type.equalsIgnoreCase(AttributeType.TEXT.toString())){
-						int min = Integer.parseInt(attribute.getReferenceValue().get(0));
-						int max = Integer.parseInt(attribute.getReferenceValue().get(1));
-						String textValue = (String)this.getCurrentProfile().getNextValue(min, max, null, type);
-						switch(k){
-						case(0): 
-							e3.setFirstValue((String)textValue);
-						case(1):
-							e3.setSecondValue((String)textValue);
-						case(2):
-							e3.setThirdValue((String)textValue);
-						}
-					}
-					if(type.equalsIgnoreCase(AttributeType.ENUM.toString())){
-						ArrayList<String> vals = attribute.getReferenceValue();
-						String enumValue = (String)this.getCurrentProfile().getNextValue(0, 0, vals, type);
-						switch(k){
-						case(0): 
-							e3.setFirstValue((String)enumValue);
-						case(1):
-							e3.setSecondValue((String)enumValue);
-						case(2):
-							e3.setThirdValue((String)enumValue);
-						}
-					}
-				}
-				iter[j] = (IElement) e3;
-				break;
-				case(4):
-					IElement4<Object,Object,Object,Object> e4 = (IElement4<Object,Object,Object,Object>) new Element4<Object,Object,Object,Object>(null, null, null, null, timestamp);
-				for(int k = 0; k < nbAttribute; k++){
-					IStreamAttribute attribute = attributes.get(k);
-					String type = attribute.getType().toString();
-					if(type.equalsIgnoreCase(AttributeType.INT.toString())){
-						int min = Integer.parseInt(attribute.getReferenceValue().get(0));
-						int max = Integer.parseInt(attribute.getReferenceValue().get(1));
-						int intValue = (Integer)this.getCurrentProfile().getNextValue(min, max, null, type);
-						switch(k){
-						case(0): 
-							e4.setFirstValue((Integer)intValue);
-						case(1):
-							e4.setSecondValue((Integer)intValue);
-						case(2):
-							e4.setThirdValue((Integer)intValue);
-						case(3):
-							e4.setFourthValue((Integer)intValue);
-						}
-
-					}
-					if(type.equalsIgnoreCase(AttributeType.TEXT.toString())){
-						int min = Integer.parseInt(attribute.getReferenceValue().get(0));
-						int max = Integer.parseInt(attribute.getReferenceValue().get(1));
-						String textValue = (String)this.getCurrentProfile().getNextValue(min, max, null, type);
-						switch(k){
-						case(0): 
-							e4.setFirstValue((String)textValue);
-						case(1):
-							e4.setSecondValue((String)textValue);
-						case(2):
-							e4.setThirdValue((String)textValue);
-						case(3):
-							e4.setFourthValue((String)textValue);
-						}
-					}
-					if(type.equalsIgnoreCase(AttributeType.ENUM.toString())){
-						ArrayList<String> vals = attribute.getReferenceValue();
-						String enumValue = (String)this.getCurrentProfile().getNextValue(0, 0, vals, type);
-						switch(k){
-						case(0): 
-							e4.setFirstValue((String)enumValue);
-						case(1):
-							e4.setSecondValue((String)enumValue);
-						case(2):
-							e4.setThirdValue((String)enumValue);
-						case(3):
-							e4.setFourthValue((String)enumValue);
-						}
-					}
-				}
-				iter[j] = (IElement) e4;
-				break;
-				}
+				iter[j] = element;
 				nbElements++;
 			}
 			result.add(iter);

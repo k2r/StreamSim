@@ -17,7 +17,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import core.attribute.EnumAttribute;
-import core.attribute.IStreamAttribute;
+import core.attribute.IAttribute;
 import core.attribute.IntAttribute;
 import core.attribute.TextAttribute;
 import core.attribute.type.AttributeType;
@@ -76,7 +76,7 @@ public class XmlStreamParser {
 	 * @param attribute an Element (according to W3C norm) corresponding to a stream attribute
 	 * @return a stream attribute taking values in a defined range of integer values
 	 */
-	public IStreamAttribute getStreamIntAttribute(Element attribute){
+	public IAttribute getStreamIntAttribute(Element attribute){
 		String name  = attribute.getAttribute(AttributeNames.NAME.toString());
 		final NodeList values  = attribute.getElementsByTagName(NodeNames.VALUE.toString());
 		int n = values.getLength();
@@ -93,7 +93,7 @@ public class XmlStreamParser {
 				}
 			}
 		}
-		IStreamAttribute result = (IStreamAttribute) new IntAttribute(name, min, max);
+		IAttribute result = (IAttribute) new IntAttribute(name, min, max);
 		return result;
 	}
 	
@@ -102,7 +102,7 @@ public class XmlStreamParser {
 	 * @param attribute an Element (according to W3C norm) corresponding to a stream attribute
 	 * @return a stream attribute taking random string values of length contained between user defined values 
 	 */
-	public IStreamAttribute getStreamTextAttribute(Element attribute){
+	public IAttribute getStreamTextAttribute(Element attribute){
 		String name = attribute.getAttribute(AttributeNames.NAME.toString());
 		final NodeList values = attribute.getElementsByTagName(NodeNames.VALUE.toString());
 		int n = values.getLength();
@@ -119,7 +119,7 @@ public class XmlStreamParser {
 				}
 			}
 		}
-		IStreamAttribute result = (IStreamAttribute) new TextAttribute(name, min, max);
+		IAttribute result = (IAttribute) new TextAttribute(name, min, max);
 		return result;
 	}
 	
@@ -128,7 +128,7 @@ public class XmlStreamParser {
 	 * @param attribute an Element (according to W3C norm) corresponding to a stream attribute
 	 * @return a stream attribute taking string values on a set of user defined values
 	 */
-	public IStreamAttribute getStreamEnumAttribute(Element attribute){
+	public IAttribute getStreamEnumAttribute(Element attribute){
 		String name = attribute.getAttribute(AttributeNames.NAME.toString());
 		final NodeList values = attribute.getElementsByTagName(NodeNames.VALUE.toString());
 		int n = values.getLength();
@@ -141,7 +141,7 @@ public class XmlStreamParser {
 				}
 			}
 		}
-		IStreamAttribute result = (IStreamAttribute) new EnumAttribute(name, enumVals);
+		IAttribute result = (IAttribute) new EnumAttribute(name, enumVals);
 		return result;
 	}
 	
@@ -149,9 +149,9 @@ public class XmlStreamParser {
 	 * 
 	 * @return the schema of the stream described by the xml file
 	 */
-	public ArrayList<IStreamAttribute> getStreamAttributes() {
+	public ArrayList<IAttribute> getStreamAttributes() {
 		Document doc = this.getDocument();
-		ArrayList<IStreamAttribute> result = new ArrayList<IStreamAttribute>();
+		ArrayList<IAttribute> result = new ArrayList<IAttribute>();
 		final NodeList nodes = doc.getElementsByTagName(NodeNames.ATTRIBUTE.toString());
 		int n = nodes.getLength();
 		for(int i = 0; i < n; i++){

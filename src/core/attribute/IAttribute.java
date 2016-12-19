@@ -11,7 +11,7 @@ import core.attribute.type.AttributeType;
  * @author Roland KOTTO KOMBI
  * Interface representing a stream attribute
  */
-public interface IStreamAttribute {
+public interface IAttribute {
 	
 	/**
 	 * 
