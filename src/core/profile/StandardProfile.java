@@ -93,6 +93,11 @@ public class StandardProfile implements IStreamProfile {
 		return this.nbElementPerTick;
 	}
 	
+	@Override
+	public void setNbElementPerTick(int rate) {
+		this.nbElementPerTick = rate;
+	}
+	
 	/* (non-Javadoc)
 	 * @see core.profile.IStreamProfile#getNextValue()
 	 */
@@ -169,4 +174,6 @@ public class StandardProfile implements IStreamProfile {
 		}
 		return result;
 	}
+
+	
 }

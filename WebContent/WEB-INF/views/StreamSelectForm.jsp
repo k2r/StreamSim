@@ -28,5 +28,12 @@
        </select>
     </p>
     
+    <p>
+    	<label>
+  			<input type="checkbox" value="live" name="live">
+  			Control stream rate with the live board
+		</label>
+    </p>
+    
     <input type="submit" value="load" name="load"/>
 </form>

@@ -34,6 +34,12 @@ public interface IStreamProfile extends Serializable{
 	public int getNbElementPerTick();
 	
 	/**
+	 * Set the number of element to generate at each timestamp
+	 * @param rate the number of element to generate at each timestamp
+	 */
+	public void setNbElementPerTick(int rate);
+	
+	/**
 	 * 
 	 * @param attributeType the type of the attribute to consider
 	 * @param parameters the map containing parameters of the current attribute

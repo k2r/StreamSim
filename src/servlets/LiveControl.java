@@ -4,10 +4,6 @@
 package servlets;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -17,38 +13,39 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import beans.ElementStreamBean;
-import core.profile.IStreamProfile;
-import core.stream.ElementStream;
-import core.transition.IStreamTransition;
+import core.runnable.RunnableStreamEmission;
+import core.stream.IElementStream;
 
 /**
  * @author Roland
  *
  */
-public class Generator extends HttpServlet {
+public class LiveControl extends HttpServlet {
 
 	ServletContext context;
+	private Thread thread;
+	private RunnableStreamEmission emission;
 	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 8800848739710775121L;
+	private static final long serialVersionUID = -7985485027974923235L;
 
 	/**
 	 * 
 	 */
-	public Generator() {
+	public LiveControl() {
 	}
-
+	
 	@Override
 	public void init(ServletConfig config) throws ServletException{
 		super.init(config);
 		this.context = config.getServletContext();
 	}
-	
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		this.getServletContext().getRequestDispatcher("/WEB-INF/Generator.jsp").forward(req, resp);
+		this.getServletContext().getRequestDispatcher("/WEB-INF/LiveControl.jsp").forward(req, resp);
 	}
 	
 	@Override
@@ -57,15 +54,12 @@ public class Generator extends HttpServlet {
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String load = (String) req.getParameter("load");
-		
+		/*String load = (String) req.getParameter("load");
+
 		if(load != null){
-			
-			
 			String streamName = (String) req.getParameter("name");
 			Integer port = Integer.parseInt((String) req.getParameter("port"));
-			String variation = (String) req.getParameter("variation");
-
+			String variation = "no";
 			ElementStreamBean bean = (ElementStreamBean) req.getSession().getAttribute("stream");
 			ElementStream stream;
 			try {
@@ -105,17 +99,55 @@ public class Generator extends HttpServlet {
 				bean.setAttrTypes(attrTypes);
 				bean.setVariations(variations);
 
-				String live = (String) req.getParameter("live");
-				if(live.equalsIgnoreCase("live")){
-					this.getServletContext().getRequestDispatcher("/WEB-INF/LiveControl.jsp").forward(req, resp);
-				}else{
-					this.getServletContext().getRequestDispatcher("/WEB-INF/Generator.jsp").forward(req, resp);
-				}
+				this.getServletContext().getRequestDispatcher("/WEB-INF/LiveControl.jsp").forward(req, resp);
+
 			} catch (URISyntaxException e) {
 				PrintWriter out = resp.getWriter();
 				out.println("Unable to load the stream schema/variation because of " + e);
 				out.println("Please try again with an existing stream");
 			}
+		}*/
+
+		String generate = (String) req.getParameter("generate");
+		if(generate != null){
+			ElementStreamBean bean = (ElementStreamBean) req.getSession().getAttribute("stream");
+			IElementStream stream = bean.getStream();
+
+			Integer rate = Integer.parseInt((String) req.getParameter("rate"));
+			stream.getCurrentProfile().setNbElementPerTick(rate);
+			if(this.thread == null){
+				if(this.emission == null){
+					this.emission = new RunnableStreamEmission(req, bean);
+				}
+				this.thread = new Thread(this.emission);
+				this.thread.start();
+
+				String startMessage = "Emission of the stream " + bean.getName() + " on port " + bean.getPort() + " with variation " + bean.getVariation() + "...";
+				req.setAttribute("start", startMessage);
+			}else{
+				if(this.thread.isAlive()){
+					String stopMessage = "";
+					try {
+						String debugMessage = "Thread found and active";
+						req.setAttribute("debug", debugMessage);
+						this.emission.stopEmission();
+
+						this.thread.join(1000);
+
+						stopMessage = "The emission of the stream " + bean.getName() + " have been stopped properly on port " + bean.getPort() + ".";
+					} catch (InterruptedException e) {
+						stopMessage = "The emission of the stream " + bean.getName() + " have failed because of exception " + e;
+					}
+					req.setAttribute("stop", stopMessage);
+
+				}
+				this.emission = new RunnableStreamEmission(req, bean);
+				this.thread = new Thread(this.emission);
+				this.thread.start();
+				String setMessage = "Restarting the emission of the stream " + bean.getName() + " on port " + bean.getPort() + " with new rate (" + stream.getCurrentProfile().getNbElementPerTick() + " items/s)";
+				req.setAttribute("set", setMessage);
+			}
 		}
+		this.getServletContext().getRequestDispatcher("/WEB-INF/LiveControl.jsp").forward(req, resp);
 	}
 }

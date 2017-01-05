@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<stream>
+	<name>radar</name>
+	<attributes>
+		<attribute type="text" name="registration">
+			<value type="pattern" length="3">[A-Z]</value>
+			<value type="pattern" length="2">[0-9]</value>
+			<value type="pattern" length="2">[A-Z]</value>
+		</attribute>
+		<attribute type="integer" name="speed">
+			<value type="min">10</value>
+			<value type="max">90</value>
+		</attribute>
+		<attribute type="enumerate" name="make">
+			<value type="option">GM</value>
+			<value type="option">TOYOTA</value>
+			<value type="option">NISSAN</value>
+			<value type="option">MITSUBISHI</value>
+			<value type="option">FORD</value>
+			<value type="option">VOLKSWAGEN</value>
+		</attribute>
+		<attribute type="enumerate" name="color">
+			<value type="option">BLUE</value>
+			<value type="option">RED</value>
+			<value type="option">WHITE</value>
+			<value type="option">SILVER</value>
+			<value type="option">BLACK</value>
+			<value type="option">YELLOW</value>
+		</attribute>
+	</attributes>
+</stream>

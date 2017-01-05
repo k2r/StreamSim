@@ -6,8 +6,8 @@
 </servlet>
 
 <servlet>
-	<servlet-name>Loader</servlet-name>
-	<servlet-class>servlets.Loader</servlet-class>
+	<servlet-name>LiveControl</servlet-name>
+	<servlet-class>servlets.LiveControl</servlet-class>
 </servlet>
 
 <servlet>
@@ -21,8 +21,8 @@
 </servlet-mapping>
 
 <servlet-mapping>
-	<servlet-name>Loader</servlet-name>
-	<url-pattern>/loader</url-pattern>
+	<servlet-name>LiveControl</servlet-name>
+	<url-pattern>/livecontrol</url-pattern>
 </servlet-mapping>
 
 <servlet-mapping>
