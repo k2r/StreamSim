@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!-- Configuration file for standalone usage (as a jar) -->
 <parameters>
 	<!--The command to execute
 		PLAY: This command generates a stream according to following parameters and plays it
