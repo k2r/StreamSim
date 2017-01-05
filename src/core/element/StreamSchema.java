@@ -13,6 +13,10 @@ import core.attribute.IAttribute;
  */
 public class StreamSchema implements ISchema {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4234836723733469772L;
 	private ArrayList<IAttribute> attributes;
 	
 	public StreamSchema() {

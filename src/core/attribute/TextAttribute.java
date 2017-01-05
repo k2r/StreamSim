@@ -3,7 +3,7 @@
  */
 package core.attribute;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import core.attribute.type.AttributeType;
 
@@ -13,20 +13,21 @@ import core.attribute.type.AttributeType;
  */
 public class TextAttribute implements IAttribute {
 
-	private String name;
-	private AttributeType type;
-	private int minValue;
-	private int maxValue;
-	
-	
 	/**
 	 * 
 	 */
-	public TextAttribute(String name, int min, int max) {
+	private static final long serialVersionUID = -6172709283043947380L;
+	private String name;
+	private HashMap<String, Object> parameters;
+	
+	public static final String PATTERNS = "patterns";
+	/**
+	 * 
+	 */
+	public TextAttribute(String name, HashMap<Integer, HashMap<String, Integer>> patterns) {
 		this.name = name;
-		this.type = AttributeType.TEXT;
-		this.minValue = min;
-		this.maxValue = max;
+		this.parameters = new HashMap<>();
+		this.parameters.put(PATTERNS, patterns);
 	}
 
 	/* (non-Javadoc)
@@ -42,25 +43,11 @@ public class TextAttribute implements IAttribute {
 	 */
 	@Override
 	public AttributeType getType() {
-		return this.type;
+		return AttributeType.TEXT;
 	}
 
-	/* (non-Javadoc)
-	 * @see core.attribute.IAttribute#getReferenceValue()
-	 */
 	@Override
-	public ArrayList<String> getReferenceValue() {
-		ArrayList<String> result = new ArrayList<String>();
-		result.add(this.minValue + "");
-		result.add(this.maxValue + "");
-		return result;
-	}
-
-	/* (non-Javadoc)
-	 * @see core.attribute.IAttribute#getValueSpace()
-	 */
-	@Override
-	public String getValueSpace() {
-		return "[a-Z]*[0-9]*";
+	public HashMap<String, Object> getParameters() {
+		return this.parameters;
 	}
 }

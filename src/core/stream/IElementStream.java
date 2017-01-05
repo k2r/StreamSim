@@ -3,6 +3,7 @@
  */
 package core.stream;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -17,7 +18,7 @@ import core.transition.IStreamTransition;
  * @author Roland KOTTO KOMBI
  * Interface representing a data stream 
  */
-public interface IElementStream {
+public interface IElementStream extends Serializable{
 	
 	/**
 	 * 
@@ -56,20 +57,6 @@ public interface IElementStream {
 	 * @return the type of the attribute selected
 	 */
 	public String getAttributeType(String attributeName);
-	
-	/**
-	 * 
-	 * @param attributeName the name of the selected attribute
-	 * @return the reference value list of the selected attribute
-	 */
-	public ArrayList<String> getReferenceValue(String attributeName);
-	
-	/**
-	 * 
-	 * @param attributeName the name of the selected attribute
-	 * @return the value space (if the type extends Number or is an finite list of String) of the selected attribute
-	 */
-	public String getValueSpace(String attributeName);
 	
 	/**
 	 * Method extracting the variations defined by the user and initializing profiles and transitions

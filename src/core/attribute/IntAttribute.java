@@ -3,7 +3,7 @@
  */
 package core.attribute;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import core.attribute.type.AttributeType;
 
@@ -13,16 +13,21 @@ import core.attribute.type.AttributeType;
  */
 public class IntAttribute implements IAttribute {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3796245751672878597L;
 	private String name;
-	private AttributeType type;
-	private int minValue;
-	private int maxValue;
+	private HashMap<String, Object> parameters;
+
+	public static final String MIN_PARAM = "min";
+	public static final String MAX_PARAM = "max";
 
 	public IntAttribute(String name, int minValue, int maxValue) {
 		this.name = name;
-		this.type = AttributeType.INT;
-		this.minValue = minValue;
-		this.maxValue = maxValue;
+		this.parameters = new HashMap<>();
+		this.parameters.put(MIN_PARAM, minValue);
+		this.parameters.put(MAX_PARAM, maxValue);
 	}
 	
 	/* (non-Javadoc)
@@ -38,33 +43,13 @@ public class IntAttribute implements IAttribute {
 	 */
 	@Override
 	public AttributeType getType() {
-		return this.type;
+		return AttributeType.INT;
+	}
+
+	@Override
+	public HashMap<String, Object> getParameters() {
+		return this.parameters;
 	}
 	
-	/* (non-Javadoc)
-	 * @see core.attribute.IAttribute#getReferenceValue()
-	 */
-	@Override
-	public ArrayList<String> getReferenceValue() {
-		ArrayList<String> result = new ArrayList<String>();
-		if(this.maxValue == Integer.MIN_VALUE){
-			result.add("random");
-		}else{
-			result.add(this.minValue + "");
-			result.add(this.maxValue + "");
-		}
-		return result;
-	}
 	
-	/* (non-Javadoc)
-	 * @see core.attribute.IAttribute#getValueSpace()
-	 */
-	@Override
-	public String getValueSpace() {
-		if(this.getReferenceValue().get(0).equalsIgnoreCase("random")){
-			return "all integer values";
-		}else{
-			return "[" + this.getReferenceValue().get(0) + ";" + this.getReferenceValue().get(1) + "]";
-		}
-	}
 }

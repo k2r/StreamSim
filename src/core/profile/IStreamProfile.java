@@ -3,15 +3,17 @@
  */
 package core.profile;
 
-import java.util.ArrayList;
+import java.io.Serializable;
+import java.util.HashMap;
 
+import core.attribute.type.AttributeType;
 import core.profile.type.ProfileType;
 
 /**
  * @author Roland KOTTO KOMBI
  * Interface defining a stream profile
  */
-public interface IStreamProfile {
+public interface IStreamProfile extends Serializable{
 
 	/**
 	 * 
@@ -33,11 +35,9 @@ public interface IStreamProfile {
 	
 	/**
 	 * 
-	 * @param min the minimum value that an attribute can take, null if enumerate attribute
-	 * @param max the maximum value that an attribute can take, null if enumerate attribute
-	 * @param enumVals a list of possible values for an enumerate attribute, null if other type of attribute 
-	 * @param type the type of the attribute 
-	 * @return the value of the next element to consider
+	 * @param attributeType the type of the attribute to consider
+	 * @param parameters the map containing parameters of the current attribute
+	 * @return the next value for a given attribute defined by a type and some parameters to generate new values
 	 */
-	public Object getNextValue(int min, int max, ArrayList<String> enumVals, String type);
+	public Object getNextValue(AttributeType attributeType, HashMap<String, Object> parameters);
 }

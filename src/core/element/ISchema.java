@@ -3,6 +3,7 @@
  */
 package core.element;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import core.attribute.IAttribute;
@@ -11,7 +12,7 @@ import core.attribute.IAttribute;
  * @author Roland
  *
  */
-public interface ISchema {
+public interface ISchema extends Serializable{
 
 	/**
 	 * 

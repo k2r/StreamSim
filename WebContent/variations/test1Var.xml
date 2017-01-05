@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<variations>
+	<profile type="standard" rate="5">
+		<duration>5</duration>
+	</profile>
+	<transition type="exponential">
+		<duration>5</duration>
+	</transition>
+	<profile type="standard" rate="15">
+		<duration>10</duration>
+	</profile>
+</variations>

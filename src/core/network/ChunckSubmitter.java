@@ -3,6 +3,7 @@
  */
 package core.network;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
@@ -14,8 +15,12 @@ import core.stream.*;
  * @author Roland
  * Class sending an element of a generated stream through a given stream source
  */
-public class ChunckSubmitter implements Runnable{
+public class ChunckSubmitter implements Runnable, Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7948384213242513390L;
 	private IElement[] chunk;
 	private double rate;
 	private IElementStream stream;
@@ -96,7 +101,7 @@ public class ChunckSubmitter implements Runnable{
 		long start = System.currentTimeMillis();
 		RMIStreamSource source = (RMIStreamSource)this.getStream().getSource();
 		try{
-			System.out.println("Rate : " + this.getChunk().length);
+			logger.info("Rate : " + this.getChunk().length);
 			source.buffer(this.getChunk(), this.attrNames);
 			long end = System.currentTimeMillis();
 			long remaining = (this.getTickRate() * 1000) - (end - start); //the time remaining after the complete emission

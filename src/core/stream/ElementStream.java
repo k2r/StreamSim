@@ -4,16 +4,21 @@
 package core.stream;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
+
+import javax.servlet.ServletContext;
 import javax.xml.parsers.ParserConfigurationException;
+
 import org.xml.sax.SAXException;
 
 import core.attribute.IAttribute;
 import core.attribute.type.AttributeType;
+import core.config.XmlStreamParser;
 import core.element.IElement;
 import core.element.ISchema;
 import core.element.StreamElement;
@@ -24,14 +29,18 @@ import core.network.rmi.source.RMIStreamSource;
 //import core.network.socket.source.SocketStreamSource;
 import core.profile.IStreamProfile;
 import core.transition.IStreamTransition;
-import core.util.XmlStreamParser;
 
 /**
  * @author Roland
  *
  */
-public class ElementStream implements IElementStream {
+public class ElementStream implements IElementStream{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3157381972651298760L;
+	
 	private int port;
 	private Path schemaPath;
 	private Path varPath;
@@ -56,8 +65,16 @@ public class ElementStream implements IElementStream {
 		this.port = port;
 		//this.source = new SocketStreamSource(this.port);
 		this.source = new RMIStreamSource(this.port);
-		this.schemaPath = Paths.get("schemas/" + schema + "Schema.xml");
-		this.varPath = Paths.get("variations/models/" + variation + "Var.xml");
+		this.schemaPath = Paths.get("/schemas/" + schema + "Schema.xml");
+		this.varPath = Paths.get("/variations/models/" + variation + "Var.xml");
+		this.isTransition = false;
+	}
+	
+	public ElementStream(int port, String schema, String variation, ServletContext context) throws IOException, URISyntaxException {
+		this.port = port;
+		this.source = new RMIStreamSource(port);
+		this.schemaPath = Paths.get(context.getRealPath("/schemas/" + schema + "Schema.xml"));
+		this.varPath = Paths.get(context.getRealPath("/variations/models/" + variation + "Var.xml"));
 		this.isTransition = false;
 	}
 
@@ -118,40 +135,6 @@ public class ElementStream implements IElementStream {
 			String name = attributes.get(i).getName();
 			if(name.equalsIgnoreCase(attributeName)){
 				result = attributes.get(i).getType().toString();
-			}
-		}
-		return result;
-	}
-
-	/* (non-Javadoc)
-	 * @see core.stream.IElementStream#getReferenceValue(java.lang.String)
-	 */
-	@Override
-	public ArrayList<String> getReferenceValue(String attributeName) {
-		ArrayList<String> result = null;
-		ArrayList<IAttribute> attributes = this.schema.getAttributes();
-		int n = attributes.size();
-		for (int i = 0; i < n; i++){
-			String name = attributes.get(i).getName();
-			if(name.equalsIgnoreCase(attributeName)){
-				result = attributes.get(i).getReferenceValue();
-			}
-		}
-		return result;
-	}
-
-	/* (non-Javadoc)
-	 * @see core.stream.IElementStream#getValueSpace(java.lang.String)
-	 */
-	@Override
-	public String getValueSpace(String attributeName) {
-		String result = null;
-		ArrayList<IAttribute> attributes = this.schema.getAttributes();
-		int n = attributes.size();
-		for (int i = 0; i < n; i++){
-			String name = attributes.get(i).getName();
-			if(name.equalsIgnoreCase(attributeName)){
-				result = attributes.get(i).getValueSpace();
 			}
 		}
 		return result;
@@ -301,7 +284,7 @@ public class ElementStream implements IElementStream {
 	 */
 	@Override
 	public void generateStream(long tickDelay) {
-		System.out.println("Generating elements for the stream...");
+		logger.info("Generating elements for the stream...");
 		int pSize = this.getProfiles().size();
 		int tSize = this.getTransitions().size();
 		
@@ -318,11 +301,11 @@ public class ElementStream implements IElementStream {
 			for(int k = 0; k < n; k++){
 				String pChunkKey = "P" + i + "It" + k;
 				this.elements.put(pChunkKey, pElements.get(k));
-				System.out.println("Chunk " + k + " of profile " + i + " (key " + pChunkKey + ") generated with " + this.elements.get(pChunkKey).length + " stream elements");
+				logger.fine("Chunk " + k + " of profile " + i + " (key " + pChunkKey + ") generated with " + this.elements.get(pChunkKey).length + " stream elements");
 				numPrElem += this.elements.get(pChunkKey).length;
 			}
 			nbElem += numPrElem;
-			System.out.println("Profile " + i + " generated ("+ numPrElem + " stream elements)...");
+			logger.fine("Profile " + i + " generated ("+ numPrElem + " stream elements)...");
 			if(nextPIndex < pSize && j < tSize){
 				this.setNextProfile(this.getProfiles().get(nextPIndex));
 				this.setCurrentTransition(this.getTransitions().get(j));
@@ -332,17 +315,17 @@ public class ElementStream implements IElementStream {
 				for(int l = 0; l < m; l++){
 					String tChunkKey = "T" + i + "It" + l;
 					this.elements.put(tChunkKey, tElements.get(l));
-					System.out.println("Chunk " + l + " of profile " + j + " (key " + tChunkKey + ") generated with " + this.elements.get(tChunkKey).length + " stream elements");
+					logger.fine("Chunk " + l + " of profile " + j + " (key " + tChunkKey + ") generated with " + this.elements.get(tChunkKey).length + " stream elements");
 					numTrElem += this.elements.get(tChunkKey).length;
 				}
 				nbElem += numTrElem;
-				System.out.println("Transition " + j + " generated ("+ numTrElem + " stream elements)...");
+				logger.fine("Transition " + j + " generated ("+ numTrElem + " stream elements)...");
 			}
 			i++;
 			j++;
 			nextPIndex++;
 		}
-		System.out.println(nbElem + " stream elements generated");
+		logger.info(nbElem + " stream elements generated");
 	}
 
 	/* (non-Javadoc)
@@ -365,22 +348,18 @@ public class ElementStream implements IElementStream {
 				IElement element = (IElement) new StreamElement(nbAttributes,timestamp);
 				for(int k = 0; k < nbAttributes; k++){
 					IAttribute attribute = this.schema.getAttributes().get(k);
+					HashMap<String, Object> parameters = attribute.getParameters();
 					String type = attribute.getType().toString();
 					if(type.equalsIgnoreCase(AttributeType.INT.toString())){
-						int min = Integer.parseInt(attribute.getReferenceValue().get(0));
-						int max = Integer.parseInt(attribute.getReferenceValue().get(1));
-						int intValue = (Integer)this.getCurrentProfile().getNextValue(min, max, null, type);
+						int intValue = (Integer)this.getCurrentProfile().getNextValue(AttributeType.INT, parameters);
 						element.setValue(k, intValue);
 					}
 					if(type.equalsIgnoreCase(AttributeType.TEXT.toString())){
-						int min = Integer.parseInt(attribute.getReferenceValue().get(0));
-						int max = Integer.parseInt(attribute.getReferenceValue().get(1));
-						String textValue = (String)this.getCurrentProfile().getNextValue(min, max, null, type);
+						String textValue = (String)this.getCurrentProfile().getNextValue(AttributeType.TEXT, parameters);
 						element.setValue(k, textValue);
 					}
 					if(type.equalsIgnoreCase(AttributeType.ENUM.toString())){
-						ArrayList<String> vals = attribute.getReferenceValue();
-						String enumValue = (String)this.getCurrentProfile().getNextValue(0, 0, vals, type);
+						String enumValue = (String)this.getCurrentProfile().getNextValue(AttributeType.ENUM, parameters);
 						element.setValue(k, enumValue);
 					}
 				}
@@ -388,7 +367,7 @@ public class ElementStream implements IElementStream {
 			}
 			result.add(iter);
 		}
-		System.out.println("this profile generated " + (iterations * rate) + " stream elements for " + iterations + " ticks");
+		logger.info("this profile has generated " + (iterations * rate) + " stream element(s) for " + iterations + " timetamp(s)");
 		return result;
 	}
 
@@ -420,21 +399,17 @@ public class ElementStream implements IElementStream {
 				for(int k = 0; k < nbAttributes; k++){
 					IAttribute attribute = this.schema.getAttributes().get(k);
 					String type = attribute.getType().toString();
+					HashMap<String, Object> parameters = attribute.getParameters();
 					if(type.equalsIgnoreCase(AttributeType.INT.toString())){
-						int min = Integer.parseInt(attribute.getReferenceValue().get(0));
-						int max = Integer.parseInt(attribute.getReferenceValue().get(1));
-						int intValue = (Integer)this.getCurrentProfile().getNextValue(min, max, null, type);
+						int intValue = (Integer)this.getCurrentProfile().getNextValue(AttributeType.INT, parameters);
 						element.setValue(k, intValue);
 					}
 					if(type.equalsIgnoreCase(AttributeType.TEXT.toString())){
-						int min = Integer.parseInt(attribute.getReferenceValue().get(0));
-						int max = Integer.parseInt(attribute.getReferenceValue().get(1));
-						String textValue = (String)this.getCurrentProfile().getNextValue(min, max, null, type);
+						String textValue = (String)this.getCurrentProfile().getNextValue(AttributeType.TEXT, parameters);
 						element.setValue(k, textValue);
 					}
 					if(type.equalsIgnoreCase(AttributeType.ENUM.toString())){
-						ArrayList<String> vals = attribute.getReferenceValue();
-						String enumValue = (String)this.getCurrentProfile().getNextValue(0, 0, vals, type);
+						String enumValue = (String)this.getCurrentProfile().getNextValue(AttributeType.ENUM, parameters);
 						element.setValue(k, enumValue);
 					}
 				}
@@ -443,7 +418,7 @@ public class ElementStream implements IElementStream {
 			}
 			result.add(iter);
 		}
-		System.out.println("this transition generated " + nbElements + " stream elements for " + iterations + " ticks");
+		logger.info("this transition has generated " + nbElements + " stream element(s) for " + iterations + " timestamp(s)");
 		return result;
 	}
 }

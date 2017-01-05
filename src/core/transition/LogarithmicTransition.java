@@ -11,6 +11,10 @@ import core.transition.type.TransitionType;
  */
 public class LogarithmicTransition implements IStreamTransition {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8913660251802784370L;
 	private TransitionType type;
 	private double duration;
 	private double tickRate;

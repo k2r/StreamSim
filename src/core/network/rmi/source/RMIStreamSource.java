@@ -8,6 +8,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import core.element.IElement;
 
@@ -21,6 +22,7 @@ public class RMIStreamSource extends UnicastRemoteObject implements IRMIStreamSo
 	private IElement[] chunk;
 	private ArrayList<String> attrNames;
 	private Registry registry;
+	private static final Logger logger = Logger.getLogger("RMIStreamSource");
 	
 	public RMIStreamSource(int port) throws RemoteException {
 		super(port);
@@ -76,13 +78,13 @@ public class RMIStreamSource extends UnicastRemoteObject implements IRMIStreamSo
 		try {
 			registry.bind("tuples", (IRMIStreamSource)this);
 		} catch (RemoteException | AlreadyBoundException e) {
-			System.out.println("Server unable to bind the remote object");
-			System.out.println("Re-sending chunk...");
+			logger.info("Server unable to bind the remote object");
+			logger.info("Re-sending chunk...");
 			try {
 				Thread.sleep(1000);
 				this.buffer(chunk, attrNames);
 			} catch (InterruptedException e1) {
-				System.out.println("Waiting for client acknowlegment before sending new tuples...");
+				logger.info("Waiting for client acknowlegment before sending new tuples...");
 			}
 			
 		}

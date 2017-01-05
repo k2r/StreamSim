@@ -14,12 +14,12 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
+import core.config.XmlStreamInitParser;
 import core.element.IElement;
 import core.jdbc.JdbcStorageManager;
 import core.network.ChunckSubmitter;
 import core.stream.ElementStream;
 import core.stream.IElementStream;
-import core.util.XmlStreamInitParser;
 
 /**
  * @author Roland KOTTO KOMBI

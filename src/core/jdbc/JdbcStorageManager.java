@@ -3,6 +3,7 @@
  */
 package core.jdbc;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -21,8 +22,12 @@ import core.element.StreamElement;
  * @author Roland
  *
  */
-public class JdbcStorageManager {
+public class JdbcStorageManager implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6619333306843261347L;
 	private final Connection connection;
 	private static final Logger logger = Logger.getLogger("JdbcStorageManager");
 	

@@ -4,13 +4,15 @@
  */
 package core.transition;
 
+import java.io.Serializable;
+
 import core.transition.type.TransitionType;
 
 /**
  * @author Roland KOTTO KOMBI
  * Interface defining transitions between two stream profiles. 
  */
-public interface IStreamTransition {
+public interface IStreamTransition extends Serializable{
 	
 	/**
 	 * 

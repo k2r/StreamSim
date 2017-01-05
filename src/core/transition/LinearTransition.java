@@ -11,6 +11,10 @@ import core.transition.type.TransitionType;
  */
 public class LinearTransition implements IStreamTransition {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7437997385349359757L;
 	private TransitionType type;
 	private double duration;
 	private double tickRate;

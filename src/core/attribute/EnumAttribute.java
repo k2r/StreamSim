@@ -4,6 +4,7 @@
 package core.attribute;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import core.attribute.type.AttributeType;
 
@@ -12,16 +13,23 @@ import core.attribute.type.AttributeType;
  * Implementation of an attribute taking only predefined string values
  */
 public class EnumAttribute implements IAttribute {
-
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 722319712139830568L;
 	private String name;
-	private ArrayList<String> values;
+	private HashMap<String, Object> parameters;
+
+	public static final String VALUES_PARAM = "values";
 	
 	/**
 	 * 
 	 */
 	public EnumAttribute(String name, ArrayList<String> values) {
 		this.name = name;
-		this.values = values;
+		this.parameters = new HashMap<>();
+		this.parameters.put(VALUES_PARAM, values);
 	}
 
 	/* (non-Javadoc)
@@ -40,26 +48,10 @@ public class EnumAttribute implements IAttribute {
 		return AttributeType.ENUM;
 	}
 
-	/* (non-Javadoc)
-	 * @see core.attribute.IAttribute#getReferenceValue()
-	 */
 	@Override
-	public ArrayList<String> getReferenceValue() {
-		return this.values;
+	public HashMap<String, Object> getParameters() {
+		return this.parameters;
 	}
 
-	/* (non-Javadoc)
-	 * @see core.attribute.IAttribute#getValueSpace()
-	 */
-	@Override
-	public String getValueSpace() {
-		String res = "";
-		ArrayList<String> val = this.getReferenceValue(); 
-		int n = val.size();
-		for(int i = 0; i < n; i++){
-			res += val.get(i);
-			res += ";";
-		}
-		return res;
-	}
+
 }

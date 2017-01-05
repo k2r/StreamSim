@@ -11,6 +11,10 @@ import core.transition.type.TransitionType;
  */
 public class ExponentialTransition implements IStreamTransition {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9010059232809055217L;
 	private TransitionType type;
 	private double duration;
 	private double tickRate;

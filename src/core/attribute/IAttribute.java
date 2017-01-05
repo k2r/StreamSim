@@ -3,7 +3,8 @@
  */
 package core.attribute;
 
-import java.util.ArrayList;
+import java.io.Serializable;
+import java.util.HashMap;
 
 import core.attribute.type.AttributeType;
 
@@ -11,7 +12,7 @@ import core.attribute.type.AttributeType;
  * @author Roland KOTTO KOMBI
  * Interface representing a stream attribute
  */
-public interface IAttribute {
+public interface IAttribute extends Serializable{
 	
 	/**
 	 * 
@@ -27,14 +28,7 @@ public interface IAttribute {
 	
 	/**
 	 * 
-	 * @return the reference value list of the attribute (only if relevant)
+	 * @return the Map containing parameters of the attribute
 	 */
-	public ArrayList<String> getReferenceValue();
-	
-	/**
-	 * 
-	 * @return the value space for the attribute
-	 */
-	public String getValueSpace();
-
+	public HashMap<String, Object> getParameters();
 }
