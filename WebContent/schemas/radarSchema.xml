@@ -3,6 +3,7 @@
 	<name>radar</name>
 	<attributes>
 		<attribute type="text" name="registration">
+			<value type="pattern" length="1">[0-9]</value>
 			<value type="pattern" length="3">[A-Z]</value>
 			<value type="pattern" length="2">[0-9]</value>
 			<value type="pattern" length="2">[A-Z]</value>
@@ -26,6 +27,12 @@
 			<value type="option">SILVER</value>
 			<value type="option">BLACK</value>
 			<value type="option">YELLOW</value>
+		</attribute>
+		<attribute type="enumerate" name="location">
+			<value type="option">NORTH</value>
+			<value type="option">EAST</value>
+			<value type="option">WEST</value>
+			<value type="option">SOUTH</value>
 		</attribute>
 	</attributes>
 </stream>
