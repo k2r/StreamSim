@@ -106,7 +106,7 @@ public class Generator extends HttpServlet {
 				bean.setVariations(variations);
 
 				String live = (String) req.getParameter("live");
-				if(live.equalsIgnoreCase("live")){
+				if(live != null){
 					this.getServletContext().getRequestDispatcher("/WEB-INF/LiveControl.jsp").forward(req, resp);
 				}else{
 					this.getServletContext().getRequestDispatcher("/WEB-INF/Generator.jsp").forward(req, resp);

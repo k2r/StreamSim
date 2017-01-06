@@ -102,7 +102,7 @@ public class ChunckSubmitter implements Runnable, Serializable{
 		RMIStreamSource source = (RMIStreamSource)this.getStream().getSource();
 		try{
 			logger.info("Rate : " + this.getChunk().length);
-			source.buffer(this.getChunk(), this.attrNames);
+			source.cast(this.getChunk(), this.attrNames);
 			long end = System.currentTimeMillis();
 			long remaining = (this.getTickRate() * 1000) - (end - start); //the time remaining after the complete emission
 			if(remaining > 0){

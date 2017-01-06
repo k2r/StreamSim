@@ -82,7 +82,6 @@ public class Emitter extends HttpServlet {
 		}
 		
 		if(restart != null){
-			this.emission.startEmission();
 			if(!this.thread.isAlive()){
 				this.thread = new Thread(this.emission);
 				this.thread.start();

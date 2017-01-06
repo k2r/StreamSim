@@ -5,8 +5,6 @@ package servlets;
 
 import java.io.IOException;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +20,6 @@ import core.stream.IElementStream;
  */
 public class LiveControl extends HttpServlet {
 
-	ServletContext context;
 	private Thread thread;
 	private RunnableStreamEmission emission;
 	
@@ -36,12 +33,6 @@ public class LiveControl extends HttpServlet {
 	 */
 	public LiveControl() {
 	}
-	
-	@Override
-	public void init(ServletConfig config) throws ServletException{
-		super.init(config);
-		this.context = config.getServletContext();
-	}
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -54,60 +45,6 @@ public class LiveControl extends HttpServlet {
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		/*String load = (String) req.getParameter("load");
-
-		if(load != null){
-			String streamName = (String) req.getParameter("name");
-			Integer port = Integer.parseInt((String) req.getParameter("port"));
-			String variation = "no";
-			ElementStreamBean bean = (ElementStreamBean) req.getSession().getAttribute("stream");
-			ElementStream stream;
-			try {
-				stream = new ElementStream(port, streamName, variation, this.context);
-				stream.initializeSchema();
-				stream.initializeVariations();
-
-				ArrayList<String> attributes = stream.getAttributeNames();
-				ArrayList<String> attrTypes = new ArrayList<>();
-				Integer nbAttrs = attributes.size();
-				for(int i = 0; i < nbAttrs; i++){
-					attrTypes.add(stream.getAttributeType(attributes.get(i)));
-				}
-
-				HashMap<String, Double> variations = new HashMap<>();
-				ArrayList<IStreamProfile> profiles = stream.getProfiles();
-				int nbProfiles = profiles.size();
-
-				ArrayList<IStreamTransition> transitions = stream.getTransitions();
-				int nbTransitions = transitions.size();
-
-				for(int i = 0; i < nbProfiles; i++){
-					String profile = "profile" + i;
-					variations.put(profile, profiles.get(i).getDuration());
-				}
-				for(int j = 0; j < nbTransitions; j++){
-					String transition = "transition" + j;
-					variations.put(transition, transitions.get(j).getDuration());
-				}
-
-				bean.setStream(stream);
-				bean.setName(streamName);
-				bean.setPort(port);
-				bean.setNbAttrs(nbAttrs);
-				bean.setVariation(variation);
-				bean.setAttrNames(attributes);
-				bean.setAttrTypes(attrTypes);
-				bean.setVariations(variations);
-
-				this.getServletContext().getRequestDispatcher("/WEB-INF/LiveControl.jsp").forward(req, resp);
-
-			} catch (URISyntaxException e) {
-				PrintWriter out = resp.getWriter();
-				out.println("Unable to load the stream schema/variation because of " + e);
-				out.println("Please try again with an existing stream");
-			}
-		}*/
-
 		String generate = (String) req.getParameter("generate");
 		if(generate != null){
 			ElementStreamBean bean = (ElementStreamBean) req.getSession().getAttribute("stream");

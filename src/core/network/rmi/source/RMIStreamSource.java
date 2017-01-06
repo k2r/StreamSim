@@ -72,7 +72,7 @@ public class RMIStreamSource extends UnicastRemoteObject implements IRMIStreamSo
 		this.attrNames = attrNames;
 	}
 
-	public void buffer(IElement[] chunk, ArrayList<String> attrNames){
+	public void cast(IElement[] chunk, ArrayList<String> attrNames){
 		this.chunk = chunk;
 		this.setAttrNames(attrNames);
 		try {
@@ -82,7 +82,7 @@ public class RMIStreamSource extends UnicastRemoteObject implements IRMIStreamSo
 			logger.info("Re-sending chunk...");
 			try {
 				Thread.sleep(1000);
-				this.buffer(chunk, attrNames);
+				this.cast(chunk, attrNames);
 			} catch (InterruptedException e1) {
 				logger.info("Waiting for client acknowlegment before sending new tuples...");
 			}

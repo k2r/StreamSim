@@ -57,11 +57,14 @@ public class StreamElement implements IElement {
 	 */
 	@Override
 	public String toString(ArrayList<String> attrNames) {
-		String result = "[Element: <";
-		for(Object value : this.values){
-			result += value + ";";
+		int n = attrNames.size();
+		String result = "[Element{ ";
+		for(int i = 0; i < n; i++){
+			String attribute = attrNames.get(i);
+			Object value = this.values[i];
+			result += attribute + ":" + value + ";";
 		}
-		result += ">@" + this.getTimestamp() + "]";
+		result += "}@" + this.getTimestamp() + "]";
 		return result;
 	}
 

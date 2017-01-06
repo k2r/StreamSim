@@ -11,6 +11,11 @@
 </servlet>
 
 <servlet>
+	<servlet-name>Listener</servlet-name>
+	<servlet-class>servlets.Listener</servlet-class>
+</servlet>
+
+<servlet>
 	<servlet-name>Emitter</servlet-name>
 	<servlet-class>servlets.Emitter</servlet-class>
 </servlet>
@@ -23,6 +28,11 @@
 <servlet-mapping>
 	<servlet-name>LiveControl</servlet-name>
 	<url-pattern>/livecontrol</url-pattern>
+</servlet-mapping>
+
+<servlet-mapping>
+	<servlet-name>Listener</servlet-name>
+	<url-pattern>/listener</url-pattern>
 </servlet-mapping>
 
 <servlet-mapping>
