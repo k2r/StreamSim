@@ -4,14 +4,15 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link rel="stylesheet" href="/WEB-INF/css/style.css">
 <title>StreamSim Web Application</title>
 </head>
 <body>
 
-<table>
+<table class="header">
 	<tr>
-		<td>Welcome on the StreamSim Web Application</td>
-		<td><form action="/streamsim/" method="POST"><input type="submit" value="Generate a new stream" name="generate"></form></td>
-		<td><form action="/streamsim/" method="POST"><input type="submit" value="Listen to a stream" name="listen"></form></td>
+		<td class="headerMsg">Welcome on the StreamSim Web Application</td>
+		<td class="headerOpt"><form action="/streamsim/" method="POST"><input type="submit" value="Generate a new stream" name="generate"></form></td>
+		<td class="headerOpt"><form action="/streamsim/" method="POST"><input type="submit" value="Listen to a stream" name="listen"></form></td>
 	</tr>
 </table>

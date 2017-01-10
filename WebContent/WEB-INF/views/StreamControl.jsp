@@ -3,7 +3,7 @@
 
 <table>
 <tr>
-<td><form action="/streamsim/emitter" method="POST"><input type="submit" value="Stop the emission" name="stop"></form></td>
-<td><form action="/streamsim/emitter" method="POST"><input type="submit" value="Restart the emission" name="restart"></form></td>
+	<td class="control"><form action="/streamsim/emitter" method="POST"><input type="submit" value="Stop the emission" name="stop"></form></td>
+	<td class="control"><form action="/streamsim/emitter" method="POST"><input type="submit" value="Restart the emission" name="restart"></form></td>
 </tr>
 </table>

@@ -4,11 +4,11 @@
 
 <jsp:useBean id="stream" class="beans.ElementStreamBean" scope="session" />
 
-<h1>Stream info</h1>
+<h1 class="sectionTitle">Stream info</h1>
 
-<table>
+<table class="infoTab">
 	<tr><td>Attribute</td><td>Type</td></tr>
 	<c:forEach begin="0" end="${stream.nbAttrs}" var="i">
-	<tr><td><c:out value="${stream.attrNames[i]}"></c:out></td><td><c:out value="${stream.attrTypes[i]}"></c:out></td></tr>
+	<tr><td>${stream.attrNames[i]}</td><td>${stream.attrTypes[i]}</td></tr>
 	</c:forEach>
 </table>

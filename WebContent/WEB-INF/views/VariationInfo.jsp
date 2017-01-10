@@ -6,9 +6,9 @@
 
 <h1>Variation info</h1>
 
-<table>
+<table class="infoTab">
 	<tr><td>Variation</td><td>Duration</td></tr>
-	<c:forEach items="${stream.variations}" var="i">
-	<tr><td><c:out value="i"></c:out></td><td><c:out value="${stream.variations[i]}"></c:out></td></tr>
+	<c:forEach items="${stream.variations}" var="variation">
+	<tr><td>${variation}</td><td>${stream.variations[variation]}</td></tr>
 	</c:forEach>
 </table>

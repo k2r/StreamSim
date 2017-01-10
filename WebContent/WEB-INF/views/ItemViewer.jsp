@@ -4,9 +4,9 @@
 
 <jsp:useBean id="listener" class="beans.ListenerBean" scope="session" />
 
-<h1>Last Records</h1>
+<h1 class="sectionTitle">Last Records</h1>
 
-<table>
+<table class="infoTab">
 	<tr><td>Records</td></tr>
 	<c:forEach begin="0" end="${listener.nbItems}" var="i">
 	<tr><td>${listener.items[i]}</td></tr>
