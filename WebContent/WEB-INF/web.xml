@@ -20,6 +20,11 @@
 	<servlet-class>servlets.Emitter</servlet-class>
 </servlet>
 
+<servlet>
+	<servlet-name>Manager</servlet-name>
+	<servlet-class>servlets.Manager</servlet-class>
+</servlet>
+
 <servlet-mapping>
 	<servlet-name>Generator</servlet-name>
 	<url-pattern>/generator</url-pattern>
@@ -38,5 +43,10 @@
 <servlet-mapping>
 	<servlet-name>Emitter</servlet-name>
 	<url-pattern>/emitter</url-pattern>
+</servlet-mapping>
+
+<servlet-mapping>
+	<servlet-name>Manager</servlet-name>
+	<url-pattern>/</url-pattern>
 </servlet-mapping>
 </web-app>

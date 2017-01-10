@@ -59,6 +59,7 @@ public class Listener extends HttpServlet {
 				if(this.listener == null){
 					this.listener = new RunnableStreamListener(bean.getHost(), bean.getPort(), bean.getResource(), bean.getType(), bean.getNbItems());
 				}
+				this.listener.startListener();
 				this.thread = new Thread(this.listener);
 				this.thread.start();
 
@@ -79,6 +80,7 @@ public class Listener extends HttpServlet {
 
 				}
 				this.listener = new RunnableStreamListener(bean.getHost(), bean.getPort(), bean.getResource(), bean.getType(), bean.getNbItems());
+				this.listener.startListener();
 				this.thread = new Thread(this.listener);
 				this.thread.start();
 				String setMessage = "Restarting to listen for updates on host " + bean.getHost() + " port " + bean.getPort() + " for resource " + bean.getResource() + "...";

@@ -4,7 +4,6 @@
 package servlets;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,8 +59,6 @@ public class Generator extends HttpServlet {
 		String load = (String) req.getParameter("load");
 		
 		if(load != null){
-			
-			
 			String streamName = (String) req.getParameter("name");
 			Integer port = Integer.parseInt((String) req.getParameter("port"));
 			String variation = (String) req.getParameter("variation");
@@ -112,9 +109,10 @@ public class Generator extends HttpServlet {
 					this.getServletContext().getRequestDispatcher("/WEB-INF/Generator.jsp").forward(req, resp);
 				}
 			} catch (URISyntaxException e) {
-				PrintWriter out = resp.getWriter();
-				out.println("Unable to load the stream schema/variation because of " + e);
-				out.println("Please try again with an existing stream");
+				String errorMessage = "Unable to load the stream schema/variation because of " + e + "\n";
+				errorMessage += "Please try again with an existing stream";
+				req.setAttribute("error", errorMessage);
+				this.getServletContext().getRequestDispatcher("/WEB-INF/Generator.jsp");
 			}
 		}
 	}

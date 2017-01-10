@@ -9,6 +9,8 @@
 	<jsp:include page="/WEB-INF/views/StreamSelectForm.jsp"></jsp:include> 
 </c:if>
 
+<c:if test="${!empty requestScope.error}"><div>${requestScope.error}</div></c:if>
+
 <c:if test="${!empty param.load}">
 	<jsp:include page="/WEB-INF/views/StreamInfo.jsp"></jsp:include>
 	<jsp:include page="/WEB-INF/views/CommandOptionsForm.jsp"></jsp:include>

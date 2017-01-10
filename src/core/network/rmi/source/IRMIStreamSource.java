@@ -24,4 +24,9 @@ public interface IRMIStreamSource extends Remote, Serializable{
 	 */
 	public IElement[] getInputStream() throws RemoteException;
 
+	/**
+	 * If the current source has created a registry, it is unexported, otherwise nothing
+	 */
+	void releaseRegistry() throws RemoteException;
+
 }

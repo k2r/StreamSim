@@ -65,8 +65,6 @@ public class LiveControl extends HttpServlet {
 				if(this.thread.isAlive()){
 					String stopMessage = "";
 					try {
-						String debugMessage = "Thread found and active";
-						req.setAttribute("debug", debugMessage);
 						this.emission.stopEmission();
 
 						this.thread.join(1000);

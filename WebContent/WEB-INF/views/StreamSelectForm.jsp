@@ -1,12 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <h1>Stream parameters</h1>
 
 <form action="/streamsim/generator" method="POST">
+    
     <p>
-        <label>Stream name</label> : <input type="text" name="name" />
+        <label>Stream name</label> : 
+        <select name="name" >
+			<c:forEach items="${requestScope.schemas}" var="index">
+				<option value="${index}">${index}</option>
+			</c:forEach>
+       </select>
     </p>
     
 	<p>

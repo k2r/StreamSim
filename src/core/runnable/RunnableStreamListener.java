@@ -80,7 +80,6 @@ public class RunnableStreamListener implements Runnable, Serializable {
 							this.inputs.add(allItems.get(lastIndex - i));
 						}
 		            }
-		            Thread.sleep(1000);
 				}catch(Exception e){
 					try {
 						logger.severe("Nothing to retrieve because " + e);
@@ -103,7 +102,6 @@ public class RunnableStreamListener implements Runnable, Serializable {
 							this.inputs.add(allItems.get(lastIndex - i));
 						}
 		            }
-		            Thread.sleep(1000);
 				}catch(Exception e){
 					try {
 						logger.severe("Nothing to retrieve because " + e);

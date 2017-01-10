@@ -13,6 +13,4 @@
 <c:if test="${!empty requestScope.stop}"><div>${requestScope.stop}</div></c:if>
 <c:if test="${!empty requestScope.set}"><div>${requestScope.set}</div></c:if>
 
-<c:if test="${!empty requestScope.debug}"><div>${requestScope.debug}</div></c:if>
-
 <jsp:include page="/WEB-INF/views/Footer.jsp"></jsp:include>

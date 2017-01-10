@@ -49,9 +49,9 @@ public class Emitter extends HttpServlet {
 		
 		if(generate != null){
 			if(this.emission == null){
-				this.emission = new RunnableStreamEmission(req, bean);
-				
+				this.emission = new RunnableStreamEmission(req, bean);	
 			}
+			this.emission.startEmission();
 			this.thread = new Thread(this.emission);
 			this.thread.start();
 			
@@ -61,18 +61,13 @@ public class Emitter extends HttpServlet {
 		
 		String stop = (String) req.getParameter("stop");
 		String restart = (String) req.getParameter("restart");
-		String reset = (String) req.getParameter("reset");
 		
-		if(stop != null || reset != null){
+		if(stop != null || restart != null){
 			if(this.thread != null && this.emission != null){
 				String stopMessage = "";
 				try {
-					String debugMessage = "Thread found and active";
-					req.setAttribute("debug", debugMessage);
 					this.emission.stopEmission();
-					
 					this.thread.join(1000);
-					
 					stopMessage = "The emission of the stream " + bean.getName() + " have been stopped properly on port " + bean.getPort() + ".";
 				} catch (InterruptedException e) {
 					stopMessage = "The emission of the stream " + bean.getName() + " have failed because of exception " + e;
@@ -82,6 +77,7 @@ public class Emitter extends HttpServlet {
 		}
 		
 		if(restart != null){
+			this.emission.startEmission();
 			if(!this.thread.isAlive()){
 				this.thread = new Thread(this.emission);
 				this.thread.start();

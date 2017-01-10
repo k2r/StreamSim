@@ -3,6 +3,7 @@
  */
 package core.network.rmi.source;
 import java.rmi.AlreadyBoundException;
+import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -17,6 +18,11 @@ import core.element.IElement;
  *
  */
 public class RMIStreamSource extends UnicastRemoteObject implements IRMIStreamSource {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7442458055103865656L;
 	
 	private int port;
 	private IElement[] chunk;
@@ -44,10 +50,6 @@ public class RMIStreamSource extends UnicastRemoteObject implements IRMIStreamSo
 		this.port = port;
 	}
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7442458055103865656L;
 	
 	/* (non-Javadoc)
 	 * @see core.network.rmi.IRMISource#getInputStream()
@@ -87,6 +89,15 @@ public class RMIStreamSource extends UnicastRemoteObject implements IRMIStreamSo
 				logger.info("Waiting for client acknowlegment before sending new tuples...");
 			}
 			
+		}
+	}
+	
+	@Override
+	public void releaseRegistry() throws RemoteException{
+		try {
+			UnicastRemoteObject.unexportObject(registry, true);
+		} catch (NoSuchObjectException e) {
+			logger.severe("There is no registry to release on given host/port");
 		}
 	}
 }

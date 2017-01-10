@@ -7,4 +7,11 @@
 <title>StreamSim Web Application</title>
 </head>
 <body>
-<div>header here</div>
+
+<table>
+	<tr>
+		<td>Welcome on the StreamSim Web Application</td>
+		<td><form action="/streamsim/" method="POST"><input type="submit" value="Generate a new stream" name="generate"></form></td>
+		<td><form action="/streamsim/" method="POST"><input type="submit" value="Listen to a stream" name="listen"></form></td>
+	</tr>
+</table>
