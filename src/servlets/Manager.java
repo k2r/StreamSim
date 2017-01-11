@@ -29,7 +29,6 @@ public class Manager extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		this.getServletContext().getRequestDispatcher("/WEB-INF/Index.jsp").forward(req, resp);
 	}
 	
 	@Override
@@ -41,7 +40,7 @@ public class Manager extends HttpServlet {
 		String generate = (String) req.getParameter("generate");
 		String listen = (String) req.getParameter("listen");
 		
-		String page = "/WEB-INF/Index.jsp";
+		String page = "/Index.jsp";
 		
 		if(generate != null){
 			ElementStreamBean stream = (ElementStreamBean) req.getSession().getAttribute("stream");
@@ -56,14 +55,14 @@ public class Manager extends HttpServlet {
 			
 			ArrayList<String> schemas = Manager.getStreamList(this.getServletContext().getRealPath("/schemas"));
 			req.setAttribute("schemas", schemas);
- 			page = "/WEB-INF/Generator.jsp";
+ 			page = "/Generator.jsp";
 		}
 		
 		if(listen != null){
 			ListenerBean listener = (ListenerBean) req.getSession().getAttribute("listener");
 			listener = new ListenerBean();
 			req.getSession().setAttribute("listener", listener);
-			page = "/WEB-INF/Listener.jsp";
+			page = "/Listener.jsp";
 		}
 		this.getServletContext().getRequestDispatcher(page).forward(req, resp);
  	}

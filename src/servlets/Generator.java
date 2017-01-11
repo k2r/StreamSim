@@ -47,7 +47,7 @@ public class Generator extends HttpServlet {
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		this.getServletContext().getRequestDispatcher("/WEB-INF/Generator.jsp").forward(req, resp);
+		this.getServletContext().getRequestDispatcher("/Generator.jsp").forward(req, resp);
 	}
 	
 	@Override
@@ -104,15 +104,15 @@ public class Generator extends HttpServlet {
 
 				String live = (String) req.getParameter("live");
 				if(live != null){
-					this.getServletContext().getRequestDispatcher("/WEB-INF/LiveControl.jsp").forward(req, resp);
+					this.getServletContext().getRequestDispatcher("/LiveControl.jsp").forward(req, resp);
 				}else{
-					this.getServletContext().getRequestDispatcher("/WEB-INF/Generator.jsp").forward(req, resp);
+					this.getServletContext().getRequestDispatcher("/Generator.jsp").forward(req, resp);
 				}
 			} catch (URISyntaxException e) {
 				String errorMessage = "Unable to load the stream schema/variation because of " + e + "\n";
 				errorMessage += "Please try again with an existing stream";
 				req.setAttribute("error", errorMessage);
-				this.getServletContext().getRequestDispatcher("/WEB-INF/Generator.jsp");
+				this.getServletContext().getRequestDispatcher("/Generator.jsp");
 			}
 		}
 	}

@@ -5,7 +5,7 @@
 <h1 class="sectionTitle">Stream parameters</h1>
 
 <form action="/streamsim/generator" method="POST">
-    <table>
+    <table class="form">
     <tr>
         <td><label>Stream name</label>:</td> 
         <td><select name="name" >

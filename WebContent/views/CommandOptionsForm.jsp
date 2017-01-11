@@ -4,7 +4,7 @@
 <h1 class="sectionTitle">Command and Options</h1>
 
 <form action="/streamsim/emitter" method="POST">
-<table>
+<table class="form">
 	<tr>
         <td><label>Command</label>:</td> 
         <td><select name="command" >

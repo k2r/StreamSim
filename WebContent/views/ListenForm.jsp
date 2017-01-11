@@ -5,6 +5,7 @@
     
 <h1 class="sectionTitle">Stream to listen</h1>
 
+<div class="form">
 <form action="/streamsim/listener" method="POST">
 	<table>
     <tr>
@@ -44,3 +45,4 @@
 <form action="/streamsim/listener" method="POST">
 	<input type="submit" value="Stop listening" name="stopListen"/>
 </form>
+</div>

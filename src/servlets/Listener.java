@@ -30,7 +30,7 @@ public class Listener extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		this.getServletContext().getRequestDispatcher("/WEB-INF/Listener.jsp").forward(req, resp);
+		this.getServletContext().getRequestDispatcher("/Listener.jsp").forward(req, resp);
 	}
 	
 	@Override
@@ -105,6 +105,6 @@ public class Listener extends HttpServlet {
 				req.setAttribute("stop", stopMessage);
 			}
 		}
-		this.getServletContext().getRequestDispatcher("/WEB-INF/Listener.jsp").forward(req, resp);
+		this.getServletContext().getRequestDispatcher("/Listener.jsp").forward(req, resp);
 	}
 }

@@ -5,7 +5,7 @@
 
 <div class="sectionTitle">Stream live control</div>
 <form action="/streamsim/livecontrol" method="POST">
-<table>
+<table class="form">
 
 <tr>
 	<td><label>Select a stream output rate</label></td>
