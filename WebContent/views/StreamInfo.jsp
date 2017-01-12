@@ -7,8 +7,8 @@
 <h1 class="sectionTitle">Stream info</h1>
 
 <table class="infoTab">
-	<tr><td>Attribute</td><td>Type</td></tr>
+	<tr><td class="infoHeader">Attribute</td><td class="infoHeader">Type</td></tr>
 	<c:forEach begin="0" end="${stream.nbAttrs}" var="i">
-	<tr><td>${stream.attrNames[i]}</td><td>${stream.attrTypes[i]}</td></tr>
+	<tr><td class="infoCell">${stream.attrNames[i]}</td><td class="infoCell">${stream.attrTypes[i]}</td></tr>
 	</c:forEach>
 </table>

@@ -89,7 +89,7 @@ public class RunnableStreamListener implements Runnable, Serializable {
 					}
 				}
 			}
-			if(this.type.equalsIgnoreCase("INFO")){
+			if(this.type.equalsIgnoreCase("RAW")){
 				try {
 		            Registry registry = LocateRegistry.getRegistry(host, port);
 		            if(registry != null){

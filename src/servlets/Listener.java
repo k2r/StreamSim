@@ -39,6 +39,14 @@ public class Listener extends HttpServlet {
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String refresh = (String) req.getParameter("refreshListener");
+		
+		if(refresh != null){
+			ListenerBean listener = (ListenerBean) req.getSession().getAttribute("listener");
+			listener = new ListenerBean();
+			req.getSession().setAttribute("listener", listener);
+		}
+		
 		ListenerBean bean = (ListenerBean) req.getSession().getAttribute("listener");
 		
 		String listen = (String) req.getParameter("listen");

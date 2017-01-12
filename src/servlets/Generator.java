@@ -3,6 +3,7 @@
  */
 package servlets;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import beans.ElementStreamBean;
 import core.profile.IStreamProfile;
 import core.stream.ElementStream;
+import core.stream.IElementStream;
 import core.transition.IStreamTransition;
 
 /**
@@ -56,6 +58,25 @@ public class Generator extends HttpServlet {
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
+		String refresh = (String) req.getParameter("refreshGenerator");
+		
+		if(refresh != null){
+			ElementStreamBean stream = (ElementStreamBean) req.getSession().getAttribute("stream");
+			if(stream != null){
+				IElementStream eStream = stream.getStream();
+				if(eStream != null){
+					eStream.getSource().releaseRegistry();
+				}
+			}
+			stream = new ElementStreamBean();
+			req.getSession().setAttribute("stream", stream);
+			
+			ArrayList<String> schemas = Generator.getStreamList(this.getServletContext().getRealPath("/schemas"));
+			req.setAttribute("schemas", schemas);
+			this.getServletContext().getRequestDispatcher("/Generator.jsp").forward(req, resp);
+		}
+		
 		String load = (String) req.getParameter("load");
 		
 		if(load != null){
@@ -115,5 +136,18 @@ public class Generator extends HttpServlet {
 				this.getServletContext().getRequestDispatcher("/Generator.jsp");
 			}
 		}
+	}
+	
+	public static ArrayList<String> getStreamList(String schemaPath){
+		ArrayList<String> result = new ArrayList<>();
+		File schemaFolder = new File(schemaPath);
+		File[] schemas = schemaFolder.listFiles();
+		if(schemas != null){
+			for(File schema : schemas){
+				String schemaName = schema.getName().split("Schema")[0];
+				result.add(schemaName);
+			}
+		}
+		return result;
 	}
 }

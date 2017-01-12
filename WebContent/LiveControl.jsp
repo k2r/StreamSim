@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <jsp:useBean id="stream" class="beans.ElementStreamBean" scope="session" />
+<jsp:useBean id="live" class="beans.LiveControlBean" scope="session"></jsp:useBean>
 
 <jsp:include page="/views/Header.jsp"></jsp:include>
 

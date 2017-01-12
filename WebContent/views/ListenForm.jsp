@@ -5,44 +5,51 @@
     
 <h1 class="sectionTitle">Stream to listen</h1>
 
-<div class="form">
+<table class="form">
+<tr>
+<td>
 <form action="/streamsim/listener" method="POST">
 	<table>
     <tr>
-        <td><label>Host name</label>:</td>
+        <td class="label"><label>Host name</label>:</td>
         <td><input type="text" name="host" value="${!empty listener.host ? listener.host : ''}"/></td>
     </tr>
     
 	<tr>
-        <td><label>Emission port</label>:</td>
-        <td><input type="text" name="port" value="${!empty listener.port ? listener.port : ''}"/></td>
+        <td class="label"><label>Emission port</label>:</td>
+        <td class="input"><input type="text" name="port" value="${!empty listener.port ? listener.port : ''}"/></td>
     </tr>
     
     <tr>
-        <td><label>Stream type</label>:</td> 
-        <td><select name="type" >
-           <option value="BASIC" ${listener.type == "BASIC" ? 'selected="selected"' : ''}>Basic</option>
+        <td class="label"><label>Stream type</label>:</td> 
+        <td  class="input"><select name="type" >
            <option value="STREAMSIM" ${listener.type == "STREAMSIM" ? 'selected="selected"' : ''}>StreamSim</option>
+           <option value="RAW" ${listener.type == "RAW" ? 'selected="selected"' : ''}>raw stream</option>
        </select></td>
     </tr>
     
     <tr>
-        <td><label>Resource</label>:</td>
-        <td><input type="text" name="resource" value="${!empty listener.resource ? listener.resource : ''}"/></td>
+        <td class="label"><label>Resource</label>:</td>
+        <td class="input"><input type="text" name="resource" value="${!empty listener.resource ? listener.resource : ''}"/></td>
     </tr>
     
     <tr>
-        <td><label>Number of items to show</label>:</td> 
-        <td><input type="number" name="nbItems" min="1" max="50" value="${!empty listener.nbItems ? listener.nbItems : '1'}"/></td>
+        <td class="label"><label>Number of items to show</label>:</td> 
+        <td class="input"><input type="number" name="nbItems" min="1" max="50" value="${!empty listener.nbItems ? listener.nbItems : '1'}"/></td>
     </tr>
     
     <tr>
-    <td><input type="submit" value="listen" name="listen"/></td>
+    <td class="submit"><input class="button" type="submit" value="listen" name="listen"/></td>
     </tr>
     </table>
 </form>
-
+</td>
+</tr>
+<tr>
+<td>
 <form action="/streamsim/listener" method="POST">
-	<input type="submit" value="Stop listening" name="stopListen"/>
+	<input class="buttonStop" type="submit" value="Stop listening" name="stopListen"/>
 </form>
-</div>
+</td>
+</tr>
+</table>

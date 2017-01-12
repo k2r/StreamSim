@@ -4,11 +4,11 @@
 
 <jsp:useBean id="stream" class="beans.ElementStreamBean" scope="session" />
 
-<h1>Variation info</h1>
+<h1 class="sectionTitle">Variation info</h1>
 
 <table class="infoTab">
-	<tr><td>Variation</td><td>Duration</td></tr>
+	<tr><td class="infoHeader">Variation</td><td class="infoHeader">Duration</td></tr>
 	<c:forEach items="${stream.variations}" var="variation">
-	<tr><td>${variation}</td><td>${stream.variations[variation]}</td></tr>
+	<tr><td class="infoCell">${variation.key}</td><td class="infoCell">${variation.value}</td></tr>
 	</c:forEach>
 </table>

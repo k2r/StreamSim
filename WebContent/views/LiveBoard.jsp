@@ -3,13 +3,16 @@
 
 <jsp:useBean id="stream" class="beans.ElementStreamBean" scope="session" />
 
-<div class="sectionTitle">Stream live control</div>
+<h1 class="sectionTitle">Stream live control</h1>
 <form action="/streamsim/livecontrol" method="POST">
 <table class="form">
 
 <tr>
-	<td><label>Select a stream output rate</label></td>
-	<td><input class="rangeSelect" type="range" value="10" min="1" max="500" step="10" name="rate"></input></td>
+	<td class="label"><label>Select a stream output rate</label>:</td>
+	<td class="input">
+		<input class="rangeSelect" type="range" id="rateInput" value="0" min="0" max="1000" step="50" name="rate" oninput="rateOutput.value = rateInput.value"></input>
+		<output id="rateOutput">0</output>
+	</td>
 </tr>
 
 <tr>
@@ -18,7 +21,7 @@
 </tr>
 
 <tr>
-	<td><input type="submit" value="Set rate and generate" name="generate"></input></td>
+	<td class="submit"><input class="button" type="submit" value="Set rate and generate" name="generate"></input></td>
 </tr>
 </table>
 </form>    

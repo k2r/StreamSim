@@ -12,8 +12,8 @@
 <table class="header">
 	<tr>
 		<td class="headerMsg">StreamSim Web Application</td>
-		<td><form action="/streamsim/manager" method="POST"><input class="headerOpt" type="submit" value="Generate a new stream" name="generate"></form></td>
-		<td><form action="/streamsim/manager" method="POST"><input class="headerOpt" type="submit" value="Listen to a stream" name="listen"></form></td>
+		<td><form action="/streamsim/generator" method="POST"><input class="headerOpt" type="submit" value="Generate a new stream" name="refreshGenerator"></form></td>
+		<td><form action="/streamsim/listener" method="POST"><input class="headerOpt" type="submit" value="Listen to a stream" name="refreshListener"></form></td>
 	</tr>
 </table>
 <div class="content">

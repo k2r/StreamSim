@@ -12,10 +12,7 @@ import java.util.ArrayList;
  */
 public class ListenerBean implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -431221303091422802L;
+	
 	
 	private String host;
 	private Integer port;
@@ -23,6 +20,11 @@ public class ListenerBean implements Serializable {
 	private String resource;
 	private Integer nbItems;
 	private ArrayList<String> items;
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -431221303091422802L;
 	
 	public ListenerBean() {
 	}

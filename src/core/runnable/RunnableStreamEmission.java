@@ -75,6 +75,7 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 	public void stopEmission(){
 		this.runFlag = false;
 	}
+	
 
 	/* (non-Javadoc)
 	 * @see java.lang.Runnable#run()

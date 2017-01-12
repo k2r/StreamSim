@@ -7,8 +7,8 @@
 <h1 class="sectionTitle">Last Records</h1>
 
 <table class="infoTab">
-	<tr><td>Records</td></tr>
+	<tr><td class="infoHeader">Records</td></tr>
 	<c:forEach begin="0" end="${listener.nbItems}" var="i">
-	<tr><td>${listener.items[i]}</td></tr>
+	<tr><td class="infoCell">${listener.items[i]}</td></tr>
 	</c:forEach>
 </table>
