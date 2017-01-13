@@ -9,6 +9,7 @@
 
 <jsp:include page="/views/StreamInfo.jsp"></jsp:include>
 <jsp:include page="/views/LiveBoard.jsp"></jsp:include>
+<jsp:include page="/views/LiveChart.jsp"></jsp:include>
 
 <c:if test="${!empty requestScope.start}"><div>${requestScope.start}</div></c:if>
 <c:if test="${!empty requestScope.stop}"><div>${requestScope.stop}</div></c:if>
