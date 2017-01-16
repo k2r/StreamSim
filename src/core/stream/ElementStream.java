@@ -367,7 +367,7 @@ public class ElementStream implements IElementStream{
 			}
 			result.add(iter);
 		}
-		logger.info("this profile has generated " + (iterations * rate) + " stream element(s) for " + iterations + " timetamp(s)");
+		logger.fine("this profile has generated " + (iterations * rate) + " stream element(s) for " + iterations + " timetamp(s)");
 		return result;
 	}
 
@@ -418,7 +418,7 @@ public class ElementStream implements IElementStream{
 			}
 			result.add(iter);
 		}
-		logger.info("this transition has generated " + nbElements + " stream element(s) for " + iterations + " timestamp(s)");
+		logger.fine("this transition has generated " + nbElements + " stream element(s) for " + iterations + " timestamp(s)");
 		return result;
 	}
 }

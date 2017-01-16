@@ -3,11 +3,9 @@
  */
 package servlets;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -21,6 +19,7 @@ import core.profile.IStreamProfile;
 import core.stream.ElementStream;
 import core.stream.IElementStream;
 import core.transition.IStreamTransition;
+import servlets.utils.Utils;
 
 /**
  * @author Roland
@@ -72,7 +71,7 @@ public class Generator extends HttpServlet {
 			stream = new ElementStreamBean();
 			req.getSession().setAttribute("stream", stream);
 			
-			ArrayList<String> schemas = Generator.getStreamList(this.getServletContext().getRealPath("/schemas"));
+			ArrayList<String> schemas = Utils.getStreamList(this.getServletContext().getRealPath("/schemas"));
 			req.setAttribute("schemas", schemas);
 			this.getServletContext().getRequestDispatcher("/Generator.jsp").forward(req, resp);
 		}
@@ -98,20 +97,45 @@ public class Generator extends HttpServlet {
 					attrTypes.add(stream.getAttributeType(attributes.get(i)));
 				}
 
-				HashMap<String, Double> variations = new HashMap<>();
 				ArrayList<IStreamProfile> profiles = stream.getProfiles();
 				int nbProfiles = profiles.size();
 
 				ArrayList<IStreamTransition> transitions = stream.getTransitions();
 				int nbTransitions = transitions.size();
-
-				for(int i = 0; i < nbProfiles; i++){
-					String profile = "profile" + i;
-					variations.put(profile, profiles.get(i).getDuration());
-				}
-				for(int j = 0; j < nbTransitions; j++){
-					String transition = "transition" + j;
-					variations.put(transition, transitions.get(j).getDuration());
+				
+				ArrayList<Double> varTimestamps = new ArrayList<>();
+				ArrayList<Double> varRates = new ArrayList<>();
+				
+				Double timestamp = 0.0;
+				int indexP = 0;
+				int indexT = 0;
+				
+				while(indexP < nbProfiles){
+					IStreamProfile profile = profiles.get(indexP);
+					Double durationP = profile.getDuration();
+					Double endTimestamp = timestamp + durationP;
+					Double rateP = ((Integer)profile.getNbElementPerTick()).doubleValue();
+					
+					for(double i = timestamp; i < endTimestamp; i++){
+						varTimestamps.add(i);
+						varRates.add(rateP);
+					}
+					timestamp = endTimestamp;
+					indexP++;
+					if(indexT < nbTransitions && indexP < nbProfiles){
+						IStreamProfile nextProfile = profiles.get(indexP);
+						Double nextRate = ((Integer) nextProfile.getNbElementPerTick()).doubleValue();
+						IStreamTransition transition = transitions.get(indexT);
+						Double durationT = transition.getDuration();
+						transition.solveTransitionFunc(rateP, nextRate, 1);
+						endTimestamp += durationT; 
+						for(double j = timestamp; j < endTimestamp; j++){
+							varTimestamps.add(j);
+							varRates.add(transition.getIntermediateValue());
+						}
+						timestamp = endTimestamp;
+						indexT++;
+					}
 				}
 
 				bean.setStream(stream);
@@ -121,7 +145,8 @@ public class Generator extends HttpServlet {
 				bean.setVariation(variation);
 				bean.setAttrNames(attributes);
 				bean.setAttrTypes(attrTypes);
-				bean.setVariations(variations);
+				bean.setVarTimestamps(varTimestamps);
+				bean.setVarRates(varRates);
 
 				String live = (String) req.getParameter("live");
 				if(live != null){
@@ -136,18 +161,5 @@ public class Generator extends HttpServlet {
 				this.getServletContext().getRequestDispatcher("/Generator.jsp");
 			}
 		}
-	}
-	
-	public static ArrayList<String> getStreamList(String schemaPath){
-		ArrayList<String> result = new ArrayList<>();
-		File schemaFolder = new File(schemaPath);
-		File[] schemas = schemaFolder.listFiles();
-		if(schemas != null){
-			for(File schema : schemas){
-				String schemaName = schema.getName().split("Schema")[0];
-				result.add(schemaName);
-			}
-		}
-		return result;
 	}
 }

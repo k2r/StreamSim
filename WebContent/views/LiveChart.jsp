@@ -21,6 +21,9 @@ if(<%= times != null && vals != null%>){
 }
 
 </script>
+
 <script type="text/javascript" src="js/googlechart.js"></script>
-</c:if>
+
 <div id="chart_div"></div>
+
+</c:if>

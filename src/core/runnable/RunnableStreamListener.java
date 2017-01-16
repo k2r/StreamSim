@@ -82,8 +82,8 @@ public class RunnableStreamListener implements Runnable, Serializable {
 		            }
 				}catch(Exception e){
 					try {
-						logger.severe("Nothing to retrieve because " + e);
-						Thread.sleep(1000);
+						logger.fine("Nothing to retrieve because " + e);
+						Thread.sleep(500);
 					} catch (InterruptedException e1) {
 						logger.severe("Unable to wait for new info because " + e);
 					}
@@ -104,8 +104,8 @@ public class RunnableStreamListener implements Runnable, Serializable {
 		            }
 				}catch(Exception e){
 					try {
-						logger.severe("Nothing to retrieve because " + e);
-						Thread.sleep(1000);
+						logger.fine("Nothing to retrieve because " + e);
+						Thread.sleep(500);
 					} catch (InterruptedException e1) {
 						logger.severe("Unable to wait for new info because " + e);
 					}

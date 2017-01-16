@@ -13,12 +13,11 @@ function drawChart() {
 
 	var options = {
 			hAxis: {
-				title: 'Timestamp'
+				title: 'Timestamp (in s)'
 			},
 			vAxis: {
-				title: 'Output rate (items/s)'
+				title: 'Rate (items/s)'
 			},
-			backgroundColor: '#f1f8e9'
 	};
 
 	var chart = new google.visualization.LineChart(document.getElementById('chart_div'));

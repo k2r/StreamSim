@@ -60,7 +60,7 @@ body {
 	
 	padding: 0.5em;
 	display: inline;
-	
+	margin-bottom: 2em;
 	background-color: whitesmoke;
 }
 
@@ -127,4 +127,10 @@ body {
 	text-align: center;
 	width: 55%;
 	height: 2em;
+}
+
+#chart_div {
+	margin: 2.5% 5%;
+    height:720px;
+    width:1280px;
 }

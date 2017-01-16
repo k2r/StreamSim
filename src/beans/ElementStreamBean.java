@@ -5,7 +5,6 @@ package beans;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import core.runnable.RunnableStreamEmission;
 import core.stream.IElementStream;
@@ -26,7 +25,8 @@ public class ElementStreamBean implements Serializable{
 	private ArrayList<String> attrTypes;
 	private Integer nbAttrs;
 	private String variation;
-	private HashMap<String, Double> variations;
+	private ArrayList<Double> varTimestamps;
+	private ArrayList<Double> varRates;
 	
 	/**
 	 * 
@@ -138,20 +138,6 @@ public class ElementStreamBean implements Serializable{
 	}
 
 	/**
-	 * @return the variations
-	 */
-	public HashMap<String, Double> getVariations() {
-		return variations;
-	}
-
-	/**
-	 * @param variations the variations to set
-	 */
-	public void setVariations(HashMap<String, Double> variations) {
-		this.variations = variations;
-	}
-
-	/**
 	 * @return the nbAttrs
 	 */
 	public Integer getNbAttrs() {
@@ -163,6 +149,34 @@ public class ElementStreamBean implements Serializable{
 	 */
 	public void setNbAttrs(Integer nbAttrs) {
 		this.nbAttrs = nbAttrs;
+	}
+
+	/**
+	 * @return the varTimestamps
+	 */
+	public ArrayList<Double> getVarTimestamps() {
+		return varTimestamps;
+	}
+
+	/**
+	 * @param varTimestamps the varTimestamps to set
+	 */
+	public void setVarTimestamps(ArrayList<Double> varTimestamps) {
+		this.varTimestamps = varTimestamps;
+	}
+
+	/**
+	 * @return the varRates
+	 */
+	public ArrayList<Double> getVarRates() {
+		return varRates;
+	}
+
+	/**
+	 * @param varRates the varRates to set
+	 */
+	public void setVarRates(ArrayList<Double> varRates) {
+		this.varRates = varRates;
 	}
 
 }

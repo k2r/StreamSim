@@ -5,7 +5,6 @@ package servlets;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 
 import javax.servlet.ServletException;
@@ -17,6 +16,7 @@ import beans.ElementStreamBean;
 import beans.LiveControlBean;
 import core.runnable.RunnableStreamEmission;
 import core.stream.IElementStream;
+import servlets.utils.Utils;
 
 /**
  * @author Roland
@@ -99,8 +99,8 @@ public class LiveControl extends HttpServlet {
 				rates.put(System.currentTimeMillis() / 1000, rate);
 				liveBean.setRates(rates);
 				req.getSession().setAttribute("live", liveBean);
-				ArrayList<Long> timestamps = LiveControl.normalizedTimestamps(rates);
-				ArrayList<Integer> values = LiveControl.rateValues(rates);
+				ArrayList<Long> timestamps = Utils.normalizedTimestamps(rates);
+				ArrayList<Integer> values = Utils.rateValues(rates);
 				req.setAttribute("timestamps", timestamps);
 				req.setAttribute("values", values);
 			}
@@ -124,34 +124,7 @@ public class LiveControl extends HttpServlet {
 		this.getServletContext().getRequestDispatcher("/LiveControl.jsp").forward(req, resp);
 	}
 	
-	public static ArrayList<Long> normalizedTimestamps(HashMap<Long, Integer> rawData){
-		ArrayList<Long> result = new ArrayList<>();
-		int nbTimestamp = rawData.keySet().size();
-		Long start = Long.MAX_VALUE;
-		for(Long timestamp: rawData.keySet()){
-			if(timestamp < start){
-				start = timestamp;
-			}
-			result.add(timestamp);
-		}
-		for(int i = 0; i < nbTimestamp; i++){
-			result.set(i, result.get(i) - start);
-		}
-		Collections.sort(result);
-		return result;
-	}
 	
-	public static ArrayList<Integer> rateValues(HashMap<Long, Integer> rawData){
-		int nbTimestamp = rawData.keySet().size();
-		ArrayList<Integer> result = new ArrayList<>();
-		ArrayList<Long> rawTimestamps = new ArrayList<>();
-		for(Long timestamp : rawData.keySet()){
-			rawTimestamps.add(timestamp);
-		}
-		Collections.sort(rawTimestamps);
-		for(int i = 0; i< nbTimestamp; i++){
-			result.add(rawData.get(rawTimestamps.get(i)));
-		}
-		return result;
-	}
+	
+	
 }

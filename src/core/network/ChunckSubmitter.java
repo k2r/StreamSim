@@ -109,7 +109,7 @@ public class ChunckSubmitter implements Runnable, Serializable{
 				Thread.sleep(remaining);
 			}
 		}catch(Exception e){
-			logger.severe("Unable to start the ChunkSubmitter process");
+			logger.severe("Unable to start the ChunkSubmitter process because " + e);
 		}
 	}
 
