@@ -22,9 +22,9 @@
     
     <tr>
         <td class="label"><label>Stream type</label>:</td> 
-        <td  class="input"><select name="type" >
+        <td class="input"><select name="type" >
            <option value="STREAMSIM" ${listener.type == "STREAMSIM" ? 'selected="selected"' : ''}>StreamSim</option>
-           <option value="RAW" ${listener.type == "RAW" ? 'selected="selected"' : ''}>raw stream</option>
+           <option value="RAW" ${listener.type == "RAW" ? 'selected="selected"' : ''}>Raw stream</option>
        </select></td>
     </tr>
     

@@ -1,7 +1,11 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE stream SYSTEM "streamDocType.dtd">
 <stream>
 	<name>student</name>
 	<attributes>
+		<attribute type="text" name="identifiant">
+			<value type="pattern" length="12">[A-9]</value>
+		</attribute>
 		<attribute type="enumerate" name="prenom">
 			<value type="option">Josiane</value>
 			<value type="option">Monique</value>
@@ -9,13 +13,14 @@
 			<value type="option">Ghislaine</value>
 			<value type="option">Viviane</value>
 			<value type="option">Virginie</value>
-			<value type="option">Marie-Francoise</value>
 			<value type="option">Therese</value>
 			<value type="option">Chantal</value>
+			<value type="option">Marie-Solange</value>
+			<value type="option">Nadege</value>
 		</attribute>
 		<attribute type="enumerate" name="nom">
 			<value type="option">Chambon</value>
-			<value type="option">Bérenger</value>
+			<value type="option">Berenger</value>
 			<value type="option">Bernard</value>
 			<value type="option">Shapiro</value>
 			<value type="option">Pignon</value>

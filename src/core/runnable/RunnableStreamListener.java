@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import core.element.IElement;
+import core.network.rmi.source.IRMIInfoSource;
 import core.network.rmi.source.IRMIStreamSource;
-import core.network.rmi.source.RMIInfoSource;
 
 /**
  * @author Roland
@@ -94,7 +94,7 @@ public class RunnableStreamListener implements Runnable, Serializable {
 		            Registry registry = LocateRegistry.getRegistry(host, port);
 		            if(registry != null){
 		            	ArrayList<String> allItems = new ArrayList<>();
-		            	RMIInfoSource stub = (RMIInfoSource) registry.lookup(this.resourceName);
+		            	IRMIInfoSource stub = (IRMIInfoSource) registry.lookup(this.resourceName);
 		            	allItems = stub.getInfo();
 		            	int lastIndex = allItems.size() - 1;
 						this.nbItems = Math.min(this.nbItems, lastIndex);

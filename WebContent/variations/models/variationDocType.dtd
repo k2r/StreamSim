@@ -1,0 +1,7 @@
+<!ELEMENT variations ((profile+, transition*)+)>
+<!ELEMENT profile (duration)>
+<!ELEMENT transition (duration)>
+<!ATTLIST profile type (standard|weighted) "standard">
+<!ATTLIST profile rate CDATA "0">
+<!ATTLIST transition type (linear|exponential|logarithmic) "linear">
+<!ELEMENT duration (#PCDATA)>

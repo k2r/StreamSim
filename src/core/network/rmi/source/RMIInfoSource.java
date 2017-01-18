@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  * @author Roland
  *
  */
-public class RMIInfoSource extends UnicastRemoteObject {
+public class RMIInfoSource extends UnicastRemoteObject implements IRMIInfoSource {
 
 	ArrayList<String> info;
 	
@@ -35,6 +35,7 @@ public class RMIInfoSource extends UnicastRemoteObject {
 		this.info = new ArrayList<>();
 	}
 
+	@Override
 	public ArrayList<String> getInfo() throws RemoteException{
 		return this.info;
 	}
@@ -51,6 +52,7 @@ public class RMIInfoSource extends UnicastRemoteObject {
 		}
 	}
 	
+	@Override
 	public void releaseRegistry() throws RemoteException{
 		try {
 			UnicastRemoteObject.unexportObject(registry, true);

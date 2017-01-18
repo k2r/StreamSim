@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE stream SYSTEM "variationDocType.dtd">
 <variations>
 	<profile type="standard" rate="10">
 		<duration>600</duration>
