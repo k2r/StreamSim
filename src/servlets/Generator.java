@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import beans.ElementStreamBean;
+import beans.LiveControlBean;
 import core.profile.IStreamProfile;
 import core.stream.ElementStream;
 import core.stream.IElementStream;
@@ -70,6 +71,10 @@ public class Generator extends HttpServlet {
 			}
 			stream = new ElementStreamBean();
 			req.getSession().setAttribute("stream", stream);
+			
+			LiveControlBean live = (LiveControlBean)req.getSession().getAttribute("live");
+			live = new LiveControlBean();
+			req.getSession().setAttribute("live", live);
 			
 			ArrayList<String> schemas = Utils.getStreamList(this.getServletContext().getRealPath("/schemas"));
 			req.setAttribute("schemas", schemas);

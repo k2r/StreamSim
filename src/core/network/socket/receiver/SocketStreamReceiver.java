@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.charset.Charset;
 
 /**
  * @author Roland KOTTO KOMBI
@@ -20,10 +21,7 @@ public class SocketStreamReceiver implements IStreamReceiver {
 	
 	public SocketStreamReceiver(String hostname,int port) throws UnknownHostException, IOException {
 		this.socket = new Socket(hostname, port);
-		if(this.socket.isConnected()){
-			System.out.println("the client is connected at the port " + port);
-		}
-		this.input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		this.input = new BufferedReader(new InputStreamReader(socket.getInputStream(), Charset.forName("UTF8")));
 	}
 	
 	/* (non-Javadoc)
@@ -35,8 +33,7 @@ public class SocketStreamReceiver implements IStreamReceiver {
 			String line = this.input.readLine();
 			return line;
 		} catch (IOException e) {
-			e.printStackTrace();
-			return "no message can be retrieved on port " + this.socket.getLocalPort();
+			return "no message can be retrieved on port " + this.socket.getLocalPort() + " because " + e;
 			
 		}
 	}

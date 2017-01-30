@@ -3,15 +3,17 @@
  */
 package core.runnable;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
 import core.element.IElement;
-import core.network.rmi.source.IRMIInfoSource;
 import core.network.rmi.source.IRMIStreamSource;
+import core.network.socket.receiver.SocketStreamReceiver;
 
 /**
  * @author Roland
@@ -28,9 +30,10 @@ public class RunnableStreamListener implements Runnable, Serializable {
 	private Integer port;
 	private String resourceName;
 	private String type;
-	private Boolean runFlag;
-	private ArrayList<String> inputs;
+	private Boolean runFlag;	
 	private Integer nbItems;
+
+	private static CopyOnWriteArrayList<String> items;
 	public static Logger logger = Logger.getLogger("RunnableStreamListener");
 	
 	public RunnableStreamListener(String host, Integer port, String resourceName, String type, Integer nbItems) {
@@ -39,14 +42,16 @@ public class RunnableStreamListener implements Runnable, Serializable {
 		this.resourceName = resourceName;
 		this.runFlag = true;
 		this.type = type;
-		this.inputs = new ArrayList<>();
 		this.nbItems = nbItems;
-	}
-	
-	public ArrayList<String> getInputs(){
-		return this.inputs;
+		if(RunnableStreamListener.items == null){
+			RunnableStreamListener.items = new CopyOnWriteArrayList<>();
+		}
 	}
 
+	public static CopyOnWriteArrayList<String> getItems(){
+		return RunnableStreamListener.items;
+	}
+	
 	public void startListener(){
 		this.runFlag = true;
 	}
@@ -77,7 +82,7 @@ public class RunnableStreamListener implements Runnable, Serializable {
 						int lastIndex = allItems.size() - 1;
 						this.nbItems = Math.min(this.nbItems, lastIndex);
 						for(int i = 0; i < this.nbItems; i++){
-							this.inputs.add(allItems.get(lastIndex - i));
+							items.add(allItems.get(lastIndex - i));
 						}
 		            }
 				}catch(Exception e){
@@ -90,28 +95,26 @@ public class RunnableStreamListener implements Runnable, Serializable {
 				}
 			}
 			if(this.type.equalsIgnoreCase("RAW")){
+				SocketStreamReceiver receiver;
 				try {
-		            Registry registry = LocateRegistry.getRegistry(host, port);
-		            if(registry != null){
-		            	ArrayList<String> allItems = new ArrayList<>();
-		            	IRMIInfoSource stub = (IRMIInfoSource) registry.lookup(this.resourceName);
-		            	allItems = stub.getInfo();
-		            	int lastIndex = allItems.size() - 1;
-						this.nbItems = Math.min(this.nbItems, lastIndex);
-						for(int i = 0; i < this.nbItems; i++){
-							this.inputs.add(allItems.get(lastIndex - i));
-						}
-		            }
-				}catch(Exception e){
-					try {
-						logger.fine("Nothing to retrieve because " + e);
-						Thread.sleep(500);
-					} catch (InterruptedException e1) {
-						logger.severe("Unable to wait for new info because " + e);
+					receiver = new SocketStreamReceiver(host, port);
+					if(items.size() > nbItems){
+						items.remove(0);
 					}
+					String tuple = receiver.getMessage();
+					if(tuple == null){
+						try{
+							Thread.sleep(50);
+						}catch(InterruptedException e){
+							logger.severe("Unable to wait for new tuples because " + e);
+						}
+					}else{
+						items.add(tuple);
+					}
+				} catch (IOException e1) {
+					logger.severe("Unable to instanciate the stream listener because " + e1);;
 				}
 			}
 		}
 	}
-
 }

@@ -94,7 +94,7 @@ public class Listener extends HttpServlet {
 				String setMessage = "Restarting to listen for updates on host " + bean.getHost() + " port " + bean.getPort() + " for resource " + bean.getResource() + "...";
 				req.setAttribute("set", setMessage);
 			}
-			bean.setItems(this.listener.getInputs());
+			bean.setItems(RunnableStreamListener.getItems());
 		}
 		
 		String stopListener = (String) req.getParameter("stopListen");
