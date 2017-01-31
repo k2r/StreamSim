@@ -4,6 +4,7 @@
 package servlets;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -62,7 +63,7 @@ public class Listener extends HttpServlet {
 			bean.setPort(port);
 			bean.setResource(resource);
 			bean.setType(type);
-		
+
 			if(this.thread == null){
 				if(this.listener == null){
 					this.listener = new RunnableStreamListener(bean.getHost(), bean.getPort(), bean.getResource(), bean.getType(), bean.getNbItems());
@@ -70,31 +71,23 @@ public class Listener extends HttpServlet {
 				this.listener.startListener();
 				this.thread = new Thread(this.listener);
 				this.thread.start();
-
+			
+				ArrayList<String> items = this.listener.getItems();
+				req.setAttribute("items", items);
+				
 				String startMessage = "Listening updates on host " + bean.getHost() + " port " + bean.getPort() + " for resource " + bean.getResource() + "...";
 				req.setAttribute("start", startMessage);
+				
+				bean.setItems(this.listener.getItems());
 			}else{
 				if(this.thread.isAlive()){
-					String stopMessage = "";
-					try {
-						this.listener.stopListener();
-						this.thread.join(1000);
-
-						stopMessage = "Stopped listening updates on host " + bean.getHost() + " port " + bean.getPort() + " for resource " + bean.getResource() + ".";
-					} catch (InterruptedException e) {
-						stopMessage = "The listener has failed stopping itself because of exception " + e;
-					}
-					req.setAttribute("stop", stopMessage);
-
+					ArrayList<String> items = this.listener.getItems();
+					req.setAttribute("items", items);
+					
+					String setMessage = "Listening for updates on host " + bean.getHost() + " port " + bean.getPort() + " for resource " + bean.getResource() + "...";
+					req.setAttribute("set", setMessage);
 				}
-				this.listener = new RunnableStreamListener(bean.getHost(), bean.getPort(), bean.getResource(), bean.getType(), bean.getNbItems());
-				this.listener.startListener();
-				this.thread = new Thread(this.listener);
-				this.thread.start();
-				String setMessage = "Restarting to listen for updates on host " + bean.getHost() + " port " + bean.getPort() + " for resource " + bean.getResource() + "...";
-				req.setAttribute("set", setMessage);
 			}
-			bean.setItems(RunnableStreamListener.getItems());
 		}
 		
 		String stopListener = (String) req.getParameter("stopListen");

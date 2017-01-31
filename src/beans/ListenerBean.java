@@ -4,7 +4,7 @@
 package beans;
 
 import java.io.Serializable;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.ArrayList;
 
 /**
  * @author Roland
@@ -19,7 +19,7 @@ public class ListenerBean implements Serializable {
 	private String type;
 	private String resource;
 	private Integer nbItems;
-	private CopyOnWriteArrayList<String> items;
+	private ArrayList<String> items;
 	
 	/**
 	 * 
@@ -102,14 +102,14 @@ public class ListenerBean implements Serializable {
 	/**
 	 * @return the items
 	 */
-	public CopyOnWriteArrayList<String> getItems() {
+	public ArrayList<String> getItems() {
 		return items;
 	}
 
 	/**
 	 * @param items the items to set
 	 */
-	public void setItems(CopyOnWriteArrayList<String> items) {
+	public void setItems(ArrayList<String> items) {
 		this.items = items;
 	}
 

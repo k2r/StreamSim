@@ -9,6 +9,6 @@
 <table class="infoTab">
 	<tr><td class="infoHeader">Records</td></tr>
 	<c:forEach begin="0" end="${listener.nbItems}" var="i">
-	<tr><td class="infoCell">${listener.items[i]}</td></tr>
+	<tr><td class="infoCell">${requestScope.items[i]}</td></tr>
 	</c:forEach>
 </table>

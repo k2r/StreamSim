@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
 import core.element.IElement;
@@ -33,7 +32,8 @@ public class RunnableStreamListener implements Runnable, Serializable {
 	private Boolean runFlag;	
 	private Integer nbItems;
 
-	private static CopyOnWriteArrayList<String> items;
+	private ArrayList<String> items;
+	private SocketStreamReceiver receiver;
 	public static Logger logger = Logger.getLogger("RunnableStreamListener");
 	
 	public RunnableStreamListener(String host, Integer port, String resourceName, String type, Integer nbItems) {
@@ -43,13 +43,11 @@ public class RunnableStreamListener implements Runnable, Serializable {
 		this.runFlag = true;
 		this.type = type;
 		this.nbItems = nbItems;
-		if(RunnableStreamListener.items == null){
-			RunnableStreamListener.items = new CopyOnWriteArrayList<>();
-		}
+		this.items = new ArrayList<>();
 	}
 
-	public static CopyOnWriteArrayList<String> getItems(){
-		return RunnableStreamListener.items;
+	public ArrayList<String> getItems(){
+		return this.items;
 	}
 	
 	public void startListener(){
@@ -65,55 +63,59 @@ public class RunnableStreamListener implements Runnable, Serializable {
 	 */
 	@Override
 	public void run() {
+		
 		while(runFlag){
 			if(this.type.equalsIgnoreCase("STREAMSIM")){
+				ArrayList<String> temp = new ArrayList<>();
 				try {
 		            Registry registry = LocateRegistry.getRegistry(host, port);
 		            if(registry != null){
-		            	ArrayList<String> allItems = new ArrayList<>();
 		            	IRMIStreamSource stub = (IRMIStreamSource) registry.lookup(this.resourceName);
 		            	IElement[] istream = stub.getInputStream();
 						ArrayList<String> attrNames = stub.getAttrNames();
 						registry.unbind(this.resourceName);
 						int n = istream.length;
-						for(int i = 0; i < n; i++){
-							allItems.add(istream[i].toString(attrNames));
-						}
-						int lastIndex = allItems.size() - 1;
-						this.nbItems = Math.min(this.nbItems, lastIndex);
+						this.nbItems = Math.min(this.nbItems, n);
 						for(int i = 0; i < this.nbItems; i++){
-							items.add(allItems.get(lastIndex - i));
+							String readableItem = istream[i].toString(attrNames);
+							temp.add(readableItem);
 						}
+						this.items = temp;
 		            }
 				}catch(Exception e){
 					try {
 						logger.fine("Nothing to retrieve because " + e);
-						Thread.sleep(500);
+						Thread.sleep(200);
 					} catch (InterruptedException e1) {
-						logger.severe("Unable to wait for new info because " + e);
+						logger.severe("Unable to wait for new info because " + e1);
 					}
 				}
 			}
 			if(this.type.equalsIgnoreCase("RAW")){
-				SocketStreamReceiver receiver;
 				try {
-					receiver = new SocketStreamReceiver(host, port);
-					if(items.size() > nbItems){
-						items.remove(0);
+					if(this.receiver == null){
+						receiver = new SocketStreamReceiver(host, port);
 					}
-					String tuple = receiver.getMessage();
-					if(tuple == null){
-						try{
-							Thread.sleep(50);
-						}catch(InterruptedException e){
-							logger.severe("Unable to wait for new tuples because " + e);
-						}
-					}else{
-						items.add(tuple);
+					while(runFlag){
+						ArrayList<String> temp = new ArrayList<>();
+						updateBatch(temp, receiver);
+						logger.fine("Batch updated");
+						this.items = temp;
 					}
 				} catch (IOException e1) {
 					logger.severe("Unable to instanciate the stream listener because " + e1);;
 				}
+			}
+		}
+	}
+	
+	public void updateBatch(ArrayList<String> tempBatch, SocketStreamReceiver receiver){
+		while(tempBatch.size() < this.nbItems){
+			logger.fine("Acquiring items...");
+			String tuple = receiver.getMessage();
+			if(tuple != null){
+				tempBatch.add(tuple);
+				logger.fine("Add of item " + tuple);
 			}
 		}
 	}

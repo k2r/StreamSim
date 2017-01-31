@@ -1,4 +1,4 @@
-package core.main.rmi;
+package core.main;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -15,9 +15,7 @@ import core.network.socket.receiver.SocketStreamReceiver;
  *
  */
 public class MainClient {
-
-	private MainClient() {}
-
+	
 	/**
 	 * @param args
 	 * @throws IOException 
@@ -60,15 +58,7 @@ public class MainClient {
 			SocketStreamReceiver receiver = new SocketStreamReceiver(host, port);
 			while(true){
 				String tuple = receiver.getMessage();
-				if(tuple == null){
-					try{
-						Thread.sleep(50);
-						tuple = receiver.getMessage();
-					}catch(InterruptedException e){
-						System.out.println("Waiting for stream items on host " + host + " port " + port + "...");
-						Thread.sleep(200);
-					}
-				}else{
+				if(tuple != null){
 					System.out.println(tuple);
 				}
 			}
