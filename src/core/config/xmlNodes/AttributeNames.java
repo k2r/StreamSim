@@ -16,7 +16,8 @@ public enum AttributeNames {
 	RATE("rate"),
 	OPTION("option"),
 	LGTH("length"),
-	PATT("pattern");
+	PATT("pattern"),
+	SKEW("skew");
 	
 	private String name = "";
 	

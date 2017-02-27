@@ -26,6 +26,7 @@ import core.config.xmlNodes.AttributeNames;
 import core.config.xmlNodes.NodeNames;
 import core.profile.IStreamProfile;
 import core.profile.StandardProfile;
+import core.profile.ZipfProfile;
 import core.profile.type.ProfileType;
 import core.transition.*;
 import core.transition.type.TransitionType;
@@ -188,6 +189,25 @@ public class XmlStreamParser {
 				final NodeList durations = profile.getElementsByTagName(NodeNames.DURATION.toString());
 				double duration = Double.parseDouble(durations.item(0).getTextContent());
 				IStreamProfile sp = (IStreamProfile) new StandardProfile(duration, nbElementPerTick);
+				result.add(sp);
+			}
+			/*Zipf-1 can be defined without specifying the skew*/
+			if(profile.hasAttribute(AttributeNames.TYPE.toString()) && profile.getAttribute(AttributeNames.TYPE.toString()).equalsIgnoreCase(ProfileType.ZIPF.toString())
+					&& !profile.hasAttribute(AttributeNames.SKEW.toString())){
+				int nbElementPerTick = Integer.parseInt(profile.getAttribute(AttributeNames.RATE.toString()));
+				final NodeList durations = profile.getElementsByTagName(NodeNames.DURATION.toString());
+				double duration = Double.parseDouble(durations.item(0).getTextContent());
+				IStreamProfile sp = (IStreamProfile) new ZipfProfile(duration, nbElementPerTick);
+				result.add(sp);
+			}
+			/*Zipf distribution other than 1 must specify a value for an attribute skew*/
+			if(profile.hasAttribute(AttributeNames.TYPE.toString()) && profile.getAttribute(AttributeNames.TYPE.toString()).equalsIgnoreCase(ProfileType.ZIPF.toString())
+					&& profile.hasAttribute(AttributeNames.SKEW.toString())){
+				int nbElementPerTick = Integer.parseInt(profile.getAttribute(AttributeNames.RATE.toString()));
+				final NodeList durations = profile.getElementsByTagName(NodeNames.DURATION.toString());
+				double duration = Double.parseDouble(durations.item(0).getTextContent());
+				double skew = Double.parseDouble(profile.getAttribute(AttributeNames.SKEW.toString()));
+				IStreamProfile sp = (IStreamProfile) new ZipfProfile(duration, nbElementPerTick, skew);
 				result.add(sp);
 			}
 		}

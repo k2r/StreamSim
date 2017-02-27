@@ -10,9 +10,7 @@ package core.profile.type;
 public enum ProfileType {
 
 	STANDARD("standard"),
-	WEIGHTED("weighted"),
-	OCCURENCE("occurence"),
-	LOADED("loaded");
+	ZIPF("zipf");
 	
 	private String name = "";
 	

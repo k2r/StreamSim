@@ -23,15 +23,19 @@
     <tr>
         <td class="label"><label>Variation type</label>:</td> 
         <td class="input"><select name="variation" >
-           <option value="no">No variation</option>
-           <option value="linearIncrease">Linear increase</option>
-           <option value="scaleIncrease">Scaled increase</option>
-           <option value="exponentialIncrease">Exponential increase</option>
-           <option value="logarithmicIncrease">Logarithmic increase</option>
-           <option value="linearDecrease">Linear decrease</option>
-           <option value="scaleDecrease">Scaled decrease</option>
-           <option value="exponentialDecrease">Exponential decrease</option>
-           <option value="all">All variations</option>
+           <option value="no">Uniform no variation</option>
+           <option value="linearIncrease">Uniform linear increase</option>
+           <option value="scaleIncrease">Uniform scaled increase</option>
+           <option value="exponentialIncrease">Uniform exponential increase</option>
+           <option value="logarithmicIncrease">Uniform logarithmic increase</option>
+           <option value="linearDecrease">Uniform linear decrease</option>
+           <option value="scaleDecrease">Uniform scaled decrease</option>
+           <option value="exponentialDecrease">Uniform exponential decrease</option>
+           <option value="all">Uniform all variations</option>
+           <option value="zipf05">Zipf-0.5 no variation</option>
+           <option value="zipf1">Zipf-1 no variation</option>
+           <option value="zipf15">Zipf-1.5 no variation</option>
+           <option value="zipf2">Zipf-2 no variation</option>
        </select></td>
     </tr>
     

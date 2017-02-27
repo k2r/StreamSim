@@ -4,7 +4,7 @@
 package core.runnable;
 
 import java.io.Serializable;
-
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import beans.ElementStreamBean;
 import core.element.IElement;
+import core.jdbc.JdbcStorageManager;
 import core.network.ChunckSubmitter;
 import core.stream.IElementStream;
 
@@ -33,9 +34,10 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 	private HttpServletRequest request;
 	private ElementStreamBean bean;
 	private Boolean runFlag;
+	private String stateMsg;
 	
 	private IElementStream stream;
-	private Integer frequency;
+	private Long frequency;
 	private HashMap<String, IElement[]> elements;
 	private Integer profileSize;
 	private Integer transitionSize;
@@ -46,14 +48,11 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 	/**
 	 * 
 	 */
-	public RunnableStreamEmission(HttpServletRequest req, ElementStreamBean bean) {
+	public RunnableStreamEmission(HttpServletRequest req, ElementStreamBean bean, String command) {
 		this.request = req;
 		this.bean = bean;
-		this.runFlag = true;
-		String command = (String) this.request.getParameter("command");
 		if(command.equalsIgnoreCase("PLAY")){
-			this.startEmission();
-			this.frequency = Integer.parseInt((String) this.request.getParameter("frequency"));
+			this.frequency = Long.parseLong((String) this.request.getParameter("frequency"));
 			this.stream = this.bean.getStream();
 			this.stream.generateStream(frequency);
 
@@ -63,8 +62,47 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 			this.profileIndex = 0;
 			this.transitionIndex = 0;
 			this.nextProfile = 1;
-		}else{
-			this.stopEmission();
+			this.stateMsg = "Emission of the stream " + bean.getName() + " on port " + bean.getPort() + " with variation " + bean.getVariation() + "...";
+		}
+		if(command.equalsIgnoreCase("RECORD")){
+			this.frequency = Long.parseLong((String) this.request.getParameter("frequency"));
+			this.stream = this.bean.getStream();
+			this.stream.generateStream(frequency);
+
+			this.elements = this.stream.getElements();
+			
+			String dbHost = (String) req.getParameter("dbhost");
+			String dbUser = (String) req.getParameter("dbuser");
+			String dbPwd = (String) req.getParameter("dbpwd");
+			try {
+				JdbcStorageManager manager = new JdbcStorageManager(dbHost, dbUser, dbPwd);
+				manager.recordParameters(bean.getName(), bean.getPort(), bean.getVariation(), frequency);
+				manager.recordStream(bean.getName(), bean.getStream().getSchema().getAttributes(), bean.getStream().getElements());
+				this.stateMsg = "Stream " + bean.getName() + " recorded successfully on host " + dbHost + "!";
+			} catch (ClassNotFoundException | SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		if(command.equalsIgnoreCase("REPLAY")){
+			
+			String dbHost = (String) req.getParameter("dbhost");
+			String dbUser = (String) req.getParameter("dbuser");
+			String dbPwd = (String) req.getParameter("dbpwd");
+			
+			try{
+				JdbcStorageManager manager = new JdbcStorageManager(dbHost, dbUser, dbPwd);
+				System.out.println(bean.getName() +  " " + this.stream.getSchema().getAttributes().size());
+				this.elements = manager.getElements(bean.getName(), this.stream.getSchema().getAttributes());
+				
+				this.profileSize = stream.getProfiles().size();;
+				this.transitionSize = stream.getTransitions().size();
+				this.profileIndex = 0;
+				this.transitionIndex = 0;
+				this.nextProfile = 1;
+				this.stateMsg = "Re-emission of the stream " + bean.getName() + " on port " + bean.getPort() + " with variation " + bean.getVariation() + "...";
+			} catch (ClassNotFoundException | SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -74,6 +112,10 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 
 	public void stopEmission(){
 		this.runFlag = false;
+	}
+	
+	public String getStateMsg(){
+		return this.stateMsg;
 	}
 	
 

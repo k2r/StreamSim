@@ -7,7 +7,10 @@
 
 <jsp:include page="/views/StreamInfo.jsp"></jsp:include>
 <jsp:include page="/views/VariationInfo.jsp"></jsp:include>
+
+<c:if test="${!empty requestScope.playing}">
 <jsp:include page="/views/StreamControl.jsp"></jsp:include>
+</c:if>
 
 <c:if test="${!empty requestScope.start}"><div>${requestScope.start}</div></c:if>
 <c:if test="${!empty requestScope.stop}"><div>${requestScope.stop}</div></c:if>

@@ -116,6 +116,7 @@ public class JdbcStorageManager implements Serializable {
 
 	public HashMap<String, IElement[]> getElements(String streamName, ArrayList<IAttribute> attributes){
 		int nbAttributes = attributes.size();
+		
 		HashMap<String, IElement[]> elements = new HashMap<>();
 		String query = "SELECT * FROM stream_" + streamName;
 		Statement statement;

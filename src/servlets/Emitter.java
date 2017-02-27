@@ -44,18 +44,21 @@ public class Emitter extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		ElementStreamBean bean = (ElementStreamBean) req.getSession().getAttribute("stream");
+		String command = (String) req.getParameter("command");
 		
 		String generate = (String) req.getParameter("generate");
-		
 		if(generate != null){
 			if(this.emission == null){
-				this.emission = new RunnableStreamEmission(req, bean);	
+				this.emission = new RunnableStreamEmission(req, bean, command);	
 			}
-			this.emission.startEmission();
-			this.thread = new Thread(this.emission);
-			this.thread.start();
-			
-			String startMessage = "Emission of the stream " + bean.getName() + " on port " + bean.getPort() + " with variation " + bean.getVariation() + "...";
+			if(command.equalsIgnoreCase("PLAY") || command.equalsIgnoreCase("REPLAY")){
+				this.emission.startEmission();
+				this.thread = new Thread(this.emission);
+				this.thread.start();
+				req.setAttribute("playing", true);
+			}
+
+			String startMessage = this.emission.getStateMsg();
 			req.setAttribute("start", startMessage);
 		}
 		

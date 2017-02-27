@@ -61,7 +61,7 @@ public class LiveControl extends HttpServlet {
 			stream.getCurrentProfile().setNbElementPerTick(rate);
 			if(this.thread == null){
 				if(this.emission == null){
-					this.emission = new RunnableStreamEmission(req, streamBean);
+					this.emission = new RunnableStreamEmission(req, streamBean, "PLAY");
 				}
 				this.thread = new Thread(this.emission);
 				this.thread.start();
@@ -83,7 +83,7 @@ public class LiveControl extends HttpServlet {
 					req.setAttribute("stop", stopMessage);
 
 				}
-				this.emission = new RunnableStreamEmission(req, streamBean);
+				this.emission = new RunnableStreamEmission(req, streamBean, "PLAY");
 				this.thread = new Thread(this.emission);
 				this.thread.start();
 				String setMessage = "Restarting the emission of the stream " + streamBean.getName() + " on port " + streamBean.getPort() + " with new rate (" + stream.getCurrentProfile().getNbElementPerTick() + " items/s)";

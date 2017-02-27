@@ -1,7 +1,8 @@
 <!ELEMENT variations ((profile+, transition*)+)>
 <!ELEMENT profile (duration)>
 <!ELEMENT transition (duration)>
-<!ATTLIST profile type (standard|weighted) "standard">
+<!ATTLIST profile type (standard|zipf) "standard">
 <!ATTLIST profile rate CDATA "0">
+<!ATTLIST profile skew CDATA #IMPLIED>
 <!ATTLIST transition type (linear|exponential|logarithmic) "linear">
 <!ELEMENT duration (#PCDATA)>
