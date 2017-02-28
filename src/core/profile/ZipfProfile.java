@@ -153,42 +153,42 @@ public class ZipfProfile implements IStreamProfile {
 					if(regExp.equals("[a-z]")){
 						ZipfDistribution zipf = new ZipfDistribution(this.lowerCaseLetters.size(), this.getSkew());
 						for(int j = 0; j < nbChars; j++){
-							char c = this.lowerCaseLetters.get(zipf.sample());
+							char c = this.lowerCaseLetters.get(zipf.sample() - 1);// to set it to the interval [0;n[ instead of [1;n]
 							nextString += c;
 						}
 					}
 					if(regExp.equals("[A-Z]")){
 						ZipfDistribution zipf = new ZipfDistribution(this.upperCaseLetters.size(), this.getSkew());
 						for(int j = 0; j < nbChars; j++){
-							char c = this.upperCaseLetters.get(zipf.sample());
+							char c = this.upperCaseLetters.get(zipf.sample() - 1);// to set it to the interval [0;n[ instead of [1;n]
 							nextString += c;
 						}
 					}
 					if(regExp.equals("[0-9]")){
 						ZipfDistribution zipf = new ZipfDistribution(this.digits.size(), this.getSkew());
 						for(int j = 0; j < nbChars; j++){
-							char c = this.digits.get(zipf.sample());
+							char c = this.digits.get(zipf.sample() - 1);// to set it to the interval [0;n[ instead of [1;n]
 							nextString += c;
 						}
 					}
 					if(regExp.equals("[a-Z]")){
 						ZipfDistribution zipf = new ZipfDistribution(this.lowerAndUpperLetters.size(), this.getSkew());
 						for(int j = 0; j < nbChars; j++){
-							char c = this.lowerAndUpperLetters.get(zipf.sample());
+							char c = this.lowerAndUpperLetters.get(zipf.sample() - 1);// to set it to the interval [0;n[ instead of [1;n]
 							nextString += c;
 						}
 					}
 					if(regExp.equals("[a-9]")){
 						ZipfDistribution zipf = new ZipfDistribution(this.lowerLettersAndDigits.size(), this.getSkew());
 						for(int j = 0; j < nbChars; j++){
-							char c = this.lowerLettersAndDigits.get(zipf.sample());
+							char c = this.lowerLettersAndDigits.get(zipf.sample() - 1);// to set it to the interval [0;n[ instead of [1;n]
 							nextString += c;
 						}
 					}
 					if(regExp.equals("[A-9]")){
 						ZipfDistribution zipf = new ZipfDistribution(this.upperLettersAndDigits.size(), this.getSkew());
 						for(int j = 0; j < nbChars; j++){
-							char c = this.upperLettersAndDigits.get(zipf.sample());
+							char c = this.upperLettersAndDigits.get(zipf.sample() - 1);// to set it to the interval [0;n[ instead of [1;n]
 							nextString += c;
 						}
 					}
@@ -200,7 +200,7 @@ public class ZipfProfile implements IStreamProfile {
 			ArrayList<String> vals = (ArrayList<String>) parameters.get(EnumAttribute.VALUES_PARAM);
 			int n = vals.size();
 			ZipfDistribution zipf = new ZipfDistribution(n, this.getSkew());
-			int next = zipf.sample();
+			int next = zipf.sample() - 1;// to set it to the interval [0;n[ instead of [1;n]
 			result = vals.get(next);
 		}
 		

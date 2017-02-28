@@ -104,13 +104,13 @@ public class MainRMI{
 
 			if(command.equalsIgnoreCase("record")){
 				try {
-					JdbcStorageManager manager = new JdbcStorageManager(dbHost, dbUser, dbPwd);
+					JdbcStorageManager manager = new JdbcStorageManager("streamsim", dbHost, dbUser, dbPwd);
 
 					System.out.println("Recording parameters for stream " + streamName + "...");
 					manager.recordParameters(streamName, port, variation, tickDelay);
 
 					System.out.println("Recording tuples for stream " + streamName + "...");
-					manager.recordStream(streamName, stream.getSchema().getAttributes(), elements);
+					manager.recordStream(streamName, variation, stream.getSchema().getAttributes(), elements);
 					System.out.println("Stream " + streamName + " recorded successfully!");
 					return;
 				} catch (ClassNotFoundException | SQLException e) {
@@ -121,7 +121,7 @@ public class MainRMI{
 
 		if(command .equalsIgnoreCase("REPLAY")){
 			try {
-				JdbcStorageManager manager = new JdbcStorageManager(dbHost, dbUser, dbPwd);
+				JdbcStorageManager manager = new JdbcStorageManager("streamsim", dbHost, dbUser, dbPwd);
 				port = manager.getPort(streamName);
 				String variation = manager.getVariation(streamName);
 				tickDelay = manager.getTickDelay(streamName);
@@ -141,7 +141,7 @@ public class MainRMI{
 				stream.initializeVariations();
 
 				System.out.println("Loading the stream from the database...");
-				elements = manager.getElements(streamName, stream.getSchema().getAttributes());
+				elements = manager.getElements(streamName, variation, stream.getSchema().getAttributes());
 
 				pSize = stream.getProfiles().size();
 				tSize = stream.getTransitions().size();

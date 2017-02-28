@@ -31,16 +31,16 @@ public class JdbcStorageManager implements Serializable {
 	private final Connection connection;
 	private static final Logger logger = Logger.getLogger("JdbcStorageManager");
 	
-	public JdbcStorageManager(String dbHost, String dbUser, String dbPassword) throws ClassNotFoundException, SQLException{
+	public JdbcStorageManager(String dbName, String dbHost, String dbUser, String dbPassword) throws ClassNotFoundException, SQLException{
 		String jdbcDriver = "com.mysql.jdbc.Driver";
-		String dbUrl = "jdbc:mysql://"+ dbHost +"/streamsim";
+		String dbUrl = "jdbc:mysql://" + dbHost + "/" + dbName;
 		Class.forName(jdbcDriver);
 		this.connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
 		this.createParametersTable();
 	}
 	
-	public void createStreamTable(String streamName, ArrayList<IAttribute> attributes){
-		String query = "CREATE TABLE stream_" + streamName + "(";
+	public void createStreamTable(String streamName, String variation, ArrayList<IAttribute> attributes){
+		String query = "CREATE TABLE stream_" + streamName + "_" + variation + "(";
 		query += "chunkId VARCHAR(255)";
 		for(int i = 0; i < attributes.size(); i++){
 			IAttribute attribute = attributes.get(i);
@@ -52,7 +52,7 @@ public class JdbcStorageManager implements Serializable {
 			}
 			query += "," + attrName + " " + attrDbType; 
 		}
-		query += ")";
+		query += ", timestamp BIGINT)";
 		Statement statement;
 		try {
 			statement = this.connection.createStatement();
@@ -80,21 +80,21 @@ public class JdbcStorageManager implements Serializable {
 		}
 	}
 
-	public void recordStream(String streamName, ArrayList<IAttribute> attributes, HashMap<String, IElement[]> elements){
+	public void recordStream(String streamName, String variation, ArrayList<IAttribute> attributes, HashMap<String, IElement[]> elements){
 		logger.info("Recording elements for stream " + streamName + "...");
 		try {
-			this.createStreamTable(streamName, attributes);
+			this.createStreamTable(streamName, variation, attributes);
 			Integer nbAttributes = attributes.size();
 			Statement statement = this.connection.createStatement();
 			for(String chunkId : elements.keySet()){
 				IElement[] chunk = elements.get(chunkId);
 				for(IElement element : chunk){
 					Object[] values = element.getValues();
-					String query = "INSERT INTO stream_" + streamName + " VALUES('" + chunkId + "',";
+					String query = "INSERT INTO stream_" + streamName + "_" + variation + " VALUES('" + chunkId + "',";
 					for(int i = 0; i < nbAttributes - 1; i++){
 						query += "'" + values[i] + "' ,";
 					}
-					query += "'" + values[nbAttributes - 1] + "')";
+					query += "'" + values[nbAttributes - 1] + "', '" + element.getTimestamp() + "')";
 					statement.executeUpdate(query);
 				}
 			}
@@ -116,12 +116,12 @@ public class JdbcStorageManager implements Serializable {
 	}
 	
 
-	public HashMap<String, IElement[]> getElements(String streamName, ArrayList<IAttribute> attributes){
+	public HashMap<String, IElement[]> getElements(String streamName, String variation, ArrayList<IAttribute> attributes){
 		logger.info("Recovering elements for stream " + streamName + "...");
 		int nbAttributes = attributes.size();
 		
 		HashMap<String, IElement[]> elements = new HashMap<>();
-		String query = "SELECT * FROM stream_" + streamName;
+		String query = "SELECT * FROM stream_" + streamName + "_" + variation;
 		Statement statement;
 		try {
 			statement = this.connection.createStatement();
@@ -134,7 +134,8 @@ public class JdbcStorageManager implements Serializable {
 					Object value = (Object) results.getObject(attributes.get(i).getName());
 					values[i] = value;
 				}
-				IElement element = (IElement) new StreamElement(nbAttributes, (double)System.currentTimeMillis(), values);
+				Double timestamp = (Double) results.getDouble("timestamp");
+				IElement element = (IElement) new StreamElement(nbAttributes, timestamp, values);
 				
 				if(elements.containsKey(chunk)){
 					IElement[] chunkElements = elements.get(chunk);

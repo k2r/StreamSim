@@ -45,8 +45,8 @@ public class JdbcStorageManagerTestSuite extends TestCase {
 		attributes.add(attr2);
 		attributes.add(attr3);
 		
-		JdbcStorageManager manager = new JdbcStorageManager("localhost", "root", null);
-		manager.createStreamTable("testStream1", attributes);
+		JdbcStorageManager manager = new JdbcStorageManager("streamsim_test", "localhost", "root", null);
+		manager.createStreamTable("testStream1", "linear", attributes);
 	}
 
 	/**
@@ -102,8 +102,8 @@ public class JdbcStorageManagerTestSuite extends TestCase {
 		chunks.put("T1It1", chunk2);
 		chunks.put("P2It1", chunk3);
 		
-		JdbcStorageManager manager = new JdbcStorageManager("localhost", "root", null);
-		manager.recordStream("testStream2", attributes, chunks);
+		JdbcStorageManager manager = new JdbcStorageManager("streamsim_test", "localhost", "root", null);
+		manager.recordStream("testStream2", "linear", attributes, chunks);
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class JdbcStorageManagerTestSuite extends TestCase {
 	 * @throws ClassNotFoundException 
 	 */
 	public void testRecordParameters() throws ClassNotFoundException, SQLException {
-		JdbcStorageManager manager = new JdbcStorageManager("localhost", "root", null);
+		JdbcStorageManager manager = new JdbcStorageManager("streamsim_test", "localhost", "root", null);
 		manager.recordParameters("testStream3", 9000, "linear", 1L);
 	}
 
@@ -169,24 +169,25 @@ public class JdbcStorageManagerTestSuite extends TestCase {
 		chunks.put("T1It1", chunk2);
 		chunks.put("P2It1", chunk3);
 		
-		JdbcStorageManager manager = new JdbcStorageManager("localhost", "root", null);
-		manager.recordStream("testStream4", attributes, chunks);
+		JdbcStorageManager manager = new JdbcStorageManager("streamsim_test", "localhost", "root", null);
+		manager.recordStream("testStream4", "linear", attributes, chunks);
 		
 		ArrayList<String> attrNames = new ArrayList<>();
 		for(int i = 0; i < attributes.size(); i++){
 			attrNames.add(attributes.get(i).getName());
 		}
 		
-		HashMap<String, IElement[]> actual = manager.getElements("testStream4", attributes);
-		/*for(String chunkId : actual.keySet()){
-			IElement[] chunk = actual.get(chunkId);
-			System.out.print(chunkId + "= [");
-			for(IElement element : chunk){
-				System.out.println(element.toString(attrNames));
+		HashMap<String, IElement[]> actual = manager.getElements("testStream4", "linear", attributes);
+		for(String chunkId : actual.keySet()){
+			IElement[] expectedChunk = chunks.get(chunkId);
+			IElement[] actualChunk = actual.get(chunkId);
+			int n = expectedChunk.length;
+			for(int i = 0; i < n; i++){
+				IElement expectedElem = expectedChunk[i];
+				IElement actualElem = actualChunk[i];
+				assertEquals(expectedElem, actualElem);
 			}
-			System.out.println("]");
-		}*/
-		assertEquals(chunks, actual);
+		}
 	}
 
 	/**
@@ -195,7 +196,7 @@ public class JdbcStorageManagerTestSuite extends TestCase {
 	 * @throws ClassNotFoundException 
 	 */
 	public void testGetPort() throws ClassNotFoundException, SQLException {
-		JdbcStorageManager manager = new JdbcStorageManager("localhost", "root", null);
+		JdbcStorageManager manager = new JdbcStorageManager("streamsim_test", "localhost", "root", null);
 		manager.recordParameters("testStream5", 9005, "linearIncrease", 1L);
 		manager.recordParameters("testStream6", 9006, "all", 1L);
 		manager.recordParameters("testStream7", 9007, "exponentialDecrease", 1L);
@@ -211,7 +212,7 @@ public class JdbcStorageManagerTestSuite extends TestCase {
 	 * @throws ClassNotFoundException 
 	 */
 	public void testGetVariation() throws ClassNotFoundException, SQLException {
-		JdbcStorageManager manager = new JdbcStorageManager("localhost", "root", null);
+		JdbcStorageManager manager = new JdbcStorageManager("streamsim_test", "localhost", "root", null);
 		manager.recordParameters("testStream8", 9000, "linearIncrease", 1L);
 		manager.recordParameters("testStream9", 9000, "all", 1L);
 		manager.recordParameters("testStream10", 9000, "exponentialDecrease", 1L);
@@ -227,7 +228,7 @@ public class JdbcStorageManagerTestSuite extends TestCase {
 	 * @throws ClassNotFoundException 
 	 */
 	public void testGetTickDelay() throws ClassNotFoundException, SQLException {
-		JdbcStorageManager manager = new JdbcStorageManager("localhost", "root", null);
+		JdbcStorageManager manager = new JdbcStorageManager("streamsim_test", "localhost", "root", null);
 		manager.recordParameters("testStream11", 9000, "linear", 1L);
 		manager.recordParameters("testStream12", 9000, "linear", 2L);
 		manager.recordParameters("testStream13", 9000, "linear", 3L);

@@ -66,13 +66,14 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 
 			this.elements = this.stream.getElements();
 			
+			String dbName = (String) req.getParameter("dbname");
 			String dbHost = (String) req.getParameter("dbhost");
 			String dbUser = (String) req.getParameter("dbuser");
 			String dbPwd = (String) req.getParameter("dbpwd");
 			try {
-				JdbcStorageManager manager = new JdbcStorageManager(dbHost, dbUser, dbPwd);
+				JdbcStorageManager manager = new JdbcStorageManager(dbName, dbHost, dbUser, dbPwd);
 				manager.recordParameters(bean.getName(), bean.getPort(), bean.getVariation(), frequency);
-				manager.recordStream(bean.getName(), bean.getStream().getSchema().getAttributes(), bean.getStream().getElements());
+				manager.recordStream(bean.getName(), bean.getVariation(), bean.getStream().getSchema().getAttributes(), bean.getStream().getElements());
 				this.stateMsg = "Stream " + bean.getName() + " recorded successfully on host " + dbHost + "!";
 			} catch (ClassNotFoundException | SQLException e) {
 				e.printStackTrace();
@@ -80,15 +81,16 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 		}
 		if(command.equalsIgnoreCase("REPLAY")){
 			
+			String dbName = (String) req.getParameter("dbname");
 			String dbHost = (String) req.getParameter("dbhost");
 			String dbUser = (String) req.getParameter("dbuser");
 			String dbPwd = (String) req.getParameter("dbpwd");
 			
 			try{
-				JdbcStorageManager manager = new JdbcStorageManager(dbHost, dbUser, dbPwd);
+				JdbcStorageManager manager = new JdbcStorageManager(dbName, dbHost, dbUser, dbPwd);
 				
 				this.frequency = manager.getTickDelay(bean.getName());
-				this.elements = manager.getElements(bean.getName(), this.stream.getSchema().getAttributes());
+				this.elements = manager.getElements(bean.getName(), bean.getVariation(), this.stream.getSchema().getAttributes());
 				
 				this.profileSize = stream.getProfiles().size();;
 				this.transitionSize = stream.getTransitions().size();
@@ -101,7 +103,7 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 			}
 		}
 	}
-
+	
 	public void startEmission(){
 		this.runFlag = true;
 	}

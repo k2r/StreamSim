@@ -21,6 +21,11 @@
     </tr>
 	
 	<tr>
+        <td class="label"><label>Database name</label>:</td>
+        <td class="input"><input type="text" name="dbname" /></td>
+    </tr>
+    
+	<tr>
         <td class="label"><label>Database host</label>:</td>
         <td class="input"><input type="text" name="dbhost" /></td>
     </tr>

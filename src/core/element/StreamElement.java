@@ -67,5 +67,35 @@ public class StreamElement implements IElement {
 		result += "}@" + this.getTimestamp() + "]";
 		return result;
 	}
-
+	
+	@Override
+	public String toString() {
+		int n = this.values.length;
+		String result = "[Element{ ";
+		for(int i = 0; i < n; i++){
+			Object value = this.values[i];
+			result += "value" + i + " --> " + value + ";";
+		}
+		result += "}@" + this.getTimestamp() + "]";
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object o){
+		boolean result = true;
+		IElement element = (IElement) o;
+		Object[] toCompare = element.getValues();
+		Object[] values = this.getValues();
+		int n = toCompare.length;
+		if(this.timestamp != element.getTimestamp()){
+			result = false;
+		}
+		for(int i = 0; i < n; i++){
+			if(!values[i].equals(toCompare[i])){
+				result = false;
+				break;
+			}
+		}
+		return result;
+	}
 }
