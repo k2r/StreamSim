@@ -31,8 +31,6 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -8264272828086522045L;
-	private HttpServletRequest request;
-	private ElementStreamBean bean;
 	private Boolean runFlag;
 	private String stateMsg;
 	
@@ -49,11 +47,9 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 	 * 
 	 */
 	public RunnableStreamEmission(HttpServletRequest req, ElementStreamBean bean, String command) {
-		this.request = req;
-		this.bean = bean;
+		this.stream = bean.getStream();
 		if(command.equalsIgnoreCase("PLAY")){
-			this.frequency = Long.parseLong((String) this.request.getParameter("frequency"));
-			this.stream = this.bean.getStream();
+			this.frequency = Long.parseLong((String) req.getParameter("frequency"));
 			this.stream.generateStream(frequency);
 
 			this.elements = this.stream.getElements();
@@ -65,8 +61,7 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 			this.stateMsg = "Emission of the stream " + bean.getName() + " on port " + bean.getPort() + " with variation " + bean.getVariation() + "...";
 		}
 		if(command.equalsIgnoreCase("RECORD")){
-			this.frequency = Long.parseLong((String) this.request.getParameter("frequency"));
-			this.stream = this.bean.getStream();
+			this.frequency = Long.parseLong((String) req.getParameter("frequency"));
 			this.stream.generateStream(frequency);
 
 			this.elements = this.stream.getElements();
@@ -91,7 +86,8 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 			
 			try{
 				JdbcStorageManager manager = new JdbcStorageManager(dbHost, dbUser, dbPwd);
-				System.out.println(bean.getName() +  " " + this.stream.getSchema().getAttributes().size());
+				
+				this.frequency = manager.getTickDelay(bean.getName());
 				this.elements = manager.getElements(bean.getName(), this.stream.getSchema().getAttributes());
 				
 				this.profileSize = stream.getProfiles().size();;

@@ -48,9 +48,8 @@ public class Emitter extends HttpServlet {
 		
 		String generate = (String) req.getParameter("generate");
 		if(generate != null){
-			if(this.emission == null){
-				this.emission = new RunnableStreamEmission(req, bean, command);	
-			}
+			this.emission = new RunnableStreamEmission(req, bean, command);	
+			
 			if(command.equalsIgnoreCase("PLAY") || command.equalsIgnoreCase("REPLAY")){
 				this.emission.startEmission();
 				this.thread = new Thread(this.emission);

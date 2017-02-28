@@ -81,6 +81,7 @@ public class JdbcStorageManager implements Serializable {
 	}
 
 	public void recordStream(String streamName, ArrayList<IAttribute> attributes, HashMap<String, IElement[]> elements){
+		logger.info("Recording elements for stream " + streamName + "...");
 		try {
 			this.createStreamTable(streamName, attributes);
 			Integer nbAttributes = attributes.size();
@@ -103,6 +104,7 @@ public class JdbcStorageManager implements Serializable {
 	}
 	
 	public void recordParameters(String streamName, Integer port, String variation, Long tickDelay){
+		logger.info("Recording parameters for stream " + streamName + " linked to port " + port + " and variation " + variation + "...");
 		String query = "INSERT INTO parameters VALUES('"
 				+ streamName + "', '" + port + "', '" + variation + "', '" + tickDelay + "')";
 		try {
@@ -115,6 +117,7 @@ public class JdbcStorageManager implements Serializable {
 	
 
 	public HashMap<String, IElement[]> getElements(String streamName, ArrayList<IAttribute> attributes){
+		logger.info("Recovering elements for stream " + streamName + "...");
 		int nbAttributes = attributes.size();
 		
 		HashMap<String, IElement[]> elements = new HashMap<>();
