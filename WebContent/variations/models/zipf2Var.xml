@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE stream SYSTEM "variationDocType.dtd">
 <variations>
-	<profile type="zipf" skew="2.0" rate="100">
+	<profile type="zipf" skew="2.0" rate="500">
 		<duration>600</duration>
 	</profile>
 </variations>
