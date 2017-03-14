@@ -49,6 +49,7 @@ public class MainClient {
 				}
 			}catch(Exception e){
 				System.out.println("Waiting for stream items on host " + host + " port " + port + "...");
+				e.printStackTrace();
 				Thread.sleep(1000);
 				main(args);
 			}

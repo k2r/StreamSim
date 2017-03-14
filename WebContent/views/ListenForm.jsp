@@ -8,7 +8,7 @@
 <table class="form">
 <tr>
 <td>
-<form action="/streamsim/listener" method="POST">
+<form action="/StreamSim/listener" method="POST">
 	<table>
     <tr>
         <td class="label"><label>Host name</label>:</td>
@@ -47,7 +47,7 @@
 </tr>
 <tr>
 <td>
-<form action="/streamsim/listener" method="POST">
+<form action="/StreamSim/listener" method="POST">
 	<input class="buttonStop" type="submit" value="Stop listening" name="stopListen"/>
 </form>
 </td>

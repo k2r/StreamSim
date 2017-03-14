@@ -8,7 +8,7 @@
 <table class="form">
 	<tr>
 		<td>
-			<form action="/streamsim/livecontrol" method="POST">
+			<form action="/StreamSim/livecontrol" method="POST">
 				<table>
 
 					<tr>
@@ -34,7 +34,7 @@
 	</tr>
 	<tr>
 		<td class="submit">
-			<form action="/streamsim/livecontrol" method="POST">
+			<form action="/StreamSim/livecontrol" method="POST">
 				<input class="buttonStop" type="submit" value="Stop the emission"
 					name="stop"></input>
 			</form>
