@@ -3,7 +3,7 @@
 
 <h1 class="sectionTitle">Command and Options</h1>
 
-<form action="/StreamSim/emitter" method="POST">
+<form action="/streamsim/emitter" method="POST">
 <div class="instruction">For store and replay commands, please fulfill database information with credentials:</div>
 <table class="form">
 	<tr>

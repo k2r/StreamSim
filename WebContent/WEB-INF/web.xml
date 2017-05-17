@@ -1,56 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app id="WebApp_ID" version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
-<servlet>
-	<servlet-name>Generator</servlet-name>
-	<servlet-class>servlets.Generator</servlet-class>
-</servlet>
-
-<servlet>
-	<servlet-name>LiveControl</servlet-name>
-	<servlet-class>servlets.LiveControl</servlet-class>
-</servlet>
-
-<servlet>
-	<servlet-name>Listener</servlet-name>
-	<servlet-class>servlets.Listener</servlet-class>
-</servlet>
-
-<servlet>
-	<servlet-name>Emitter</servlet-name>
-	<servlet-class>servlets.Emitter</servlet-class>
-</servlet>
-
-<servlet>
-	<servlet-name>Creator</servlet-name>
-	<servlet-class>servlets.Creator</servlet-class>
-</servlet>
-
-<servlet-mapping>
-	<servlet-name>Generator</servlet-name>
-	<url-pattern>/generator</url-pattern>
-</servlet-mapping>
-
-<servlet-mapping>
-	<servlet-name>LiveControl</servlet-name>
-	<url-pattern>/livecontrol</url-pattern>
-</servlet-mapping>
-
-<servlet-mapping>
-	<servlet-name>Listener</servlet-name>
-	<url-pattern>/listener</url-pattern>
-</servlet-mapping>
-
-<servlet-mapping>
-	<servlet-name>Emitter</servlet-name>
-	<url-pattern>/emitter</url-pattern>
-</servlet-mapping>
-
-<servlet-mapping>
-	<servlet-name>Creator</servlet-name>
-	<url-pattern>/create</url-pattern>
-</servlet-mapping>
-
-<welcome-file-list>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <servlet>
+    <servlet-name>Generator</servlet-name>
+    <servlet-class>servlets.Generator</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>LiveControl</servlet-name>
+    <servlet-class>servlets.LiveControl</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>Listener</servlet-name>
+    <servlet-class>servlets.Listener</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>Emitter</servlet-name>
+    <servlet-class>servlets.Emitter</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>Creator</servlet-name>
+    <servlet-class>servlets.Creator</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Generator</servlet-name>
+    <url-pattern>/generator</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>LiveControl</servlet-name>
+    <url-pattern>/livecontrol</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Listener</servlet-name>
+    <url-pattern>/listener</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Emitter</servlet-name>
+    <url-pattern>/emitter</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Creator</servlet-name>
+    <url-pattern>/create</url-pattern>
+  </servlet-mapping>
+  <welcome-file-list>
     <welcome-file>Index.jsp</welcome-file>
-</welcome-file-list>
+  </welcome-file-list>
 </web-app>

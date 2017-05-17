@@ -3,7 +3,7 @@
 
 <h1 class="sectionTitle">Create a new stream</h1>
 
-<form action="/StreamSim/create" method="POST">
+<form action="/streamsim/create" method="POST">
 <table class="form">
 	<tr>
 		<td class="label"><label>Stream name</label>:</td>

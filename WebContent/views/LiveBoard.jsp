@@ -8,7 +8,7 @@
 <table class="form">
 	<tr>
 		<td>
-			<form action="/StreamSim/livecontrol" method="POST">
+			<form action="/streamsim/livecontrol" method="POST">
 				<table>
 
 					<tr>

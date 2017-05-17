@@ -9,7 +9,7 @@
 
 <div class="instruction">For enumerate attributes, please enter values without spaces and separated by ;</div>
 
-<form action="/StreamSim/create" method="POST">
+<form action="/streamsim/create" method="POST">
 <table class="form">
 	<c:forEach begin="1" end="${creator.nbAttributes}" var="i">
 		<tr>
