@@ -34,7 +34,7 @@
 	</tr>
 	<tr>
 		<td class="submit">
-			<form action="/StreamSim/livecontrol" method="POST">
+			<form action="/streamsim/livecontrol" method="POST">
 				<input class="buttonStop" type="submit" value="Stop the emission"
 					name="stop"></input>
 			</form>

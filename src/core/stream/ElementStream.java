@@ -41,6 +41,7 @@ public class ElementStream implements IElementStream{
 	 */
 	private static final long serialVersionUID = -3157381972651298760L;
 	
+	private String host;
 	private int port;
 	private Path schemaPath;
 	private Path varPath;
@@ -61,21 +62,37 @@ public class ElementStream implements IElementStream{
 	 * @throws IOException 
 	 * 
 	 */
-	public ElementStream(int port, String schema, String variation) throws IOException {
+	public ElementStream(String host, int port, String schema, String variation) throws IOException {
+		this.host = host;
 		this.port = port;
 		//this.source = new SocketStreamSource(this.port);
-		this.source = new RMIStreamSource(this.port);
+		this.source = new RMIStreamSource(this.host, this.port);
 		this.schemaPath = Paths.get("/schemas/" + schema + "Schema.xml");
 		this.varPath = Paths.get("/variations/models/" + variation + "Var.xml");
 		this.isTransition = false;
 	}
 	
-	public ElementStream(int port, String schema, String variation, ServletContext context) throws IOException, URISyntaxException {
+	public ElementStream(String host, int port, String schema, String variation, ServletContext context) throws IOException, URISyntaxException {
+		this.host = host;
 		this.port = port;
-		this.source = new RMIStreamSource(port);
+		this.source = new RMIStreamSource(this.host, this.port);
 		this.schemaPath = Paths.get(context.getRealPath("/schemas/" + schema + "Schema.xml"));
 		this.varPath = Paths.get(context.getRealPath("/variations/models/" + variation + "Var.xml"));
 		this.isTransition = false;
+	}
+
+	/**
+	 * @return the host
+	 */
+	public String getHost() {
+		return host;
+	}
+
+	/**
+	 * @param host the host to set
+	 */
+	public void setHost(String host) {
+		this.host = host;
 	}
 
 	/* (non-Javadoc)

@@ -15,6 +15,11 @@
        </select></td>
     </tr>
     
+    <tr>
+        <td class="label"><label>Server hostname</label>:</td>
+        <td class="input"><input type="text" name="host" /></td>
+    </tr>
+    
 	<tr>
         <td class="label"><label>Emission port</label>:</td>
         <td class="input"><input type="text" name="port" /></td>
@@ -36,6 +41,9 @@
            <option value="zipf1">Zipf-1 no variation</option>
            <option value="zipf15">Zipf-1.5 no variation</option>
            <option value="zipf2">Zipf-2 no variation</option>
+           <option value="testStd">Uniform increase/decrease</option>
+           <option value="testZipf05">Zipf-0.5 increase/decrease</option>
+           <option value="testZipf15">Zipf-1.5 increase/decrease</option>
        </select></td>
     </tr>
     

@@ -4,6 +4,7 @@
 package core.network.rmi.source;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NoSuchObjectException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -24,18 +25,35 @@ public class RMIStreamSource extends UnicastRemoteObject implements IRMIStreamSo
 	 */
 	private static final long serialVersionUID = 7442458055103865656L;
 	
+	private String host;
 	private int port;
 	private IElement[] chunk;
 	private ArrayList<String> attrNames;
 	private Registry registry;
 	private static final Logger logger = Logger.getLogger("RMIStreamSource");
 	
-	public RMIStreamSource(int port) throws RemoteException {
+	public RMIStreamSource(String host, int port) throws RemoteException {
 		super(port);
+		this.setHost(host);
 		this.setPort(port);
+		System.setProperty("java.rmi.server.hostname", host);
 		this.registry = LocateRegistry.createRegistry(this.getPort());
 	}
 	
+	/**
+	 * @return the host
+	 */
+	public String getHost() {
+		return host;
+	}
+
+	/**
+	 * @param host the host to set
+	 */
+	public void setHost(String host) {
+		this.host = host;
+	}
+
 	/**
 	 * @return the port
 	 */
@@ -84,8 +102,9 @@ public class RMIStreamSource extends UnicastRemoteObject implements IRMIStreamSo
 			logger.info("Re-sending chunk...");
 			try {
 				Thread.sleep(1000);
+				registry.unbind("tuples");
 				this.cast(chunk, attrNames);
-			} catch (InterruptedException e1) {
+			} catch (InterruptedException | RemoteException | NotBoundException e1) {
 				logger.info("Waiting for client acknowlegment before sending new tuples...");
 			}
 			

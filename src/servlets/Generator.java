@@ -85,13 +85,14 @@ public class Generator extends HttpServlet {
 		
 		if(load != null){
 			String streamName = (String) req.getParameter("name");
+			String hostname = (String) req.getParameter("host");
 			Integer port = Integer.parseInt((String) req.getParameter("port"));
 			String variation = (String) req.getParameter("variation");
 
 			ElementStreamBean bean = (ElementStreamBean) req.getSession().getAttribute("stream");
 			ElementStream stream;
 			try {
-				stream = new ElementStream(port, streamName, variation, this.context);
+				stream = new ElementStream(hostname, port, streamName, variation, this.context);
 				stream.initializeSchema();
 				stream.initializeVariations();
 

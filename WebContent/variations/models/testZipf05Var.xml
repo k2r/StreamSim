@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE variations SYSTEM "variationDocType.dtd" >
+<variations>
+  <profile type="zipf" skew="0.5" rate="5">
+    <duration>60</duration>
+  </profile>
+  <transition type="exponential">
+  	<duration>240</duration>
+  </transition>
+  <profile type="zipf" skew="0.5" rate="500">
+    <duration>330</duration>
+  </profile>
+  <transition type="exponential">
+  	<duration>240</duration>
+  </transition>
+  <profile type="zipf" skew="0.5" rate="5">
+    <duration>60</duration>
+  </profile>
+  <transition type="linear">
+  	<duration>0</duration>
+  </transition>
+  <profile type="zipf" skew="0.5" rate="100">
+    <duration>10</duration>
+  </profile>
+  <transition type="linear">
+  	<duration>0</duration>
+  </transition>
+  <profile type="zipf" skew="0.5" rate="5">
+  	<duration>60</duration>
+  </profile>
+</variations>

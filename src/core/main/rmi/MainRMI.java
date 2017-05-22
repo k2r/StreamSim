@@ -91,7 +91,7 @@ public class MainRMI{
 
 			System.out.println("The output rate will vary according to the profile " + profile);
 
-			stream = new ElementStream(port, streamName, variation);
+			stream = new ElementStream("localhost", port, streamName, variation);
 
 			stream.initializeSchema();
 			stream.initializeVariations();
@@ -135,7 +135,7 @@ public class MainRMI{
 
 				System.out.println("The output rate will vary according to the variation " + variation);
 
-				stream = new ElementStream(port, streamName, variation);
+				stream = new ElementStream("localhost", port, streamName, variation);
 
 				stream.initializeSchema();
 				stream.initializeVariations();

@@ -46,7 +46,7 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 	/**
 	 * 
 	 */
-	public RunnableStreamEmission(HttpServletRequest req, ElementStreamBean bean, String command) {
+	public RunnableStreamEmission(HttpServletRequest req, ElementStreamBean bean, String command) { 
 		this.stream = bean.getStream();
 		if(command.equalsIgnoreCase("PLAY")){
 			this.frequency = Long.parseLong((String) req.getParameter("frequency"));
