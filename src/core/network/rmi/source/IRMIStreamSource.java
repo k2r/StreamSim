@@ -15,6 +15,8 @@ import core.element.IElement;
  */
 public interface IRMIStreamSource extends Remote, Serializable{
 	
+	public int getChunkCounter() throws RemoteException;
+	
 	public ArrayList<String> getAttrNames() throws RemoteException;
 	
 	/**

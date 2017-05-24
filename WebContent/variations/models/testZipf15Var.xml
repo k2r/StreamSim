@@ -7,7 +7,7 @@
   <transition type="exponential">
   	<duration>240</duration>
   </transition>
-  <profile type="zipf" skew="1.5" rate="500">
+  <profile type="zipf" skew="1.5" rate="250">
     <duration>330</duration>
   </profile>
   <transition type="exponential">

@@ -25,6 +25,7 @@ public class RMIStreamSource extends UnicastRemoteObject implements IRMIStreamSo
 	 */
 	private static final long serialVersionUID = 7442458055103865656L;
 	
+	private int chunkCounter;
 	private String host;
 	private int port;
 	private IElement[] chunk;
@@ -36,10 +37,26 @@ public class RMIStreamSource extends UnicastRemoteObject implements IRMIStreamSo
 		super(port);
 		this.setHost(host);
 		this.setPort(port);
+		this.chunkCounter = 1;
 		System.setProperty("java.rmi.server.hostname", host);
 		this.registry = LocateRegistry.createRegistry(this.getPort());
 	}
 	
+	/**
+	 * @return the chunkCounter
+	 */
+	@Override
+	public int getChunkCounter() {
+		return chunkCounter;
+	}
+
+	/**
+	 * @param chunkCounter the chunkCounter to set
+	 */
+	public void setChunkCounter(int chunkCounter) {
+		this.chunkCounter = chunkCounter;
+	}
+
 	/**
 	 * @return the host
 	 */
@@ -97,6 +114,7 @@ public class RMIStreamSource extends UnicastRemoteObject implements IRMIStreamSo
 		this.setAttrNames(attrNames);
 		try {
 			registry.bind("tuples", (IRMIStreamSource)this);
+			this.chunkCounter++;
 		} catch (RemoteException | AlreadyBoundException e) {
 			logger.info("Server unable to bind the remote object");
 			logger.info("Re-sending chunk...");
