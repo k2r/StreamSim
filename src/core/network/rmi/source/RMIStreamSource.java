@@ -113,19 +113,18 @@ public class RMIStreamSource extends UnicastRemoteObject implements IRMIStreamSo
 		this.chunk = chunk;
 		this.setAttrNames(attrNames);
 		try {
+			try{
+				registry.unbind("tuples");
+			}catch(NotBoundException e1){
+				logger.info("No chunk submitted yet...");
+			}
 			registry.bind("tuples", (IRMIStreamSource)this);
+			logger.info("Chunk with id " + this.chunkCounter + " has been submitted properly");
 			this.chunkCounter++;
 		} catch (RemoteException | AlreadyBoundException e) {
 			logger.info("Server unable to bind the remote object");
 			logger.info("Re-sending chunk...");
-			try {
-				Thread.sleep(1000);
-				registry.unbind("tuples");
-				this.cast(chunk, attrNames);
-			} catch (InterruptedException | RemoteException | NotBoundException e1) {
-				logger.info("Waiting for client acknowlegment before sending new tuples...");
-			}
-			
+			this.cast(chunk, attrNames);
 		}
 	}
 	
