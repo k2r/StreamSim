@@ -4,6 +4,7 @@
 package core.runnable;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
@@ -33,7 +34,7 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 	private static final long serialVersionUID = -8264272828086522045L;
 	private Boolean runFlag;
 	private String stateMsg;
-	
+
 	private IElementStream stream;
 	private Long frequency;
 	private HashMap<String, IElement[]> elements;
@@ -42,7 +43,7 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 	private Integer profileIndex;
 	private Integer transitionIndex;
 	private Integer nextProfile;
-	
+
 	/**
 	 * 
 	 */
@@ -65,7 +66,7 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 			this.stream.generateStream(frequency);
 
 			this.elements = this.stream.getElements();
-			
+
 			String dbName = (String) req.getParameter("dbname");
 			String dbHost = (String) req.getParameter("dbhost");
 			String dbUser = (String) req.getParameter("dbuser");
@@ -80,19 +81,19 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 			}
 		}
 		if(command.equalsIgnoreCase("REPLAY")){
-			
+
 			String dbName = (String) req.getParameter("dbname");
 			String dbHost = (String) req.getParameter("dbhost");
 			String dbUser = (String) req.getParameter("dbuser");
 			String dbPwd = (String) req.getParameter("dbpwd");
-			
+
 			try{
 				JdbcStorageManager manager = new JdbcStorageManager(dbName, dbHost, dbUser, dbPwd);
-				
+
 				this.frequency = manager.getTickDelay(bean.getName());
 				this.elements = manager.getElements(bean.getName(), bean.getVariation(), this.stream.getSchema().getAttributes());
-				
-				this.profileSize = stream.getProfiles().size();;
+
+				this.profileSize = stream.getProfiles().size();
 				this.transitionSize = stream.getTransitions().size();
 				this.profileIndex = 0;
 				this.transitionIndex = 0;
@@ -103,7 +104,7 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 			}
 		}
 	}
-	
+
 	public void startEmission(){
 		this.runFlag = true;
 	}
@@ -111,11 +112,11 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 	public void stopEmission(){
 		this.runFlag = false;
 	}
-	
+
 	public String getStateMsg(){
 		return this.stateMsg;
 	}
-	
+
 
 	/* (non-Javadoc)
 	 * @see java.lang.Runnable#run()
@@ -149,42 +150,47 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 				if(k == durationP){
 					this.profileIndex++;
 				}
+			}else{
+				try {
+					this.stream.getSource().releaseRegistry();
+				} catch (RemoteException e) {
+				}
+			}
 
-				if(this.transitionIndex < this.transitionSize && this.nextProfile < this.profileSize){
-					stream.setTransition(true);
-					stream.setCurrentTransition(stream.getTransitions().get(this.transitionIndex));
-					stream.setNextProfile(stream.getProfiles().get(this.nextProfile));
+			if(this.transitionIndex < this.transitionSize && this.nextProfile < this.profileSize){
+				stream.setTransition(true);
+				stream.setCurrentTransition(stream.getTransitions().get(this.transitionIndex));
+				stream.setNextProfile(stream.getProfiles().get(this.nextProfile));
 
-					stream.getCurrentTransition().solveTransitionFunc(stream.getCurrentProfile().getNbElementPerTick(), stream.getNextProfile().getNbElementPerTick(), frequency);
+				stream.getCurrentTransition().solveTransitionFunc(stream.getCurrentProfile().getNbElementPerTick(), stream.getNextProfile().getNbElementPerTick(), frequency);
 
-					long durationT = (long) stream.getCurrentTransition().getDuration();
+				long durationT = (long) stream.getCurrentTransition().getDuration();
 
-					int l = 0;
-					while(l < durationT && this.runFlag){
-						double rateT = stream.getCurrentTransition().getIntermediateValue();
+				int l = 0;
+				while(l < durationT && this.runFlag){
+					double rateT = stream.getCurrentTransition().getIntermediateValue();
 
-						String tChunkKey = "T" + this.transitionIndex + "It" + l;
-						IElement[] tElements = elements.get(tChunkKey);
-						ExecutorService executorT = Executors.newCachedThreadPool();
-						Future<?> futureT = executorT.submit(new ChunckSubmitter(tElements, rateT, stream, frequency));
-						try {
-							futureT.get(frequency, TimeUnit.SECONDS);
-							l += frequency;
-						} catch (TimeoutException e) {
-							futureT.cancel(false);
-						} catch (ExecutionException e) {
-							futureT.cancel(true);
-						} catch (InterruptedException e) {
-							futureT.cancel(true);
-						}
-						executorT.shutdownNow();
+					String tChunkKey = "T" + this.transitionIndex + "It" + l;
+					IElement[] tElements = elements.get(tChunkKey);
+					ExecutorService executorT = Executors.newCachedThreadPool();
+					Future<?> futureT = executorT.submit(new ChunckSubmitter(tElements, rateT, stream, frequency));
+					try {
+						futureT.get(frequency, TimeUnit.SECONDS);
+						l += frequency;
+					} catch (TimeoutException e) {
+						futureT.cancel(false);
+					} catch (ExecutionException e) {
+						futureT.cancel(true);
+					} catch (InterruptedException e) {
+						futureT.cancel(true);
 					}
-						
-					if(l == durationT){
-						stream.setTransition(false);
-						this.transitionIndex++;
-						this.nextProfile++;
-					}
+					executorT.shutdownNow();
+				}
+
+				if(l == durationT){
+					stream.setTransition(false);
+					this.transitionIndex++;
+					this.nextProfile++;
 				}
 			}
 		}
