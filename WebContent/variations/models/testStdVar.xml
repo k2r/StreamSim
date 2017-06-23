@@ -1,31 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE variations SYSTEM "variationDocType.dtd" >
 <variations>
-  <profile type="standard" rate="5">
-    <duration>60</duration>
+  <profile type="standard" rate="30">
+    <duration>150</duration>
   </profile>
   <transition type="exponential">
-  	<duration>60</duration>
+  	<duration>250</duration>
   </transition>
-  <profile type="standard" rate="250">
-    <duration>300</duration>
+  <profile type="standard" rate="350">
+    <duration>400</duration>
   </profile>
   <transition type="exponential">
-  	<duration>60</duration>
-  </transition>
-  <profile type="standard" rate="5">
-    <duration>60</duration>
-  </profile>
-  <transition type="linear">
-  	<duration>0</duration>
-  </transition>
-  <profile type="standard" rate="250">
-    <duration>10</duration>
-  </profile>
-  <transition type="linear">
-  	<duration>0</duration>
-  </transition>
-  <profile type="standard" rate="5">
   	<duration>50</duration>
+  </transition>
+  <profile type="standard" rate="30">
+    <duration>350</duration>
   </profile>
 </variations>
