@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE stream SYSTEM "variationDocType.dtd">
 <variations>
-	<profile type="standard" rate="100">
-		<duration>60</duration>
+	<profile type="standard" rate="30">
+		<duration>150</duration>
+	</profile>
+	<transition type="linear">
+		<duration>0</duration>
+	</transition>
+	<profile type="standard" rate="75">
+		<duration>150</duration>
 	</profile>
 	<transition type="linear">
 		<duration>0</duration>
 	</transition>
 	<profile type="standard" rate="200">
-		<duration>60</duration>
+		<duration>150</duration>
 	</profile>
 	<transition type="linear">
 		<duration>0</duration>
 	</transition>
-	<profile type="standard" rate="300">
-		<duration>60</duration>
+	<profile type="standard" rate="350">
+		<duration>450</duration>
 	</profile>
 	<transition type="linear">
 		<duration>0</duration>
 	</transition>
-	<profile type="standard" rate="400">
-		<duration>60</duration>
+	<profile type="standard" rate="200">
+		<duration>200</duration>
 	</profile>
 	<transition type="linear">
 		<duration>0</duration>
 	</transition>
-	<profile type="standard" rate="500">
-		<duration>60</duration>
+	<profile type="standard" rate="30">
+		<duration>250</duration>
 	</profile>
-	<transition type="linear">
+<!--  	<transition type="linear">
 		<duration>0</duration>
 	</transition>
-	<profile type="standard" rate="600">
-		<duration>60</duration>
-	</profile>
-	<transition type="linear">
-		<duration>0</duration>
-	</transition>
-	<profile type="standard" rate="700">
-		<duration>60</duration>
+	<profile type="standard" rate="30">
+		<duration></duration>
 	</profile>
 	<transition type="linear">
 		<duration>0</duration>
@@ -57,5 +57,5 @@
 	</transition>
 	<profile type="standard" rate="1000">
 		<duration>60</duration>
-	</profile>
+	</profile>-->
 </variations>
