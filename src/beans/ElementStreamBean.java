@@ -6,8 +6,9 @@ package beans;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import core.network.IProducer;
 import core.runnable.RunnableStreamEmission;
-import core.stream.IElementStream;
+import core.stream.IStream;
 
 
 /**
@@ -16,11 +17,11 @@ import core.stream.IElementStream;
  */
 public class ElementStreamBean implements Serializable{
 
-	private IElementStream stream;
+	private IStream stream;
 	private RunnableStreamEmission emission;
 	
 	private String name;
-	private Integer port;
+	private IProducer producer;
 	private ArrayList<String> attrNames;
 	private ArrayList<String> attrTypes;
 	private Integer nbAttrs;
@@ -42,14 +43,14 @@ public class ElementStreamBean implements Serializable{
 	/**
 	 * @return the stream
 	 */
-	public IElementStream getStream() {
+	public IStream getStream() {
 		return stream;
 	}
 
 	/**
 	 * @param stream the stream to set
 	 */
-	public void setStream(IElementStream stream) {
+	public void setStream(IStream stream) {
 		this.stream = stream;
 	}
 
@@ -82,17 +83,17 @@ public class ElementStreamBean implements Serializable{
 	}
 
 	/**
-	 * @return the port
+	 * @return the producer
 	 */
-	public Integer getPort() {
-		return port;
+	public IProducer getProducer() {
+		return producer;
 	}
 
 	/**
-	 * @param port the port to set
+	 * @param producer the producer to set
 	 */
-	public void setPort(Integer port) {
-		this.port = port;
+	public void setProducer(IProducer producer) {
+		this.producer = producer;
 	}
 
 	/**

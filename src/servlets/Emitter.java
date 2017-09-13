@@ -70,7 +70,7 @@ public class Emitter extends HttpServlet {
 				try {
 					this.emission.stopEmission();
 					this.thread.join(1000);
-					stopMessage = "The emission of the stream " + bean.getName() + " have been stopped properly on port " + bean.getPort() + ".";
+					stopMessage = "The emission of the stream " + bean.getName() + " have been stopped properly.";
 				} catch (InterruptedException e) {
 					stopMessage = "The emission of the stream " + bean.getName() + " have failed because of exception " + e;
 				}
@@ -83,7 +83,7 @@ public class Emitter extends HttpServlet {
 			if(!this.thread.isAlive()){
 				this.thread = new Thread(this.emission);
 				this.thread.start();
-				String restartMessage = "Restarting the emission of the stream " + bean.getName() + " on port " + bean.getPort() + ".";
+				String restartMessage = "Restarting the emission of the stream " + bean.getName() + " on port.";
 				req.setAttribute("restart", restartMessage);
 			}
 		}	

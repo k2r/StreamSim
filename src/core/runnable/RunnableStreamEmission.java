@@ -4,7 +4,6 @@
 package core.runnable;
 
 import java.io.Serializable;
-import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
@@ -18,9 +17,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import beans.ElementStreamBean;
 import core.element.IElement;
-import core.jdbc.JdbcStorageManager;
-import core.network.ChunckSubmitter;
-import core.stream.IElementStream;
+import core.model.relational.RelationalModel;
+import core.network.IProducer;
+import core.network.PacketSubmitter;
+import core.persistence.IPersistenceConnector;
+import core.persistence.JdbcPersistenceManager;
+import core.stream.IStream;
 
 /**
  * @author Roland
@@ -35,7 +37,8 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 	private Boolean runFlag;
 	private String stateMsg;
 
-	private IElementStream stream;
+	private IStream stream;
+	private IProducer producer;
 	private Long frequency;
 	private HashMap<String, IElement[]> elements;
 	private Integer profileSize;
@@ -49,6 +52,7 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 	 */
 	public RunnableStreamEmission(HttpServletRequest req, ElementStreamBean bean, String command) { 
 		this.stream = bean.getStream();
+		this.producer = bean.getProducer();
 		if(command.equalsIgnoreCase("PLAY")){
 			this.frequency = Long.parseLong((String) req.getParameter("frequency"));
 			this.stream.generateStream(frequency);
@@ -59,7 +63,7 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 			this.profileIndex = 0;
 			this.transitionIndex = 0;
 			this.nextProfile = 1;
-			this.stateMsg = "Emission of the stream " + bean.getName() + " on port " + bean.getPort() + " with variation " + bean.getVariation() + "...";
+			this.stateMsg = "Emission of the stream " + bean.getName() + " with variation " + bean.getVariation() + "...";
 		}
 		if(command.equalsIgnoreCase("RECORD")){
 			this.frequency = Long.parseLong((String) req.getParameter("frequency"));
@@ -72,9 +76,9 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 			String dbUser = (String) req.getParameter("dbuser");
 			String dbPwd = (String) req.getParameter("dbpwd");
 			try {
-				JdbcStorageManager manager = new JdbcStorageManager(dbName, dbHost, dbUser, dbPwd);
-				manager.recordParameters(bean.getName(), bean.getPort(), bean.getVariation(), frequency);
-				manager.recordStream(bean.getName(), bean.getVariation(), bean.getStream().getSchema().getAttributes(), bean.getStream().getElements());
+				IPersistenceConnector manager = new JdbcPersistenceManager(dbName, dbHost, dbUser, dbPwd);
+				manager.persistParameters(bean.getName(), bean.getVariation(), frequency);
+				manager.persistStream(bean.getName(), bean.getVariation(), bean.getStream().getModel(), bean.getStream().getElements());
 				this.stateMsg = "Stream " + bean.getName() + " recorded successfully on host " + dbHost + "!";
 			} catch (ClassNotFoundException | SQLException e) {
 				e.printStackTrace();
@@ -88,17 +92,17 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 			String dbPwd = (String) req.getParameter("dbpwd");
 
 			try{
-				JdbcStorageManager manager = new JdbcStorageManager(dbName, dbHost, dbUser, dbPwd);
+				IPersistenceConnector manager = new JdbcPersistenceManager(dbName, dbHost, dbUser, dbPwd);
 
-				this.frequency = manager.getTickDelay(bean.getName());
-				this.elements = manager.getElements(bean.getName(), bean.getVariation(), this.stream.getSchema().getAttributes());
+				this.frequency = ((JdbcPersistenceManager) manager).getFrequency(bean.getName());
+				this.elements = ((JdbcPersistenceManager) manager).getElements(bean.getName(), bean.getVariation(), ((RelationalModel) this.stream.getModel()).getAttributes());
 
 				this.profileSize = stream.getProfiles().size();
 				this.transitionSize = stream.getTransitions().size();
 				this.profileIndex = 0;
 				this.transitionIndex = 0;
 				this.nextProfile = 1;
-				this.stateMsg = "Re-emission of the stream " + bean.getName() + " on port " + bean.getPort() + " with variation " + bean.getVariation() + "...";
+				this.stateMsg = "Re-emission of the stream " + bean.getName() + " with variation " + bean.getVariation() + "...";
 			} catch (ClassNotFoundException | SQLException e) {
 				e.printStackTrace();
 			}
@@ -127,14 +131,13 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 			if(this.profileIndex < this.profileSize){
 				stream.setCurrentProfile(stream.getProfiles().get(this.profileIndex));
 
-				double rateP = stream.getCurrentProfile().getNbElementPerTick();
 				long durationP = (long) stream.getCurrentProfile().getDuration();
 				int k = 0;
 				while(k < durationP && this.runFlag){
-					String pChunkKey = "P" + this.profileIndex + "It" + k;
-					IElement[] pElements = elements.get(pChunkKey);
+					String pPacketHeader = "P" + this.profileIndex + "It" + k;
+					IElement[] packet = elements.get(pPacketHeader);
 					ExecutorService executorP = Executors.newCachedThreadPool();
-					Future<?> futureP = executorP.submit(new ChunckSubmitter(pElements, rateP, stream, frequency));
+					Future<?> futureP = executorP.submit(new PacketSubmitter(this.producer, packet, this.frequency));
 					try {
 						futureP.get(frequency, TimeUnit.SECONDS);
 						k += frequency;
@@ -151,10 +154,7 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 					this.profileIndex++;
 				}
 			}else{
-				try {
-					this.stream.getSource().releaseRegistry();
-				} catch (RemoteException e) {
-				}
+				this.producer.release();
 			}
 
 			if(this.transitionIndex < this.transitionSize && this.nextProfile < this.profileSize){
@@ -168,12 +168,11 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 
 				int l = 0;
 				while(l < durationT && this.runFlag){
-					double rateT = stream.getCurrentTransition().getIntermediateValue();
 
-					String tChunkKey = "T" + this.transitionIndex + "It" + l;
-					IElement[] tElements = elements.get(tChunkKey);
+					String tPacketHeader = "T" + this.transitionIndex + "It" + l;
+					IElement[] packet = elements.get(tPacketHeader);
 					ExecutorService executorT = Executors.newCachedThreadPool();
-					Future<?> futureT = executorT.submit(new ChunckSubmitter(tElements, rateT, stream, frequency));
+					Future<?> futureT = executorT.submit(new PacketSubmitter(this.producer, packet, this.frequency));
 					try {
 						futureT.get(frequency, TimeUnit.SECONDS);
 						l += frequency;

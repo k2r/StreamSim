@@ -69,14 +69,5 @@ public interface IStreamTransition extends Serializable{
 	 * 
 	 * @return the intermediate stream rate according to the transition function
 	 */
-	public double getIntermediateValue();
-
-	
-
-	
-
-	
-
-	
-	
+	public double getIntermediateValue();	
 }

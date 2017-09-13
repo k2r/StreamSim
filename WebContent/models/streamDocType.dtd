@@ -1,0 +1,11 @@
+<!ELEMENT stream (name, type, attributes+)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT type (#PCDATA)>
+<!ATTLIST type type (relational) "relational">
+<!ELEMENT attributes (attribute+)>
+<!ELEMENT attribute (value+)>
+<!ATTLIST attribute type (integer|text|enumerate) "enumerate">
+<!ATTLIST attribute name NMTOKEN "attribute">
+<!ELEMENT value (#PCDATA)>
+<!ATTLIST value type (min|max|pattern|option) "option">
+<!ATTLIST value length CDATA "0">

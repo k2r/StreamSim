@@ -4,37 +4,17 @@
 package core.element;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 /**
  * @author Roland
- *
+ * Subinterfaces must provide a method to access to the stream element
  */
 public interface IElement extends Serializable{
-	
+
 	/**
 	 * 
-	 * @return the timestamp of the current stream element.
+	 * @return the timestamp associated to the stream element
 	 */
-	public double getTimestamp();
-	
-	/**
-	 * 
-	 * @return values describing the IElement
-	 */
-	public Object[] getValues();
-	
-	/**
-	 * 
-	 * @param index the index of the attribute 
-	 * @param o the new value to assign
-	 */
-	public void setValue(Integer index, Object o);
-	
-	/**
-	 * 
-	 * @param attrNames the list of attribute names
-	 * @return the string representing the current element.
-	 */
-	public String toString(ArrayList<String> attrNames);
+	public Integer getTimestamp();
+
 }

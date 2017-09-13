@@ -10,21 +10,15 @@ package core.config.xmlNodes;
 public enum NodeNames {
 	
 	STREAM("stream"),
+	TYPE("type"),
 	PROFILES("profiles"),
 	PROFILE("profile"),
-	TRANSITIONS("transitions"),
-	TRANSITION("transition"),
 	NAME("name"),
 	ATTRIBUTES("attributes"),
 	ATTRIBUTE("attribute"),
-	REFERENCE("reference"),
-	FREQDELTA("freqdelta"),
-	SIZEDELTA("sizedelta"),
-	LOAD("load"),
 	DURATION("duration"),
-	VALUE("value"),
-	TICKINTERVAL("interval"),
-	PARAM("parameters");
+	VALUE("value"), 
+	TRANSITION("transition");
 	
 	private String name = "";
 	

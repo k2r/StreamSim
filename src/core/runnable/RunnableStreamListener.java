@@ -10,9 +10,9 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
-import core.element.IElement;
-import core.network.rmi.source.IRMIStreamSource;
-import core.network.socket.receiver.SocketStreamReceiver;
+import core.element.relational.IRelationalElement;
+import core.network.rmi.producer.IRMIStreamProducer;
+import core.network.socket.consumer.SocketStreamReceiver;
 
 /**
  * @author Roland
@@ -70,9 +70,10 @@ public class RunnableStreamListener implements Runnable, Serializable {
 				try {
 		            Registry registry = LocateRegistry.getRegistry(host, port);
 		            if(registry != null){
-		            	IRMIStreamSource stub = (IRMIStreamSource) registry.lookup(this.resourceName);
-		            	IElement[] istream = stub.getInputStream();
-						ArrayList<String> attrNames = stub.getAttrNames();
+		            	IRMIStreamProducer stub = (IRMIStreamProducer) registry.lookup(this.resourceName);
+		            	//FIXME define and implement a RMI consumer and make a distinction between consumer services
+		            	IRelationalElement[] istream = null; //= stub.getInputStream();
+						ArrayList<String> attrNames = null; //stub.getAttrNames();
 						registry.unbind(this.resourceName);
 						int n = istream.length;
 						this.nbItems = Math.min(this.nbItems, n);
@@ -109,12 +110,12 @@ public class RunnableStreamListener implements Runnable, Serializable {
 		}
 	}
 	
-	public void updateBatch(ArrayList<String> tempBatch, SocketStreamReceiver receiver){
-		while(tempBatch.size() < this.nbItems){
+	public void updateBatch(ArrayList<String> buffer, SocketStreamReceiver receiver){
+		while(buffer.size() < this.nbItems){
 			logger.fine("Acquiring items...");
 			String tuple = receiver.getMessage();
 			if(tuple != null){
-				tempBatch.add(tuple);
+				buffer.add(tuple);
 				logger.fine("Add of item " + tuple);
 			}
 		}

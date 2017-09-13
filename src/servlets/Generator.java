@@ -16,9 +16,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import beans.ElementStreamBean;
 import beans.LiveControlBean;
+import core.model.relational.RelationalModel;
+import core.model.relational.attribute.IAttribute;
 import core.profile.IStreamProfile;
-import core.stream.ElementStream;
-import core.stream.IElementStream;
+import core.stream.IStream;
+import core.stream.relational.RelationalStream;
 import core.transition.IStreamTransition;
 import servlets.utils.Utils;
 
@@ -64,9 +66,9 @@ public class Generator extends HttpServlet {
 		if(refresh != null){
 			ElementStreamBean stream = (ElementStreamBean) req.getSession().getAttribute("stream");
 			if(stream != null){
-				IElementStream eStream = stream.getStream();
+				IStream eStream = stream.getStream();
 				if(eStream != null){
-					eStream.getSource().releaseRegistry();
+					stream.getProducer().release();
 				}
 			}
 			stream = new ElementStreamBean();
@@ -86,21 +88,22 @@ public class Generator extends HttpServlet {
 		if(load != null){
 			String streamName = (String) req.getParameter("name");
 			String hostname = (String) req.getParameter("host");
-			Integer port = Integer.parseInt((String) req.getParameter("port"));
+			//Integer port = Integer.parseInt((String) req.getParameter("port"));
 			String variation = (String) req.getParameter("variation");
 
 			ElementStreamBean bean = (ElementStreamBean) req.getSession().getAttribute("stream");
-			ElementStream stream;
+			/*To support a different stream model, this part should be refactored*/
+			RelationalStream stream;
 			try {
-				stream = new ElementStream(hostname, port, streamName, variation, this.context);
-				stream.initializeSchema();
+				stream = new RelationalStream(hostname, streamName, this.context);
+				stream.initializeModel();
 				stream.initializeVariations();
 
-				ArrayList<String> attributes = stream.getAttributeNames();
+				ArrayList<IAttribute> attributes = ((RelationalModel)stream.getModel()).getAttributes();
 				ArrayList<String> attrTypes = new ArrayList<>();
 				Integer nbAttrs = attributes.size();
 				for(int i = 0; i < nbAttrs; i++){
-					attrTypes.add(stream.getAttributeType(attributes.get(i)));
+					attrTypes.add(attributes.get(i).getType().toString());
 				}
 
 				ArrayList<IStreamProfile> profiles = stream.getProfiles();
@@ -146,10 +149,8 @@ public class Generator extends HttpServlet {
 
 				bean.setStream(stream);
 				bean.setName(streamName);
-				bean.setPort(port);
 				bean.setNbAttrs(nbAttrs);
 				bean.setVariation(variation);
-				bean.setAttrNames(attributes);
 				bean.setAttrTypes(attrTypes);
 				bean.setVarTimestamps(varTimestamps);
 				bean.setVarRates(varRates);

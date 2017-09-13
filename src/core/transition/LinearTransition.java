@@ -103,8 +103,10 @@ public class LinearTransition implements IStreamTransition {
 		return this.getCurrentRate();
 	}
 
-	
-
-	
-
+	/*Two transitions are equivalent if they have same type, duration and initial rate*/
+	@Override
+	public boolean equals(Object o) {
+		IStreamTransition transition = (IStreamTransition) o;
+		return (this.type == transition.getType() && this.duration == transition.getDuration() && this.initRate == transition.getInitRate());
+	}
 }

@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import beans.ElementStreamBean;
 import beans.LiveControlBean;
 import core.runnable.RunnableStreamEmission;
-import core.stream.IElementStream;
+import core.stream.IStream;
 import servlets.utils.Utils;
 
 /**
@@ -55,7 +55,7 @@ public class LiveControl extends HttpServlet {
 		String generate = (String) req.getParameter("generate");
 		if(generate != null){
 			
-			IElementStream stream = streamBean.getStream();
+			IStream stream = streamBean.getStream();
 			Integer rate = Integer.parseInt((String) req.getParameter("rate"));
 			
 			stream.getCurrentProfile().setNbElementPerTick(rate);
@@ -66,7 +66,7 @@ public class LiveControl extends HttpServlet {
 				this.thread = new Thread(this.emission);
 				this.thread.start();
 
-				String startMessage = "Emission of the stream " + streamBean.getName() + " on port " + streamBean.getPort() + " with variation " + streamBean.getVariation() + "...";
+				String startMessage = "Emission of the stream " + streamBean.getName() + " with variation " + streamBean.getVariation() + "...";
 				req.setAttribute("start", startMessage);
 			}else{
 				if(this.thread.isAlive()){
@@ -76,7 +76,7 @@ public class LiveControl extends HttpServlet {
 
 						this.thread.join(1000);
 
-						stopMessage = "The emission of the stream " + streamBean.getName() + " have been stopped properly on port " + streamBean.getPort() + ".";
+						stopMessage = "The emission of the stream " + streamBean.getName() + " have been stopped properly.";
 					} catch (InterruptedException e) {
 						stopMessage = "The emission of the stream " + streamBean.getName() + " have failed because of exception " + e;
 					}
@@ -86,7 +86,7 @@ public class LiveControl extends HttpServlet {
 				this.emission = new RunnableStreamEmission(req, streamBean, "PLAY");
 				this.thread = new Thread(this.emission);
 				this.thread.start();
-				String setMessage = "Restarting the emission of the stream " + streamBean.getName() + " on port " + streamBean.getPort() + " with new rate (" + stream.getCurrentProfile().getNbElementPerTick() + " items/s)";
+				String setMessage = "Restarting the emission of the stream " + streamBean.getName() + " with new rate (" + stream.getCurrentProfile().getNbElementPerTick() + " items/s)";
 				req.setAttribute("set", setMessage);
 			}
 			
@@ -113,7 +113,7 @@ public class LiveControl extends HttpServlet {
 				try {
 					this.emission.stopEmission();
 					this.thread.join(1000);
-					stopMessage = "The emission of the stream " + streamBean.getName() + " have been stopped properly on port " + streamBean.getPort() + ".";
+					stopMessage = "The emission of the stream " + streamBean.getName() + " have been stopped properly.";
 				} catch (InterruptedException e) {
 					stopMessage = "The emission of the stream " + streamBean.getName() + " have failed because of exception " + e;
 				}

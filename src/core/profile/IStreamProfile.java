@@ -4,9 +4,6 @@
 package core.profile;
 
 import java.io.Serializable;
-import java.util.HashMap;
-
-import core.attribute.type.AttributeType;
 import core.profile.type.ProfileType;
 
 /**
@@ -38,12 +35,4 @@ public interface IStreamProfile extends Serializable{
 	 * @param rate the number of element to generate at each timestamp
 	 */
 	public void setNbElementPerTick(int rate);
-	
-	/**
-	 * 
-	 * @param attributeType the type of the attribute to consider
-	 * @param parameters the map containing parameters of the current attribute
-	 * @return the next value for a given attribute defined by a type and some parameters to generate new values
-	 */
-	public Object getNextValue(AttributeType attributeType, HashMap<String, Object> parameters);
 }

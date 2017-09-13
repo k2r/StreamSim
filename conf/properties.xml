@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<parameters>
+
+<!-- Main command to execute 
+
+PLAY: play the specified stream to the consumer service
+RECORD: record the specified stream in the database
+REPLAY: replay the specified stream from the database to the consumer service
+-->
+
+<command>PLAY</command>
+
+<!-- Stream parameters -->
+
+<stream_name>student</stream_name>
+<!-- 
+relational: each stream element is described by a finite set of primary attributes (integer, enumerate or character strings)
+-->
+<stream_model>relational</stream_model>
+<!--
+no: play a stream with an uniform distribution of value and with no variation
+linearIncrease: play a stream with an uniform distribution of value and with a linear increase of its output rate
+logarithmicIncrease: play a stream with an uniform distribution of value and with a logarithmic increase of its output rate
+exponentialIncrease: play a stream with an uniform distribution of value and with an exponential increase of its output rate
+scaleIncrease: play a stream with an uniform distribution of value and with a scaled increase of its output rate
+linearDecrease: play a stream with an uniform distribution of value and with a linear decrease of its output rate
+logarithmicDecrease: play a stream with an uniform distribution of value and with a logarithmic decrease of its output rate
+exponentialDecrease: play a stream with an uniform distribution of value and with an exponential decrease of its output rate
+scaleDecrease: play a stream with an uniform distribution of value and with a scaled decrease of its output rate
+zipf05: play a stream with a zipf distribution of value (skew 0.5) and with no variation
+zipf1: play a stream with a zipf distribution of value (skew 1.0) and with no variation
+zipf15: play a stream with a zipf distribution of value (skew 1.5) and with no variation
+zipf2: play a stream with a zipf distribution of value (skew 2) and with no variation
+ -->
+<stream_variation>linearIncrease</stream_variation>
+<!-- Relative time unit for stream emission (in second) -->
+<frequency>1</frequency>
+
+<!-- Consumer service information -->
+<!-- 
+RMI: the generator will populate a RMI registry at specified host and port
+KAFKA: the generator will populate a Kafka topic at the specified host
+In both case, the resource/topic is binded to the name "streamsim" -->
+<consumer>RMI</consumer>
+
+<!-- If the consumer service is RMI, please fulfill following parameters -->
+<rmi_host>localhost</rmi_host>
+<rmi_port>5354</rmi_port>
+
+<!-- If the consumer service is Kafka, please fulfill following parameters -->
+<kafka_host>localhost</kafka_host>
+
+<!-- Database credentials (optional)-->
+
+<db_host>localhost</db_host>
+<db_name>streamsim</db_name>
+<db_user>root</db_user>
+<db_password></db_password>
+
+</parameters>
