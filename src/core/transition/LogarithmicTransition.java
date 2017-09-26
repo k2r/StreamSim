@@ -95,6 +95,7 @@ public class LogarithmicTransition implements IStreamTransition {
 		this.coeff = rate2;
 		this.index = 1;
 		this.initRate = rate1;
+		this.setCurrentRate(rate1);
 		this.setTickRate(tickRate);
 	}
 	

@@ -94,6 +94,7 @@ public class ExponentialTransition implements IStreamTransition {
 	public void solveTransitionFunc(double rate1, double rate2, double tickRate) {
 		this.coeff = rate2 / rate1;
 		this.initRate = rate1;
+		this.setCurrentRate(rate1);
 		this.index = 0;
 		this.setTickRate(tickRate);
 	}

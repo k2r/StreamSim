@@ -88,6 +88,7 @@ public class LinearTransition implements IStreamTransition {
 	 */
 	@Override
 	public void solveTransitionFunc(double rate1, double rate2, double tickRate) {
+		this.setTickRate(tickRate);
 		double d = this.getDuration();
 		this.delta =  (rate2 - rate1) / d; /*Give the rate increment on each second*/
 		this.setCurrentRate(rate1);
