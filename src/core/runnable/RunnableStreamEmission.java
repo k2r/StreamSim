@@ -55,9 +55,11 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 	 * 
 	 */
 	public RunnableStreamEmission(HttpServletRequest req, ElementStreamBean bean, String command) { 
+		/*Recovering the stream and the associated producer*/
 		this.stream = bean.getStream();
 		this.producer = bean.getProducer();
 		if(command.equalsIgnoreCase("PLAY")){
+			/*Generation of the stream for immediate emission according to the clock frequency specified through UI*/
 			this.frequency = Long.parseLong((String) req.getParameter("frequency"));
 			this.stream.generateStream(frequency);
 
@@ -69,6 +71,7 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 			this.nextProfile = 1;
 			this.stateMsg = "Emission of the stream " + bean.getName() + " with variation " + bean.getVariation() + "...";
 			try {
+				/*The producer must get connect to consumer service before emission of the stream*/
 				this.producer.connect();
 			} catch (RemoteException e) {
 				logger.severe("Unable to get a connection to registry because " + e);
@@ -76,8 +79,8 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 		}
 		if(command.equalsIgnoreCase("RECORD")){
 			this.frequency = Long.parseLong((String) req.getParameter("frequency"));
-			this.stream.generateStream(frequency);
-
+			this.stream.generateStream(this.frequency);
+			/*Generation of the stream for recording in the database specified through UI*/
 			this.elements = this.stream.getElements();
 
 			String dbName = (String) req.getParameter("dbname");
@@ -85,6 +88,7 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 			String dbUser = (String) req.getParameter("dbuser");
 			String dbPwd = (String) req.getParameter("dbpwd");
 			try {
+				/*Initialization of a IPersistenceConnector and recording of stream elements in the database*/
 				IPersistenceConnector manager = new JdbcPersistenceManager(dbName, dbHost, dbUser, dbPwd);
 				manager.persistParameters(bean.getName(), bean.getVariation(), frequency);
 				manager.persistStream(bean.getName(), bean.getVariation(), bean.getStream().getModel(), bean.getStream().getElements());
@@ -101,6 +105,7 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 			String dbPwd = (String) req.getParameter("dbpwd");
 
 			try{
+				/*Initialization of the IPersistenceConnector and retrieval of stream elements*/
 				IPersistenceConnector manager = new JdbcPersistenceManager(dbName, dbHost, dbUser, dbPwd);
 
 				this.frequency = ((JdbcPersistenceManager) manager).getFrequency(bean.getName());
@@ -139,6 +144,7 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 	 */
 	@Override
 	public void run() {
+		/*As long as the stream should be emitted, we iterate on profiles and transitions*/
 		while(this.runFlag){
 			if(this.profileIndex < this.profileSize){
 				stream.setCurrentProfile(stream.getProfiles().get(this.profileIndex));
@@ -165,13 +171,15 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 				if(k == durationP){
 					this.profileIndex++;
 				}
-			}/*else{
+			}else{
 				try {
+					/*If the stream has been played in its entirety, the producer must free all consumers attached to him and stop emission thread*/
 					this.producer.disconnect();
+					this.runFlag = false;
 				} catch (Exception e) {
 					logger.severe("Unable to disconnect stream producer because " + e);
 				}
-			}*/
+			}
 
 			if(this.transitionIndex < this.transitionSize && this.nextProfile < this.profileSize){
 				stream.setTransition(true);
@@ -190,8 +198,8 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 					ExecutorService executorT = Executors.newCachedThreadPool();
 					Future<?> futureT = executorT.submit(new PacketSubmitter(this.producer, packet, this.frequency));
 					try {
-						futureT.get(frequency, TimeUnit.SECONDS);
-						l += frequency;
+						futureT.get(this.frequency, TimeUnit.SECONDS);
+						l += this.frequency;
 					} catch (TimeoutException e) {
 						futureT.cancel(false);
 					} catch (ExecutionException e) {
