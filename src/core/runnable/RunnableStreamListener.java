@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 import core.element.relational.IRelationalElement;
 import core.network.rmi.producer.IRMIStreamProducer;
-import core.network.socket.consumer.SocketStreamReceiver;
+import core.network.socket.consumer.SocketStreamConsumer;
 
 /**
  * @author Roland
@@ -33,7 +33,7 @@ public class RunnableStreamListener implements Runnable, Serializable {
 	private Integer nbItems;
 
 	private ArrayList<String> items;
-	private SocketStreamReceiver receiver;
+	private SocketStreamConsumer receiver;
 	public static Logger logger = Logger.getLogger("RunnableStreamListener");
 	
 	public RunnableStreamListener(String host, Integer port, String resourceName, String type, Integer nbItems) {
@@ -95,7 +95,7 @@ public class RunnableStreamListener implements Runnable, Serializable {
 			if(this.type.equalsIgnoreCase("RAW")){
 				try {
 					if(this.receiver == null){
-						receiver = new SocketStreamReceiver(host, port);
+						receiver = new SocketStreamConsumer(host, port);
 					}
 					while(runFlag){
 						ArrayList<String> temp = new ArrayList<>();
@@ -110,7 +110,7 @@ public class RunnableStreamListener implements Runnable, Serializable {
 		}
 	}
 	
-	public void updateBatch(ArrayList<String> buffer, SocketStreamReceiver receiver){
+	public void updateBatch(ArrayList<String> buffer, SocketStreamConsumer receiver){
 		while(buffer.size() < this.nbItems){
 			logger.fine("Acquiring items...");
 			String tuple = receiver.getMessage();

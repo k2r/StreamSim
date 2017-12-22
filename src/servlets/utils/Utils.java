@@ -34,14 +34,14 @@ import beans.TextPattern;
  */
 public class Utils {
 
-	public static ArrayList<String> getStreamList(String schemaPath){
+	public static ArrayList<String> getStreamList(String modelPath){
 		ArrayList<String> result = new ArrayList<>();
-		File schemaFolder = new File(schemaPath);
+		File schemaFolder = new File(modelPath);
 		File[] schemas = schemaFolder.listFiles();
 		if(schemas != null){
 			for(File schema : schemas){
 				if(schema.getName().endsWith(".xml")){
-					String schemaName = schema.getName().split("Schema")[0];
+					String schemaName = schema.getName().split("Model")[0];
 					result.add(schemaName);
 				}
 			}
@@ -150,7 +150,7 @@ public class Utils {
 		transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, docType.getPublicId());
 		transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, docType.getSystemId());
 		DOMSource source = new DOMSource(doc);
-		String path = context.getRealPath("/schemas") + "/" + bean.getStreamName() + "Schema.xml";
+		String path = context.getRealPath("/models") + "/" + bean.getStreamName() + "Model.xml";
 		StreamResult result = new StreamResult(new File(path));
 		transformer.transform(source, result);
 	}

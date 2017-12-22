@@ -26,8 +26,9 @@ public class RMIStreamProducer extends UnicastRemoteObject implements IRMIStream
 	
 	private int packetCounter;
 	private String host;
-	private int port;
+	private Integer port;
 	private Registry registry;
+	private IElement[] packet;
 	private static final Logger logger = Logger.getLogger("RMIStreamProducer");
 	
 	public RMIStreamProducer(String host, int port) throws RemoteException {
@@ -42,56 +43,53 @@ public class RMIStreamProducer extends UnicastRemoteObject implements IRMIStream
 	 * @return the packetCounter
 	 */
 	@Override
-	public int getPacketCounter() {
+	public int getPacketCounter() throws RemoteException {
 		return packetCounter;
 	}
 
 	/**
 	 * @param packetCounter the packetCounter to set
 	 */
-	public void setChunkCounter(int chunkCounter) {
-		this.packetCounter = chunkCounter;
+	public void setPacketCounter(int packetCounter) throws RemoteException {
+		this.packetCounter = packetCounter;
 	}
 
 	/**
 	 * @return the host
 	 */
-	public String getHost() {
+	public String getHost() throws RemoteException {
 		return host;
 	}
 
 	/**
 	 * @param host the host to set
 	 */
-	public void setHost(String host) {
+	public void setHost(String host) throws RemoteException {
 		this.host = host;
 	}
 
 	/**
 	 * @return the port
 	 */
-	public int getPort() {
+	public int getPort() throws RemoteException {
 		return port;
 	}
 
 	/**
 	 * @param port the port to set
 	 */
-	public void setPort(int port) {
+	public void setPort(int port) throws RemoteException {
 		this.port = port;
 	}
 
 	@Override
-	public void connect() {
-		try {
-			this.registry = LocateRegistry.createRegistry(this.getPort());
-		} catch (RemoteException e) {
-			logger.severe("Unable to export remote object because " + e);
-		}
+	public void connect() throws RemoteException {
+		this.registry = LocateRegistry.createRegistry(this.getPort());		
 	}
 	
 	@Override
-	public void cast(IElement[] packet){
+	public void produce(IElement[] packet) throws RemoteException{
+		this.packet = packet;
 		try {
 			try{
 				registry.unbind("tuples");
@@ -101,19 +99,24 @@ public class RMIStreamProducer extends UnicastRemoteObject implements IRMIStream
 			registry.bind("tuples", (IRMIStreamProducer)this);
 			logger.info("Chunk with id " + this.packetCounter + " has been submitted properly");
 			this.packetCounter++;
-		} catch (RemoteException | AlreadyBoundException e) {
+		} catch (AlreadyBoundException e) {
 			logger.info("Server unable to bind the remote object");
 			logger.info("Re-sending shard...");
-			this.cast(packet);
+			this.produce(packet);
 		}
 	}
 	
 	@Override
-	public void release(){
+	public void disconnect() throws RemoteException{
 		try {
-			UnicastRemoteObject.unexportObject(registry, true);
+			UnicastRemoteObject.unexportObject(this.registry, true);
 		} catch (NoSuchObjectException e) {
 			logger.severe("There is no registry to release on given host/port");
 		}
-	}	
+	}
+
+	@Override
+	public IElement[] getPacket() throws RemoteException {
+		return this.packet;
+	}
 }

@@ -62,14 +62,15 @@ public class PacketSubmitter implements Runnable, Serializable{
 		long start = System.currentTimeMillis();
 		try{
 			logger.info("Number of elements : " + this.getPacket().length);
-			this.producer.cast(this.getPacket());
+			this.producer.produce(this.getPacket());
 			long end = System.currentTimeMillis();
 			long remaining = (this.getFrequency() * 1000) - (end - start); //the time remaining after the complete emission
 			if(remaining > 0){
 				Thread.sleep(remaining);
 			}
 		}catch(Exception e){
-			logger.severe("Unable to start the ChunkSubmitter process because " + e);
+			logger.severe("Unable to start the PacketSubmitter process because " + e);
+			e.printStackTrace();
 		}
 	}
 

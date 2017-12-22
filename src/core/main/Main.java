@@ -61,17 +61,6 @@ public class Main {
 		String dbUser = global.getDbUser();
 		String dbPwd = global.getDbPwd();
 		
-		/*Initialize stream producer*/
-		if(consumer.equalsIgnoreCase(ConsumerType.RMI.toString())){
-			String rmiHost = global.getRmiHost();
-			Integer rmiPort = global.getRmiPort();
-			producer = (IProducer) new RMIStreamProducer(rmiHost, rmiPort);
-		}
-		if(consumer.equalsIgnoreCase(ConsumerType.KFK.toString())){
-			String kfkHost = global.getKafkaHost();
-			//TODO implement a kafka producer
-		}
-		
 		/*Initialize stream structures*/
 
 		IStream stream = null;
@@ -154,6 +143,17 @@ public class Main {
 		}
 
 		if(command.equalsIgnoreCase("PLAY") || command.equalsIgnoreCase("REPLAY")){
+			/*Initialize stream producer*/
+			if(consumer.equalsIgnoreCase(ConsumerType.RMI.toString())){
+				String rmiHost = global.getRmiHost();
+				Integer rmiPort = global.getRmiPort();
+				producer = (IProducer) new RMIStreamProducer(rmiHost, rmiPort);
+			}
+			if(consumer.equalsIgnoreCase(ConsumerType.KFK.toString())){
+				String kfkHost = global.getKafkaHost();
+				//TODO implement a kafka producer
+			}
+			
 			int i = 0;
 			int j = 0;
 			int nextP = 1;

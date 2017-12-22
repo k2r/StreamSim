@@ -18,6 +18,8 @@ import beans.ElementStreamBean;
 import beans.LiveControlBean;
 import core.model.relational.RelationalModel;
 import core.model.relational.attribute.IAttribute;
+import core.network.IProducer;
+import core.network.rmi.producer.RMIStreamProducer;
 import core.profile.IStreamProfile;
 import core.stream.IStream;
 import core.stream.relational.RelationalStream;
@@ -68,7 +70,7 @@ public class Generator extends HttpServlet {
 			if(stream != null){
 				IStream eStream = stream.getStream();
 				if(eStream != null){
-					stream.getProducer().release();
+					stream.getProducer().disconnect();
 				}
 			}
 			stream = new ElementStreamBean();
@@ -78,8 +80,8 @@ public class Generator extends HttpServlet {
 			live = new LiveControlBean();
 			req.getSession().setAttribute("live", live);
 			
-			ArrayList<String> schemas = Utils.getStreamList(this.getServletContext().getRealPath("/schemas"));
-			req.setAttribute("schemas", schemas);
+			ArrayList<String> models = Utils.getStreamList(this.getServletContext().getRealPath("/models"));
+			req.setAttribute("schemas", models);
 			this.getServletContext().getRequestDispatcher("/Generator.jsp").forward(req, resp);
 		}
 		
@@ -87,22 +89,25 @@ public class Generator extends HttpServlet {
 		
 		if(load != null){
 			String streamName = (String) req.getParameter("name");
-			String hostname = (String) req.getParameter("host");
-			//Integer port = Integer.parseInt((String) req.getParameter("port"));
 			String variation = (String) req.getParameter("variation");
-
+			String host = req.getParameter("host");
+			int port = Integer.parseInt(req.getParameter("port")); 
 			ElementStreamBean bean = (ElementStreamBean) req.getSession().getAttribute("stream");
+			
 			/*To support a different stream model, this part should be refactored*/
 			RelationalStream stream;
 			try {
-				stream = new RelationalStream(hostname, streamName, this.context);
+				stream = new RelationalStream(streamName, variation, this.context);
+				IProducer producer = new RMIStreamProducer(host, port);
 				stream.initializeModel();
 				stream.initializeVariations();
 
 				ArrayList<IAttribute> attributes = ((RelationalModel)stream.getModel()).getAttributes();
+				ArrayList<String> attrNames = new ArrayList<>();
 				ArrayList<String> attrTypes = new ArrayList<>();
 				Integer nbAttrs = attributes.size();
 				for(int i = 0; i < nbAttrs; i++){
+					attrNames.add(attributes.get(i).getName());
 					attrTypes.add(attributes.get(i).getType().toString());
 				}
 
@@ -120,6 +125,7 @@ public class Generator extends HttpServlet {
 				int indexT = 0;
 				
 				while(indexP < nbProfiles){
+					System.out.println("Generating profile " + indexP + " of " + nbProfiles);
 					IStreamProfile profile = profiles.get(indexP);
 					Double durationP = profile.getDuration();
 					Double endTimestamp = timestamp + durationP;
@@ -149,8 +155,10 @@ public class Generator extends HttpServlet {
 
 				bean.setStream(stream);
 				bean.setName(streamName);
+				bean.setProducer(producer);
 				bean.setNbAttrs(nbAttrs);
 				bean.setVariation(variation);
+				bean.setAttrNames(attrNames);
 				bean.setAttrTypes(attrTypes);
 				bean.setVarTimestamps(varTimestamps);
 				bean.setVarRates(varRates);
@@ -162,7 +170,7 @@ public class Generator extends HttpServlet {
 					this.getServletContext().getRequestDispatcher("/Generator.jsp").forward(req, resp);
 				}
 			} catch (URISyntaxException e) {
-				String errorMessage = "Unable to load the stream schema/variation because of " + e + "\n";
+				String errorMessage = "Unable to load the stream model/variation because of " + e + "\n";
 				errorMessage += "Please try again with an existing stream";
 				req.setAttribute("error", errorMessage);
 				this.getServletContext().getRequestDispatcher("/Generator.jsp");

@@ -15,13 +15,13 @@ import java.util.logging.Logger;
  * @author Roland KOTTO KOMBI
  * Implementation of a stream client receiving tuples through a socket
  */
-public class SocketStreamReceiver implements IStreamReceiver {
+public class SocketStreamConsumer implements ISocketStreamConsumer {
 	
 	private final Socket socket;
 	private final BufferedReader input;
-	public static Logger logger = Logger.getLogger("SocketStreamReceiver");
+	public static Logger logger = Logger.getLogger("SocketStreamConsumer");
 	
-	public SocketStreamReceiver(String hostname,int port) throws UnknownHostException, IOException {
+	public SocketStreamConsumer(String hostname,int port) throws UnknownHostException, IOException {
 		this.socket = new Socket(hostname, port);
 		this.input = new BufferedReader(new InputStreamReader(socket.getInputStream(), Charset.forName("UTF-8")));
 	}

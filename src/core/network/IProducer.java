@@ -4,6 +4,7 @@
 package core.network;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 
 import core.element.IElement;
 
@@ -14,18 +15,18 @@ import core.element.IElement;
 public interface IProducer extends Serializable{
 	
 	/**
-	 * This method establish an active connection to the consumer service
+	 * This method establishes an active connection with the consumer service
 	 */
-	public void connect();
+	public void connect()throws RemoteException;
 	
 	/**
-	 * This method cast a new packet of stream elements on a consumer service 
+	 * This method produces a new packet of stream elements and sends it to a consuming service 
 	 * @param packet the packet of stream elements to send 
 	 */
-	public void cast(IElement[] packet);
+	public void produce(IElement[] packet) throws RemoteException;
 	
 	/**
-	 * This method closes the connection to the consumer service
+	 * This method closes the connection with the consuming service
 	 */
-	public void release();
+	public void disconnect() throws RemoteException;
 }

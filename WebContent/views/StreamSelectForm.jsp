@@ -44,6 +44,9 @@
            <option value="testStd">Uniform increase/decrease</option>
            <option value="testZipf05">Zipf-0.5 increase/decrease</option>
            <option value="testZipf15">Zipf-1.5 increase/decrease</option>
+           <option value="stream1">Progressive increase/decrease</option>
+           <option value="stream2">Erratic increase/decrease</option>
+           <option value="stream3">Constant rate</option>
        </select></td>
     </tr>
     

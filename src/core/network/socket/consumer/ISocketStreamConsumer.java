@@ -2,7 +2,7 @@ package core.network.socket.consumer;
 
 import java.io.IOException;
 
-public interface IStreamReceiver {
+public interface ISocketStreamConsumer {
 
 	/**
 	 * 

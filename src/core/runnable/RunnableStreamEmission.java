@@ -4,6 +4,7 @@
 package core.runnable;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
@@ -12,6 +13,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -46,6 +48,8 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 	private Integer profileIndex;
 	private Integer transitionIndex;
 	private Integer nextProfile;
+	
+	private static Logger logger = Logger.getLogger("RunnableStreamEmission");
 
 	/**
 	 * 
@@ -64,6 +68,11 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 			this.transitionIndex = 0;
 			this.nextProfile = 1;
 			this.stateMsg = "Emission of the stream " + bean.getName() + " with variation " + bean.getVariation() + "...";
+			try {
+				this.producer.connect();
+			} catch (RemoteException e) {
+				logger.severe("Unable to get a connection to registry because " + e);
+			}
 		}
 		if(command.equalsIgnoreCase("RECORD")){
 			this.frequency = Long.parseLong((String) req.getParameter("frequency"));
@@ -103,8 +112,11 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 				this.transitionIndex = 0;
 				this.nextProfile = 1;
 				this.stateMsg = "Re-emission of the stream " + bean.getName() + " with variation " + bean.getVariation() + "...";
+				this.producer.connect();
 			} catch (ClassNotFoundException | SQLException e) {
 				e.printStackTrace();
+			} catch (RemoteException e) {
+				logger.severe("Unable to get a connection to registry because " + e);
 			}
 		}
 	}
@@ -153,9 +165,13 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 				if(k == durationP){
 					this.profileIndex++;
 				}
-			}else{
-				this.producer.release();
-			}
+			}/*else{
+				try {
+					this.producer.disconnect();
+				} catch (Exception e) {
+					logger.severe("Unable to disconnect stream producer because " + e);
+				}
+			}*/
 
 			if(this.transitionIndex < this.transitionSize && this.nextProfile < this.profileSize){
 				stream.setTransition(true);
