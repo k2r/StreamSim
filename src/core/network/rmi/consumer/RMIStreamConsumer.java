@@ -5,7 +5,6 @@ package core.network.rmi.consumer;
 
 import java.rmi.NoSuchObjectException;
 import java.rmi.NotBoundException;
-import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -63,7 +62,7 @@ public class RMIStreamConsumer extends UnicastRemoteObject implements IRMIStream
 				result = stub.getPacket();
 				this.registry.unbind(this.resource);
 			} catch (RemoteException | NotBoundException e) {
-				logger.severe("Unable to retrieve resource " + this.resource + " because " + e);
+				logger.fine("Unable to retrieve resource " + this.resource + " because " + e);
 			}
 		}
 		return result;
@@ -82,10 +81,10 @@ public class RMIStreamConsumer extends UnicastRemoteObject implements IRMIStream
 	}
 
 	/* (non-Javadoc)
-	 * @see core.network.rmi.consumer.IRMIStreamConsumer#getRegistry(java.lang.String)
+	 * @see core.network.rmi.consumer.IRMIStreamConsumer#getRegistry()
 	 */
 	@Override
-	public Remote getRegistry(String resource) throws RemoteException {
+	public Registry getRegistry() throws RemoteException {
 		return this.registry;
 	}
 }

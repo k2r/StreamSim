@@ -5,13 +5,14 @@ package core.runnable;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
-import core.element.relational.IRelationalElement;
-import core.network.rmi.producer.IRMIStreamProducer;
+import core.element.IElement;
+import core.element.relational.RelationalStreamElement;
+import core.network.rmi.consumer.IRMIStreamConsumer;
+import core.network.rmi.consumer.RMIStreamConsumer;
 import core.network.socket.consumer.SocketStreamConsumer;
 
 /**
@@ -68,17 +69,17 @@ public class RunnableStreamListener implements Runnable, Serializable {
 			if(this.type.equalsIgnoreCase("STREAMSIM")){
 				ArrayList<String> temp = new ArrayList<>();
 				try {
-		            Registry registry = LocateRegistry.getRegistry(host, port);
-		            if(registry != null){
-		            	IRMIStreamProducer stub = (IRMIStreamProducer) registry.lookup(this.resourceName);
-		            	//FIXME define and implement a RMI consumer and make a distinction between consumer services
-		            	IRelationalElement[] istream = null; //= stub.getInputStream();
-						ArrayList<String> attrNames = null; //stub.getAttrNames();
-						registry.unbind(this.resourceName);
+		            //TODO distinguish consumer types
+		            IRMIStreamConsumer consumer = new RMIStreamConsumer(this.host, this.port, this.resourceName);
+		            consumer.connect(); //try to establish a connection to the registry
+		            Registry registry = consumer.getRegistry();
+		            if(registry != null){           	
+		            	IElement[] istream = consumer.consume();
 						int n = istream.length;
 						this.nbItems = Math.min(this.nbItems, n);
 						for(int i = 0; i < this.nbItems; i++){
-							String readableItem = istream[i].toString(attrNames);
+							//TODO distinguish stream element type
+							String readableItem = ((RelationalStreamElement)istream[i]).toString();
 							temp.add(readableItem);
 						}
 						this.items = temp;

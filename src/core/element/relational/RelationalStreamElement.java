@@ -53,7 +53,7 @@ public class RelationalStreamElement implements IRelationalElement {
 	}
 	
 	/* (non-Javadoc)
-	 * @see core.element.IRelationalElement#toString(java.util.ArrayList)
+	 * @see core.element.IElement#toString(java.util.ArrayList)
 	 */
 	@Override
 	public String toString(ArrayList<String> attrNames) {

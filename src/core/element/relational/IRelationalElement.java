@@ -3,8 +3,6 @@
  */
 package core.element.relational;
 
-import java.util.ArrayList;
-
 import core.element.IElement;
 
 /**
@@ -26,10 +24,4 @@ public interface IRelationalElement extends IElement{
 	 */
 	public void setStreamElement(Integer index, Object o);
 	
-	/**
-	 * 
-	 * @param attrNames the list of attribute names
-	 * @return the string representing the current element.
-	 */
-	public String toString(ArrayList<String> attrNames);
 }

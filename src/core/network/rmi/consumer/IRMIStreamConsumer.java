@@ -5,6 +5,7 @@ package core.network.rmi.consumer;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.rmi.registry.Registry;
 
 import core.network.IConsumer;
 
@@ -14,6 +15,6 @@ import core.network.IConsumer;
  */
 public interface IRMIStreamConsumer extends Remote, IConsumer{
 	
-	public Remote getRegistry(String resource) throws RemoteException;
+	public Registry getRegistry() throws RemoteException;
 
 }
