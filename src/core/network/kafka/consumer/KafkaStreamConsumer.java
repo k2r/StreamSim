@@ -3,7 +3,6 @@
  */
 package core.network.kafka.consumer;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -52,15 +51,18 @@ public class KafkaStreamConsumer implements IKafkaStreamConsumer {
 	public IElement[] consume() {
 		IElement[] result = null;
 		try{
-			ConsumerRecords<String, String> allRecords = this.kConsumer.poll(1000);
-			if(allRecords != null){
-				ArrayList<ConsumerRecord<String, String>> records = (ArrayList<ConsumerRecord<String, String>>) allRecords.records(this.topic);
-				int nbRecords = records.size();
+			ConsumerRecords<String, String> records = this.kConsumer.poll(1000);
+			if(records != null){
+				Iterable<ConsumerRecord<String, String>> topicRecords = records.records(this.topic);
+				int nbRecords = records.count();
 				logger.info("Consuming " + nbRecords + " records from the Kafka cluster on topic " + this.topic);
 				result = new IElement[nbRecords];
-				for(int i = 0; i < nbRecords; i++){
-					IElement element = ((IElement) new RelationalStreamElement(records.get(i).value())); //generate a new relational stream element from a string
-					result[i] = element;
+				int index = 0;
+				for(ConsumerRecord<String, String> rec : topicRecords){
+					//generate a new relational stream element from a string
+					IElement element = ((IElement) new RelationalStreamElement(rec.value()));
+					result[index] = element;
+					index++;
 				}
 			}
 		}catch(Exception e){

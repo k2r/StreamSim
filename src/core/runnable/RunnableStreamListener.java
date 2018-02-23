@@ -104,7 +104,6 @@ public class RunnableStreamListener implements Runnable, Serializable {
 						}
 						IElement[] istream = this.consumer.consume();
 						int n = istream.length;
-						System.out.println("Consuming a packet of " + n + " stream elements...");
 						this.nbItems = Math.min(this.nbItems, n);
 						for(int i = 0; i < this.nbItems; i++){
 							String readableItem = ((RelationalStreamElement)istream[i]).toString();
