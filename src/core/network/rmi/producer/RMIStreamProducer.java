@@ -94,14 +94,14 @@ public class RMIStreamProducer extends UnicastRemoteObject implements IRMIStream
 			try{
 				registry.unbind("tuples");
 			}catch(NotBoundException e1){
-				logger.info("No shard submitted yet...");
+				logger.info("No packet submitted yet...");
 			}
 			registry.bind("tuples", (IRMIStreamProducer)this);
-			logger.info("Chunk with id " + this.packetCounter + " has been submitted properly");
+			logger.info("Packet with id " + this.packetCounter + " has been submitted properly");
 			this.packetCounter++;
 		} catch (AlreadyBoundException e) {
 			logger.info("Server unable to bind the remote object");
-			logger.info("Re-sending shard...");
+			logger.info("Re-sending packet...");
 			this.produce(packet);
 		}
 	}

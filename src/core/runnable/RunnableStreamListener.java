@@ -11,6 +11,9 @@ import java.util.logging.Logger;
 
 import core.element.IElement;
 import core.element.relational.RelationalStreamElement;
+import core.network.IConsumer;
+import core.network.MessagingType;
+import core.network.kafka.consumer.KafkaStreamConsumer;
 import core.network.rmi.consumer.IRMIStreamConsumer;
 import core.network.rmi.consumer.RMIStreamConsumer;
 import core.network.socket.consumer.SocketStreamConsumer;
@@ -26,6 +29,7 @@ public class RunnableStreamListener implements Runnable, Serializable {
 	 */
 	private static final long serialVersionUID = 3647940151358368943L;
 
+	private String network;
 	private String host;
 	private Integer port;
 	private String resourceName;
@@ -34,10 +38,12 @@ public class RunnableStreamListener implements Runnable, Serializable {
 	private Integer nbItems;
 
 	private ArrayList<String> items;
-	private SocketStreamConsumer receiver;
+	private IConsumer consumer;
+	private SocketStreamConsumer socketConsumer;
 	public static Logger logger = Logger.getLogger("RunnableStreamListener");
 	
-	public RunnableStreamListener(String host, Integer port, String resourceName, String type, Integer nbItems) {
+	public RunnableStreamListener(String network, String host, Integer port, String resourceName, String type, Integer nbItems) {
+		this.network = network;
 		this.host = host;
 		this.port = port;
 		this.resourceName = resourceName;
@@ -56,6 +62,12 @@ public class RunnableStreamListener implements Runnable, Serializable {
 	}
 	
 	public void stopListener() {
+		try {
+			this.consumer.disconnect();
+		} catch (Exception e) {
+			logger.severe("The consumer cannot be disconnected because " + e);
+			e.printStackTrace();
+		}
 		this.runFlag = false;
 	}
 	
@@ -63,27 +75,44 @@ public class RunnableStreamListener implements Runnable, Serializable {
 	 * @see java.lang.Runnable#run()
 	 */
 	@Override
-	public void run() {
-		
+	public void run() {	
 		while(runFlag){
 			if(this.type.equalsIgnoreCase("STREAMSIM")){
 				ArrayList<String> temp = new ArrayList<>();
 				try {
-		            //TODO distinguish consumer types
-		            IRMIStreamConsumer consumer = new RMIStreamConsumer(this.host, this.port, this.resourceName);
-		            consumer.connect(); //try to establish a connection to the registry
-		            Registry registry = consumer.getRegistry();
-		            if(registry != null){           	
-		            	IElement[] istream = consumer.consume();
+					if(this.network.equalsIgnoreCase(MessagingType.RMI.toString())){
+						if(this.consumer == null){
+							this.consumer = new RMIStreamConsumer(this.host, this.port, this.resourceName);
+						} 
+						this.consumer.connect();//the RMI consumer should connnect to the remote JVM each time it consumes new stream elements
+						Registry registry = ((IRMIStreamConsumer)consumer).getRegistry();
+						if(registry != null){           	
+							IElement[] istream = this.consumer.consume();
+							int n = istream.length;
+							this.nbItems = Math.min(this.nbItems, n);
+							for(int i = 0; i < this.nbItems; i++){
+								String readableItem = ((RelationalStreamElement)istream[i]).toString();
+								temp.add(readableItem);
+							}
+							this.items = temp;
+						}
+					}
+					if(this.network.equalsIgnoreCase(MessagingType.KFK.toString())){
+						if(this.consumer == null){
+							this.consumer = new KafkaStreamConsumer(this.host, this.port, this.resourceName);
+							this.consumer.connect();//the Kafka consumer should connect to the cluster only once until it gets stopped
+						}
+						IElement[] istream = this.consumer.consume();
 						int n = istream.length;
+						System.out.println("Consuming a packet of " + n + " stream elements...");
 						this.nbItems = Math.min(this.nbItems, n);
 						for(int i = 0; i < this.nbItems; i++){
-							//TODO distinguish stream element type
 							String readableItem = ((RelationalStreamElement)istream[i]).toString();
+							System.out.println("Element: " + readableItem);
 							temp.add(readableItem);
 						}
 						this.items = temp;
-		            }
+					}
 				}catch(Exception e){
 					try {
 						logger.fine("Nothing to retrieve because " + e);
@@ -95,12 +124,12 @@ public class RunnableStreamListener implements Runnable, Serializable {
 			}
 			if(this.type.equalsIgnoreCase("RAW")){
 				try {
-					if(this.receiver == null){
-						receiver = new SocketStreamConsumer(host, port);
+					if(this.socketConsumer == null){
+						this.socketConsumer = new SocketStreamConsumer(host, port);
 					}
 					while(runFlag){
 						ArrayList<String> temp = new ArrayList<>();
-						updateBatch(temp, receiver);
+						updateBatch(temp, this.socketConsumer);
 						logger.fine("Batch updated");
 						this.items = temp;
 					}

@@ -18,7 +18,9 @@ import beans.ElementStreamBean;
 import beans.LiveControlBean;
 import core.model.relational.RelationalModel;
 import core.model.relational.attribute.IAttribute;
+import core.network.MessagingType;
 import core.network.IProducer;
+import core.network.kafka.producer.KafkaStreamProducer;
 import core.network.rmi.producer.RMIStreamProducer;
 import core.profile.IStreamProfile;
 import core.stream.IStream;
@@ -90,6 +92,8 @@ public class Generator extends HttpServlet {
 		if(load != null){
 			String streamName = (String) req.getParameter("name");
 			String variation = (String) req.getParameter("variation");
+			//TODO add a field in the generator page to choose a network interface
+			String network = (String) req.getParameter("network");
 			String host = req.getParameter("host");
 			int port = Integer.parseInt(req.getParameter("port")); 
 			ElementStreamBean bean = (ElementStreamBean) req.getSession().getAttribute("stream");
@@ -98,7 +102,13 @@ public class Generator extends HttpServlet {
 			RelationalStream stream;
 			try {
 				stream = new RelationalStream(streamName, variation, this.context);
-				IProducer producer = new RMIStreamProducer(host, port);
+				IProducer producer = null;
+				if(network.equalsIgnoreCase(MessagingType.RMI.toString())){
+					producer = new RMIStreamProducer(host, port);
+				}
+				if(network.equalsIgnoreCase(MessagingType.KFK.toString())){
+					producer = new KafkaStreamProducer(host, port);
+				}
 				stream.initializeModel();
 				stream.initializeVariations();
 

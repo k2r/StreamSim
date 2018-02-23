@@ -5,8 +5,6 @@ package test.element;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
-
 import org.junit.Before;
 import org.junit.Test;
 import core.element.IElement;
@@ -79,23 +77,14 @@ public class RelationalStreamElementTest {
 	}
 
 	/**
-	 * Test method for {@link core.element.relational.RelationalStreamElement#toString(java.util.ArrayList)}.
+	 * Test method for {@link core.element.relational.RelationalStreamElement#stringify()}.
 	 */
 	@Test
-	public void testToStringArrayListOfString() {
-		ArrayList<String> attrs1 = new ArrayList<>();
-		ArrayList<String> attrs2 = new ArrayList<>();
-		attrs2.add("attribute1");
-		attrs2.add("attribute2");
-		attrs2.add("attribute3");
-		attrs2.add("attribute4");
-		attrs2.add("attribute5");
-		attrs2.add("attribute6");
-		attrs2.add("attribute7");
-		String expected1 = "[Element{}@1]";
-		String expected2 = "[Element{attribute1:1;attribute2:2;attribute3:3;attribute4:4.0;attribute5:5;attribute6:6;attribute7:7.0;}@2]";
+	public void testStringify() {
+		String expected1 = "{null;null;null;null;null;}@1";
+		String expected2 = "{1;2;3;4.0;5;6;7.0;}@2";
 		
-		assertEquals(expected1, ((RelationalStreamElement) this.element1).toString(attrs1));
-		assertEquals(expected2, ((RelationalStreamElement) this.element2).toString(attrs2));
+		assertEquals(expected1, ((RelationalStreamElement) this.element1).stringify());
+		assertEquals(expected2, ((RelationalStreamElement) this.element2).stringify());
 	}
 }

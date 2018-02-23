@@ -1,13 +1,13 @@
 package core.network;
 
-public enum ConsumerType {
+public enum MessagingType {
 
 	RMI("rmi"),
 	KFK("kafka");
 	
 	private String name = "";
 	
-	private ConsumerType(String name) {
+	private MessagingType(String name) {
 		this.name = name;
 	}
 	

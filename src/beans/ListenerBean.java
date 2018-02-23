@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class ListenerBean implements Serializable {
 
 	
-	
+	private String network;
 	private String host;
 	private Integer port;
 	private String type;
@@ -27,6 +27,20 @@ public class ListenerBean implements Serializable {
 	private static final long serialVersionUID = -431221303091422802L;
 	
 	public ListenerBean() {
+	}
+
+	/**
+	 * @return the network
+	 */
+	public String getNetwork() {
+		return network;
+	}
+
+	/**
+	 * @param network the network to set
+	 */
+	public void setNetwork(String network) {
+		this.network = network;
 	}
 
 	/**

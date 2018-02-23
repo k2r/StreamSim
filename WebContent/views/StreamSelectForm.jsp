@@ -16,6 +16,14 @@
     </tr>
     
     <tr>
+        <td class="label"><label>Messaging service</label>:</td>
+        <td class="input"><select name="network">
+        	<option value="rmi">RPC (RMI)</option>
+        	<option value="kafka">Apache Kafka</option>
+        </select></td>
+    </tr>
+    
+    <tr>
         <td class="label"><label>Server hostname</label>:</td>
         <td class="input"><input type="text" name="host" /></td>
     </tr>

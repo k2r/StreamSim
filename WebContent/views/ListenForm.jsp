@@ -10,14 +10,9 @@
 <td>
 <form action="/streamsim/listener" method="POST">
 	<table>
-    <tr>
-        <td class="label"><label>Host name</label>:</td>
-        <td><input type="text" name="host" value="${!empty listener.host ? listener.host : ''}"/></td>
-    </tr>
-    
 	<tr>
-        <td class="label"><label>Emission port</label>:</td>
-        <td class="input"><input type="text" name="port" value="${!empty listener.port ? listener.port : ''}"/></td>
+        <td class="label"><label>Stream name</label>:</td>
+        <td class="input"><input type="text" name="resource" value="${!empty listener.resource ? listener.resource : ''}"/></td>
     </tr>
     
     <tr>
@@ -29,13 +24,26 @@
     </tr>
     
     <tr>
-        <td class="label"><label>Resource</label>:</td>
-        <td class="input"><input type="text" name="resource" value="${!empty listener.resource ? listener.resource : ''}"/></td>
-    </tr>
-    
-    <tr>
         <td class="label"><label>Number of items to show</label>:</td> 
         <td class="input"><input type="number" name="nbItems" min="1" max="50" value="${!empty listener.nbItems ? listener.nbItems : '1'}"/></td>
+    </tr>
+    
+	<tr>
+        <td class="label"><label>Messaging service</label>:</td>
+        <td class="input"><select name="network">
+        	<option value="rmi" ${listener.network == "rmi" ? 'selected="selected"' : ''}>RPC (RMI)</option>
+        	<option value="kafka" ${listener.network == "kafka" ? 'selected="selected"' : ''}>Apache Kafka</option>
+        </select></td>
+    </tr>
+	
+    <tr>
+        <td class="label"><label>Host name</label>:</td>
+        <td><input type="text" name="host" value="${!empty listener.host ? listener.host : ''}"/></td>
+    </tr>
+    
+	<tr>
+        <td class="label"><label>Emission port</label>:</td>
+        <td class="input"><input type="text" name="port" value="${!empty listener.port ? listener.port : ''}"/></td>
     </tr>
     
     <tr>

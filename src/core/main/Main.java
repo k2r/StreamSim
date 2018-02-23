@@ -20,7 +20,7 @@ import org.xml.sax.SAXException;
 import core.config.global.ConfigParser;
 import core.element.IElement;
 import core.model.relational.IRelationalModel;
-import core.network.ConsumerType;
+import core.network.MessagingType;
 import core.network.IProducer;
 import core.network.PacketSubmitter;
 import core.network.rmi.producer.RMIStreamProducer;
@@ -144,12 +144,12 @@ public class Main {
 
 		if(command.equalsIgnoreCase("PLAY") || command.equalsIgnoreCase("REPLAY")){
 			/*Initialize stream producer*/
-			if(consumer.equalsIgnoreCase(ConsumerType.RMI.toString())){
+			if(consumer.equalsIgnoreCase(MessagingType.RMI.toString())){
 				String rmiHost = global.getRmiHost();
 				Integer rmiPort = global.getRmiPort();
 				producer = (IProducer) new RMIStreamProducer(rmiHost, rmiPort);
 			}
-			if(consumer.equalsIgnoreCase(ConsumerType.KFK.toString())){
+			if(consumer.equalsIgnoreCase(MessagingType.KFK.toString())){
 				String kfkHost = global.getKafkaHost();
 				//TODO implement a kafka producer
 			}

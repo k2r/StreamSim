@@ -3,7 +3,6 @@
  */
 package core.element.relational;
 
-import java.util.ArrayList;
 
 /**
  * @author Roland
@@ -26,6 +25,20 @@ public class RelationalStreamElement implements IRelationalElement {
 	public RelationalStreamElement(Integer nbAttributes, Integer timestamp, Object[] values) {
 		this.timestamp = timestamp;
 		this.values = values;
+	}
+	
+	public RelationalStreamElement(String stringified){
+		String valuesAndTime = stringified.split("{")[1];
+		String values = valuesAndTime.split("@")[0];
+		this.timestamp = Integer.parseInt(valuesAndTime.split("@")[1]);
+		int valuesLength = values.length();
+		values = values.substring(0, valuesLength - 1);// get rid off the closing bracket
+		String[] vals = values.split(";");
+		int valsLength = vals.length;
+		this.values = new Object[valsLength];
+		for(int i = 0; i < valsLength; i++){
+			this.values[i] = vals[i];
+		}
 	}
 	
 	/* (non-Javadoc) 
@@ -52,34 +65,6 @@ public class RelationalStreamElement implements IRelationalElement {
 		this.values[index] = o;
 	}
 	
-	/* (non-Javadoc)
-	 * @see core.element.IElement#toString(java.util.ArrayList)
-	 */
-	@Override
-	public String toString(ArrayList<String> attrNames) {
-		int n = attrNames.size();
-		String result = "[Element{";
-		for(int i = 0; i < n; i++){
-			String attribute = attrNames.get(i);
-			Object value = this.values[i];
-			result += attribute + ":" + value + ";";
-		}
-		result += "}@" + this.getTimestamp() + "]";
-		return result;
-	}
-	
-	@Override
-	public String toString() {
-		int n = this.values.length;
-		String result = "[Element{ ";
-		for(int i = 0; i < n; i++){
-			Object value = this.values[i];
-			result += "value" + i + " --> " + value + ";";
-		}
-		result += "}@" + this.getTimestamp() + "]";
-		return result;
-	}
-	
 	@Override
 	public boolean equals(Object o){
 		boolean result = true;
@@ -96,6 +81,18 @@ public class RelationalStreamElement implements IRelationalElement {
 				break;
 			}
 		}
+		return result;
+	}
+
+	@Override
+	public String stringify() {
+		int n = this.values.length;
+		String result = "{";
+		for(int i = 0; i < n; i++){
+			Object value = this.values[i];
+			result += value + ";";
+		}
+		result += "}@" + this.getTimestamp();
 		return result;
 	}
 

@@ -61,7 +61,7 @@ public class PacketSubmitter implements Runnable, Serializable{
 	public void run() {
 		long start = System.currentTimeMillis();
 		try{
-			logger.info("Number of elements : " + this.getPacket().length);
+			logger.fine("Number of elements : " + this.getPacket().length);
 			this.producer.produce(this.getPacket());
 			long end = System.currentTimeMillis();
 			long remaining = (this.getFrequency() * 1000) - (end - start); //the time remaining after the complete emission
