@@ -51,7 +51,7 @@ public class KafkaStreamProducer implements IKafkaStreamProducer {
 	public void produce(IElement[] packet) {
 		this.packet = packet;
 		for(IElement element : packet){
-			String elemToString = element.stringify();
+			String elemToString = element.toString();
 			ProducerRecord<String, String> record = new ProducerRecord<String, String>("streamsim", elemToString);
 			this.kProducer.send(record);
 		}

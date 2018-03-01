@@ -77,14 +77,14 @@ public class RelationalStreamElementTest {
 	}
 
 	/**
-	 * Test method for {@link core.element.relational.RelationalStreamElement#stringify()}.
+	 * Test method for {@link core.element.relational.RelationalStreamElement#toString()}.
 	 */
 	@Test
 	public void testStringify() {
 		String expected1 = "{null;null;null;null;null;}@1";
 		String expected2 = "{1;2;3;4.0;5;6;7.0;}@2";
 		
-		assertEquals(expected1, ((RelationalStreamElement) this.element1).stringify());
-		assertEquals(expected2, ((RelationalStreamElement) this.element2).stringify());
+		assertEquals(expected1, ((RelationalStreamElement) this.element1).toString());
+		assertEquals(expected2, ((RelationalStreamElement) this.element2).toString());
 	}
 }

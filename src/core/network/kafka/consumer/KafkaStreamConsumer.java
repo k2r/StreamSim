@@ -67,6 +67,7 @@ public class KafkaStreamConsumer implements IKafkaStreamConsumer {
 			}
 		}catch(Exception e){
 			logger.severe("New records cannot be consumed from the Kafka cluster because " + e);
+			e.printStackTrace();
 		}
 		this.kConsumer.commitSync();
 		return result;

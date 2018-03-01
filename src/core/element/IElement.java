@@ -7,7 +7,8 @@ import java.io.Serializable;
 
 /**
  * @author Roland
- * Subinterfaces must provide a method to access to the stream element
+ * 
+ * Subinterfaces must provide a method to access to the stream element. Implementing classes should override 
  */
 public interface IElement extends Serializable{
 
@@ -21,6 +22,6 @@ public interface IElement extends Serializable{
 	 * 
 	 * @return a string representation of the stream element
 	 */
-	public String stringify();
+	public String toString();
 	
 }

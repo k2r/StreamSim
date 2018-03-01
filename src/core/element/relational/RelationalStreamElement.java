@@ -28,7 +28,7 @@ public class RelationalStreamElement implements IRelationalElement {
 	}
 	
 	public RelationalStreamElement(String stringified){
-		String valuesAndTime = stringified.split("{")[1];
+		String valuesAndTime = stringified.split("\\{")[1];
 		String values = valuesAndTime.split("@")[0];
 		this.timestamp = Integer.parseInt(valuesAndTime.split("@")[1]);
 		int valuesLength = values.length();
@@ -85,7 +85,7 @@ public class RelationalStreamElement implements IRelationalElement {
 	}
 
 	@Override
-	public String stringify() {
+	public String toString() {
 		int n = this.values.length;
 		String result = "{";
 		for(int i = 0; i < n; i++){
@@ -95,6 +95,4 @@ public class RelationalStreamElement implements IRelationalElement {
 		result += "}@" + this.getTimestamp();
 		return result;
 	}
-
-	
 }
