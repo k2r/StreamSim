@@ -88,21 +88,21 @@ public class RMIStreamProducer extends UnicastRemoteObject implements IRMIStream
 	}
 	
 	@Override
-	public void produce(IElement[] packet) throws RemoteException{
+	public void produce(String streamName, IElement[] packet) throws RemoteException{
 		this.packet = packet;
 		try {
 			try{
-				registry.unbind("tuples");
+				registry.unbind(streamName);
 			}catch(NotBoundException e1){
 				logger.info("No packet submitted yet...");
 			}
-			registry.bind("tuples", (IRMIStreamProducer)this);
-			logger.info("Packet with id " + this.packetCounter + " has been submitted properly");
+			registry.bind(streamName, (IRMIStreamProducer)this);
+			logger.fine("Packet with id " + this.packetCounter + " has been submitted properly");
 			this.packetCounter++;
 		} catch (AlreadyBoundException e) {
 			logger.info("Server unable to bind the remote object");
 			logger.info("Re-sending packet...");
-			this.produce(packet);
+			this.produce(streamName, packet);
 		}
 	}
 	

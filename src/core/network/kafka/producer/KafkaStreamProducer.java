@@ -48,11 +48,11 @@ public class KafkaStreamProducer implements IKafkaStreamProducer {
 	}
 
 	@Override
-	public void produce(IElement[] packet) {
+	public void produce(String streamName, IElement[] packet) {
 		this.packet = packet;
 		for(IElement element : packet){
 			String elemToString = element.toString();
-			ProducerRecord<String, String> record = new ProducerRecord<String, String>("streamsim", elemToString);
+			ProducerRecord<String, String> record = new ProducerRecord<String, String>(streamName, elemToString);
 			this.kProducer.send(record);
 		}
 		logger.fine("Packet with id " + this.packetCounter + " has been submitted properly");

@@ -19,6 +19,7 @@ public class PacketSubmitter implements Runnable, Serializable{
 	 */
 	private static final long serialVersionUID = -7948384213242513390L;
 	private IProducer producer;
+	private String streamName;
 	private IElement[] packet;
 	private final Long frequency;
 	private static final Logger logger = Logger.getLogger("PacketSubmitter");
@@ -26,8 +27,9 @@ public class PacketSubmitter implements Runnable, Serializable{
 	/**
 	 * 
 	 */
-	public PacketSubmitter(IProducer producer, IElement[] packet, Long frequency) {
+	public PacketSubmitter(IProducer producer, String streamName, IElement[] packet, Long frequency) {
 		this.producer = producer;
+		this.setStreamName(streamName);
 		this.packet = packet;
 		this.frequency = frequency;
 	}
@@ -43,8 +45,22 @@ public class PacketSubmitter implements Runnable, Serializable{
 	/**
 	 * @param packet the new list of packet to consider
 	 */
-	public void setShard(IElement[] packet) {
+	public void setPacket(IElement[] packet) {
 		this.packet = packet;
+	}
+
+	/**
+	 * @return the streamName
+	 */
+	public String getStreamName() {
+		return streamName;
+	}
+
+	/**
+	 * @param streamName the streamName to set
+	 */
+	public void setStreamName(String streamName) {
+		this.streamName = streamName;
 	}
 
 	/**
@@ -62,7 +78,7 @@ public class PacketSubmitter implements Runnable, Serializable{
 		long start = System.currentTimeMillis();
 		try{
 			logger.fine("Number of elements : " + this.getPacket().length);
-			this.producer.produce(this.getPacket());
+			this.producer.produce(this.getStreamName(), this.getPacket());
 			long end = System.currentTimeMillis();
 			long remaining = (this.getFrequency() * 1000) - (end - start); //the time remaining after the complete emission
 			if(remaining > 0){

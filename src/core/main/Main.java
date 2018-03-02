@@ -168,7 +168,7 @@ public class Main {
 					String pChunkKey = "P" + i + "It" + k;
 					IElement[] packet = elements.get(pChunkKey);
 					ExecutorService executorP = Executors.newCachedThreadPool();
-					Future<?> futureP = executorP.submit(new PacketSubmitter(producer, packet, frequency));
+					Future<?> futureP = executorP.submit(new PacketSubmitter(producer, streamName, packet, frequency));
 					try {
 						futureP.get(frequency, TimeUnit.SECONDS);
 						k += frequency;
@@ -200,7 +200,7 @@ public class Main {
 						String tChunkKey = "T" + j + "It" + l;
 						IElement[] packet = elements.get(tChunkKey);
 						ExecutorService executorT = Executors.newCachedThreadPool();
-						Future<?> futureT = executorT.submit(new PacketSubmitter(producer, packet, frequency));
+						Future<?> futureT = executorT.submit(new PacketSubmitter(producer, streamName, packet, frequency));
 						try {
 							futureT.get(frequency, TimeUnit.SECONDS);
 							l += frequency;

@@ -20,10 +20,11 @@ public interface IProducer extends Serializable{
 	public void connect()throws RemoteException;
 	
 	/**
-	 * This method produces a new packet of stream elements and sends it to a consuming service 
+	 * This method produces a new packet of stream elements and sends it to a consuming service
+	 * @param streamName the name of the stream to update 
 	 * @param packet the packet of stream elements to send 
 	 */
-	public void produce(IElement[] packet) throws RemoteException;
+	public void produce(String streamName, IElement[] packet) throws RemoteException;
 	
 	/**
 	 * This method closes the connection with the consuming service

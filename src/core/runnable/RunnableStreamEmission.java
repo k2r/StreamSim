@@ -41,6 +41,7 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 
 	private IStream stream;
 	private IProducer producer;
+	private String streamName;
 	private Long frequency;
 	private HashMap<String, IElement[]> elements;
 	private Integer profileSize;
@@ -58,11 +59,11 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 		/*Recovering the stream and the associated producer*/
 		this.stream = bean.getStream();
 		this.producer = bean.getProducer();
+		this.streamName = bean.getName();
 		if(command.equalsIgnoreCase("PLAY")){
 			/*Generation of the stream for immediate emission according to the clock frequency specified through UI*/
 			this.frequency = Long.parseLong((String) req.getParameter("frequency"));
-			this.stream.generateStream(frequency);
-
+			this.stream.generateStream(frequency);	
 			this.elements = this.stream.getElements();
 			this.profileSize = stream.getProfiles().size();;
 			this.transitionSize = stream.getTransitions().size();
@@ -155,7 +156,7 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 					String pPacketHeader = "P" + this.profileIndex + "It" + k;
 					IElement[] packet = elements.get(pPacketHeader);
 					ExecutorService executorP = Executors.newCachedThreadPool();
-					Future<?> futureP = executorP.submit(new PacketSubmitter(this.producer, packet, this.frequency));
+					Future<?> futureP = executorP.submit(new PacketSubmitter(this.producer, this.streamName, packet, this.frequency));
 					try {
 						futureP.get(frequency, TimeUnit.SECONDS);
 						k += frequency;
@@ -196,7 +197,7 @@ public class RunnableStreamEmission implements Runnable, Serializable {
 					String tPacketHeader = "T" + this.transitionIndex + "It" + l;
 					IElement[] packet = elements.get(tPacketHeader);
 					ExecutorService executorT = Executors.newCachedThreadPool();
-					Future<?> futureT = executorT.submit(new PacketSubmitter(this.producer, packet, this.frequency));
+					Future<?> futureT = executorT.submit(new PacketSubmitter(this.producer, this.streamName, packet, this.frequency));
 					try {
 						futureT.get(this.frequency, TimeUnit.SECONDS);
 						l += this.frequency;
